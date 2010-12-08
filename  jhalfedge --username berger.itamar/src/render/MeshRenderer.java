@@ -38,31 +38,42 @@ public class MeshRenderer {
 
             gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
             if (state.getTransparent()) {
-//            gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
-                gl.glColor4f(1f, 1, 1f, 0.5f);
+                                gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+                gl.glColor4f(1f, 1f, 1f, 0.4f);
+                renderTriangles(gl);
+                
+                gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+                gl.glColor4f(1f, 1, 1f, 0.4f);
+                renderTriangles(gl);
+
             } else {
+                gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
                 gl.glColor4f(1f, 1, 1f, 1f);
-
+                renderTriangles(gl);
             }
 
-            gl.glBegin(GL.GL_TRIANGLES);
-            for (Face face : halfEdgeDataStructure.getAllFaces()) {
-                HalfEdge firstHalfEdge = face.getHalfEdge();
-                HalfEdge nextHalfEdge = firstHalfEdge;
 
-                do {
-                    Vertex vertex = nextHalfEdge.getVertex();
-                    gl.glVertex3fv(vertex.getXyz(), 0);
-                    nextHalfEdge = nextHalfEdge.getNext();
-
-                } while (nextHalfEdge != firstHalfEdge);
-            }
-            gl.glEnd();
             gl.glEndList();
             prevState = state;
         }
 
         gl.glCallList(displayList);
+    }
+
+    private void renderTriangles(GL gl) {
+        gl.glBegin(GL.GL_TRIANGLES);
+        for (Face face : halfEdgeDataStructure.getAllFaces()) {
+            HalfEdge firstHalfEdge = face.getHalfEdge();
+            HalfEdge nextHalfEdge = firstHalfEdge;
+
+            do {
+                Vertex vertex = nextHalfEdge.getVertex();
+                gl.glVertex3fv(vertex.getXyz(), 0);
+                nextHalfEdge = nextHalfEdge.getNext();
+
+            } while (nextHalfEdge != firstHalfEdge);
+        }
+        gl.glEnd();
     }
 
     public void renderFace(GL gl) {

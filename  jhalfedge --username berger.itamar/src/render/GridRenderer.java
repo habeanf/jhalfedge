@@ -35,7 +35,7 @@ public class GridRenderer {
             wire = gl.glGenLists(2);
             gl.glNewList(wire, GL.GL_COMPILE);
             gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
-            gl.glColor4f(0.3f, 0.3f, 0.3f, 0.1f);
+            gl.glColor4f(0.3f, 0.3f, 0.3f, 0.02f);
             // because we are starting to draw from the middle we need add step/2
             for (float z = -edgeSize + sampleSize / 2; z <= edgeSize; z += sampleSize) {
                 for (float x = -edgeSize + sampleSize / 2; x <= edgeSize; x += sampleSize) {

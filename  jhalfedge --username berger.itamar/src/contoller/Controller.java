@@ -73,7 +73,8 @@ public class Controller implements GLEventListener {
 
         gridRenderer = new GridRenderer(freq);
 
-        String path =      "C:\\Workspace\\ex2\\src\\Models\\BEAR_KLA.off";
+        String path = "C:\\Workspace\\ex2\\src\\Models\\homer.obj";
+//        String path = "C:\\\\Workspace\\\\ex2\\\\src\\\\Models\\\\Candil.obj";
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\Armadillo_f40000.obj");
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\BEAR_KLA.off");
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\cheetah.off");
@@ -82,9 +83,9 @@ public class Controller implements GLEventListener {
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\Candil.obj");
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\Candil.obj");
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\elk_48k.obj");
-        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\homer.obj");
+        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get(path);
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\sample.obj");
-  //      infoLogger.setModelPath(path);
+        infoLogger.setModelPath(path);
 
 
         meshRenderer = new MeshRenderer(halfEdgeDataStructure);
@@ -108,7 +109,6 @@ public class Controller implements GLEventListener {
         else
             gl.glShadeModel(GL.GL_FLAT);
 
-        drawWireFrame(gl);
 
         if (lightingEnabled)
             gl.glEnable(GL.GL_LIGHTING);
@@ -121,6 +121,7 @@ public class Controller implements GLEventListener {
 //        meshRenderer.renderFace(gl);
 
         if (enableGrid) {
+            drawWireFrame(gl);            
             gridRenderer.render(gl);
         }
 
@@ -167,7 +168,6 @@ public class Controller implements GLEventListener {
         gl.glEnable(GL.GL_LIGHT1);
         gl.glEnable(GL.GL_LIGHTING);
         this.lightingEnabled = true;
-
     }
 
     public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
@@ -181,7 +181,7 @@ public class Controller implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, h, 1.0, 60.0);
+        glu.gluPerspective(45.0f, h, 0.2, 60.0);
         gl.glMatrixMode(GL.GL_MODELVIEW);
         gl.glLoadIdentity();
     }

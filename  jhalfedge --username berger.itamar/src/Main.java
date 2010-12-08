@@ -23,7 +23,7 @@ public class Main {
         Controller Controller = new Controller();
         InputHandler keyboardInputHandler = new InputHandler(Controller, display);
         MouseInputHandler mouseInputHandler = new MouseInputHandler(Controller);
-       // InfoLogger.setOut(display);
+       InfoLogger.setOut(display);
 
         display.addMouseListener(mouseInputHandler);
         display.addMouseWheelListener(mouseInputHandler);
