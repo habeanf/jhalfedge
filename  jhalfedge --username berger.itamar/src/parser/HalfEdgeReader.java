@@ -81,8 +81,8 @@ public class HalfEdgeReader {
                 // addEdge
                 List<HalfEdge> faceEdges = new ArrayList<HalfEdge>(curr_ids.length);
                 for (int j=0;j<curr_ids.length;++j) {
-                    int      vertexFrom  = curr_ids.get(j);
-                    int      vertexTo    = curr_ids.get((j+1)%curr_ids.length);
+                    int      vertexFrom  = curr_ids[j];
+                    int      vertexTo    = curr_ids[(j+1)%curr_ids.length];
 
                     Edge     edge        = addEdge(vertexFrom,vertexTo);
                     HalfEdge half        = halfEdgeMap.get(edge);
@@ -136,5 +136,10 @@ public class HalfEdgeReader {
             return new OBJReader();
         }
         return new OFFReader();
+    }
+
+    private float findmax(float max,Vertex vertex){
+        final float[] xyz = vertex.getXyz();
+        return Math.max(max,Math.max(Math.abs(xyz[0]),Math.max(Math.abs(xyz[1]),Math.abs(xyz[2]))));
     }
 }
