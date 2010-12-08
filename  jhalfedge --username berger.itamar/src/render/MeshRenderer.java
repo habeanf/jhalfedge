@@ -23,8 +23,6 @@ public class MeshRenderer {
 
     RenderState prevState;
 
-    IColorMap colormap = new HueColorMap();
-
     private final HalfEdgeDataStructure halfEdgeDataStructure;
 
     public MeshRenderer(HalfEdgeDataStructure halfEdgeDataStructure) {
@@ -50,18 +48,18 @@ public class MeshRenderer {
                     if (attribute == null) {
                         gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
                         gl.glColor4f(1f, 1f, 1f, alpha);
-                        renderTriangles(gl, attribute,alpha);
+                        renderTriangles(gl, attribute,alpha,state.getColorMap());
                     }
 
                     gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
                     gl.glColor4f(1f, 1, 1f, 0.4f);
-                    renderTriangles(gl, attribute,alpha);
+                    renderTriangles(gl, attribute,alpha,state.getColorMap());
 
                 } else {
                     float alpha = 1f;      
                     gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
                     gl.glColor4f(1f, 1, 1f, alpha);
-                    renderTriangles(gl, attribute, alpha);
+                    renderTriangles(gl, attribute, alpha,state.getColorMap());
                 }
             } else {
                 gl.glColor4f(1f, 1f, 1f, 0.8f);
@@ -84,7 +82,7 @@ public class MeshRenderer {
         gl.glEnd();
     }
 
-    private void renderTriangles(GL gl, MeshAttribute attribute, float alpha) {
+    private void renderTriangles(GL gl, MeshAttribute attribute, float alpha, IColorMap colormap) {
         gl.glBegin(GL.GL_TRIANGLES);
         for (Face face : halfEdgeDataStructure.getAllFaces()) {            
             HalfEdge firstHalfEdge = face.getHalfEdge();
@@ -105,7 +103,7 @@ public class MeshRenderer {
                 nextHalfEdge = nextHalfEdge.getNext();
                 counter++;
 
-                if (counter>10){
+                if (counter>4){
                     break;
                 }
             } while (nextHalfEdge != firstHalfEdge);

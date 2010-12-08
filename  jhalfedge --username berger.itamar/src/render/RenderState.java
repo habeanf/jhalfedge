@@ -1,6 +1,9 @@
 package render;
 
 import attributes.MeshAttribute;
+import colormaps.ColorMapFactory;
+import colormaps.HueColorMap;
+import colormaps.IColorMap;
 
 /**
  * User: itamar
@@ -17,6 +20,8 @@ public class RenderState {
     private boolean calculatedGaussian = false;
     private boolean calculatedCentricity = false;
     private boolean calculatedDistance = false;
+
+    private IColorMap colorMap = ColorMapFactory.getNextColorMap();
 
     public boolean getTransparent() {
         return transparent;
@@ -79,5 +84,14 @@ public class RenderState {
     public void transperacy(boolean transparent) {
         this.transparent =transparent;
         shouldUpdate = true;
+    }
+
+    public void setAttributeColorMap(IColorMap colorMap) {
+        this.colorMap = colorMap;
+        shouldUpdate = true;
+    }
+
+    public IColorMap getColorMap() {
+        return colorMap;
     }
 }

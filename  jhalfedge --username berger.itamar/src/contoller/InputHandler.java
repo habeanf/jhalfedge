@@ -27,7 +27,7 @@ public class InputHandler extends KeyAdapter {
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_L, 0), "Toggle lighting");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "Toggle shade model");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_T, 0), "Toggle transparent");
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "Show vertices");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0), "Show point cloud");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_1, 0), "No Attributes");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_2, 0), "Attribute: Centricity");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_3, 0), "Attribute: Distance to centroid");
@@ -35,6 +35,7 @@ public class InputHandler extends KeyAdapter {
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0), "Load file");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), "Next mesh");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_N, 0), "Prev mesh");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "Switch colormap");
     }
 
     public void keyPressed(KeyEvent e) {
@@ -55,7 +56,7 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_T:
                 controller.toggleTransparent();
                 break;
-            case KeyEvent.VK_C:
+            case KeyEvent.VK_P:
                 controller.toggleCloud();
                 break;
             case KeyEvent.VK_1:
@@ -78,6 +79,9 @@ public class InputHandler extends KeyAdapter {
                 break;
             case KeyEvent.VK_N:
                 controller.prevFile();
+                break;
+            case KeyEvent.VK_C:
+                controller.switchColorMap();
                 break;
             default:
                 processKeyEvent(e, false);

@@ -11,6 +11,8 @@ import java.util.List;
  * Time: 5:15:39 PM
  */
 public class GaussianCurvature implements MeshAttribute {
+    private static final float TWOPI = (float) (Math.PI*2);  
+
     public String getName() {
         return "Gaussian Curvature";
     }

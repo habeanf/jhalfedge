@@ -1,6 +1,7 @@
 package contoller;
 
 import attributes.*;
+import colormaps.ColorMapFactory;
 import model.HalfEdgeDataStructure;
 import parser.HalfEdgeDataStructureGenerator;
 import render.*;
@@ -341,5 +342,9 @@ public class Controller implements GLEventListener {
         if (meshIterator == -1)
             meshIterator = paths.size() - 1;
         selectFile(paths.get(meshIterator));
+    }
+
+    public void switchColorMap() {
+        state.setAttributeColorMap(ColorMapFactory.getNextColorMap());
     }
 }
