@@ -78,9 +78,9 @@ public class HalfEdgeReader {
 
     public HalfEdge findFreeIncident(int vertexId) {
         List<HalfEdge> freeList = vertexFreeList.get(vertexId);
-        
+
         for (HalfEdge edge : freeList) {
-            if (edge.getFace()!=null) {
+            if (edge.getFace()==null) {
                 return edge;
             }
         }
@@ -132,6 +132,9 @@ public class HalfEdgeReader {
         installHalfEdge(fromVertex,fromToHalf);
         installHalfEdge(toVertex,toFromHalf);
 
+        halfEdgeMap.put(edge,fromToHalf);
+        halfEdgeMap.put(new Edge(toVertex,fromVertex),toFromHalf);
+
         return edge;
     }
 
@@ -164,6 +167,8 @@ public class HalfEdgeReader {
         for (HalfEdge edge : halfEdgeLoop) {
             edge.setFace(face);
         }
+
+        faces.add(face);
         
         return face;
     }
