@@ -10,6 +10,10 @@ public class Vertex {
     float[] xyz;
     HalfEdge halfEdge;
 
+    private float centricity;
+    private float distance;
+    private float gaussianCurvature;
+
     public Vertex(int id,float x, float y, float z) {
         this.xyz = new float[]{x, y, z};
         this.id = id;
@@ -50,5 +54,29 @@ public class Vertex {
 
     public int getId() {
         return id;
+    }
+
+    public float getCentricity() {
+        return centricity;
+    }
+
+    public void setCentricity(float centricity) {
+        this.centricity = centricity;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public float getGaussianCurvature() {
+        return gaussianCurvature;
+    }
+
+    public void setGaussianCurvature(float gaussianCurvature) {
+        this.gaussianCurvature = gaussianCurvature;
     }
 }

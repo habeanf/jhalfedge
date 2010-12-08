@@ -1,5 +1,7 @@
 package attributes;
 
+import model.Vertex;
+
 /**
  * User: itamar
  * Date: Dec 8, 2010
@@ -8,5 +10,9 @@ package attributes;
 public class Centricity implements MeshAttribute{
     public String getName() {
         return "Centricity";
+    }
+
+    public float getValue(Vertex vertex) {
+        return vertex.getCentricity();
     }
 }

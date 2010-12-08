@@ -66,17 +66,14 @@ public class Controller implements GLEventListener {
 
     private RenderState state;
 
-    private MeshAttribute meshAttribute = setNoAttribute();
     private HalfEdgeDataStructure halfEdgeDataStructure = null;
 
     private static InfoLogger infoLogger = InfoLogger.getInfoLogger();
 
     public Controller() {
         sliceColorMap = ColorMapFactory.getNextColorMap();
-
         gridRenderer = new GridRenderer(freq);
 
-        String path = "C:\\Workspace\\ex2\\src\\Models\\homer.obj";
 //        String path = "C:\\\\Workspace\\\\ex2\\\\src\\\\Models\\\\Candil.obj";
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\Armadillo_f40000.obj");
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\BEAR_KLA.off");
@@ -86,12 +83,16 @@ public class Controller implements GLEventListener {
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\Candil.obj");
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\Candil.obj");
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\elk_48k.obj");
-        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get(path);
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\sample.obj");
-        infoLogger.setModelPath("Model path:" + path);
+        loadNextObject();
+    }
 
+    private void loadNextObject(){
+        state = new RenderState();                
+        String path = "C:\\Workspace\\ex2\\src\\Models\\homer.obj";        
+        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get(path);
         meshRenderer = new MeshRenderer(halfEdgeDataStructure);
-        state = new RenderState();
+        infoLogger.setModelPath("Model path:" + path);
     }
 
     public void display(GLAutoDrawable gLDrawable) {
@@ -280,25 +281,30 @@ public class Controller implements GLEventListener {
     }
 
     public MeshAttribute setNoAttribute() {
-        MeshAttribute attribute = new NoAttribute();
-        infoLogger.setAttribute(attribute.getName());
+        MeshAttribute attribute = null;
+        state.setMeshAttribute(attribute);        
+        infoLogger.setAttribute("None");
         return attribute;
     }
 
     public MeshAttribute setCentricityAttribute() {
         MeshAttribute attribute = new Centricity();
+        state.setMeshAttribute(attribute);
         infoLogger.setAttribute(attribute.getName());
         return attribute;
     }
 
     public MeshAttribute setDistanceToCentroidAttribute() {
         MeshAttribute attribute = new DistanceToCentroid();
+        state.setMeshAttribute(attribute);
         infoLogger.setAttribute(attribute.getName());
         return attribute;
     }
 
+
     public MeshAttribute setGaussianCurvature() {
         MeshAttribute attribute = new GaussianCurvature();
+        state.setMeshAttribute(attribute);
         infoLogger.setAttribute(attribute.getName());
         return attribute;
     }

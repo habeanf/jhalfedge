@@ -13,7 +13,7 @@ public class InfoLogger{
     private   static InfoLogger infoLogger;
 
     private String path;
-    private String attribute;
+    private String attribute = "None";
 
     private InfoLogger() {      
     }
