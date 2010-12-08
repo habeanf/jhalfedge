@@ -14,6 +14,10 @@ public class RenderState {
     private boolean isMesh = true;
     private MeshAttribute meshAttribute;
 
+    private boolean calculatedGaussian = false;
+    private boolean calculatedCentricity = false;
+    private boolean calculatedDistance = false;
+
     public boolean getTransparent() {
         return transparent;
     }
@@ -46,5 +50,29 @@ public class RenderState {
     public void setMeshAttribute(MeshAttribute meshAttribute) {
         this.meshAttribute = meshAttribute;
         shouldUpdate = true;
+    }
+
+    public boolean isCalculatedGaussian() {
+        return calculatedGaussian;
+    }
+
+    public void setCalculatedGaussian(boolean calculatedGaussian) {
+        this.calculatedGaussian = calculatedGaussian;
+    }
+
+    public boolean isCalculatedCentricity() {
+        return calculatedCentricity;
+    }
+
+    public void setCalculatedCentricity(boolean calculatedCentricity) {
+        this.calculatedCentricity = calculatedCentricity;
+    }
+
+    public boolean isCalculatedDistanceToCentroid() {
+        return calculatedDistance;
+    }
+
+    public void setCalculatedDistance(boolean calculatedDistance) {
+        this.calculatedDistance = calculatedDistance;
     }
 }

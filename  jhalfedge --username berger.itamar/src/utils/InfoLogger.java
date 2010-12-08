@@ -4,7 +4,7 @@ import contoller.Controller;
 
 /**
  * Created by IntelliJ IDEA.
- * User: Lilach
+ * User: Itamar
  * Date: 08/12/2010
  * Time: 14:21:47
  * To change this template use File | Settings | File Templates.
@@ -13,7 +13,7 @@ public class InfoLogger{
     private   static InfoLogger infoLogger;
 
     private String path;
-    private String attribute = "None";
+    private String attribute = "Current mesh attribute: None";
 
     private InfoLogger() {      
     }

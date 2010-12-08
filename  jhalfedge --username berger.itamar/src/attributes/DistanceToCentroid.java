@@ -1,5 +1,6 @@
 package attributes;
 
+import model.HalfEdgeDataStructure;
 import model.Vertex;
 
 /**
@@ -14,5 +15,12 @@ public class DistanceToCentroid implements MeshAttribute {
 
     public float getValue(Vertex vertex) {
         return vertex.getDistance();
+    }
+
+    public static void calculate(HalfEdgeDataStructure halfEdgeDataStructure) {
+        for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
+            //TODO
+            vertex.setDistance(0.4f);
+        }
     }
 }

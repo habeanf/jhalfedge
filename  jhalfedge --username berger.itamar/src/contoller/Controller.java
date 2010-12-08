@@ -1,8 +1,6 @@
 package contoller;
 
 import attributes.*;
-import colormaps.ColorMapFactory;
-import colormaps.IColorMap;
 import model.HalfEdgeDataStructure;
 import parser.HalfEdgeDataStructureGenerator;
 import render.*;
@@ -27,9 +25,6 @@ public class Controller implements GLEventListener {
     private MeshRenderer meshRenderer;
     private GridRenderer gridRenderer;
 
-
-    // current color ColorMaps
-    private IColorMap sliceColorMap;
 
     public static final float WORLD_SIZE = 2f;
     private static final float freq = 1 / 20f;
@@ -71,7 +66,6 @@ public class Controller implements GLEventListener {
     private static InfoLogger infoLogger = InfoLogger.getInfoLogger();
 
     public Controller() {
-        sliceColorMap = ColorMapFactory.getNextColorMap();
         gridRenderer = new GridRenderer(freq);
 
 //        String path = "C:\\\\Workspace\\\\ex2\\\\src\\\\Models\\\\Candil.obj";
@@ -87,9 +81,9 @@ public class Controller implements GLEventListener {
         loadNextObject();
     }
 
-    private void loadNextObject(){
-        state = new RenderState();                
-        String path = "C:\\Workspace\\ex2\\src\\Models\\homer.obj";        
+    private void loadNextObject() {
+        state = new RenderState();
+        String path = "C:\\Workspace\\ex2\\src\\Models\\homer.obj";
         halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get(path);
         meshRenderer = new MeshRenderer(halfEdgeDataStructure);
         infoLogger.setModelPath("Model path:" + path);
@@ -256,16 +250,9 @@ public class Controller implements GLEventListener {
         yrot += thetaX;
     }
 
-    public void switchColorMap() {
-        sliceColorMap = ColorMapFactory.getNextColorMap();
-    }
 
     public void toggleShadeModel() {
         isSmooth = !isSmooth;
-    }
-
-    public void toggleIsoColorMapping() {
-        isIsoColorMap = !isIsoColorMap;
     }
 
     public void zoom(int wheelRotation) {
@@ -282,12 +269,17 @@ public class Controller implements GLEventListener {
 
     public MeshAttribute setNoAttribute() {
         MeshAttribute attribute = null;
-        state.setMeshAttribute(attribute);        
+        state.setMeshAttribute(attribute);
         infoLogger.setAttribute("None");
         return attribute;
     }
 
     public MeshAttribute setCentricityAttribute() {
+        if (!state.isCalculatedCentricity()) {
+            Centricity.calculate(halfEdgeDataStructure);
+            state.setCalculatedCentricity(true);
+        }
+
         MeshAttribute attribute = new Centricity();
         state.setMeshAttribute(attribute);
         infoLogger.setAttribute(attribute.getName());
@@ -295,6 +287,11 @@ public class Controller implements GLEventListener {
     }
 
     public MeshAttribute setDistanceToCentroidAttribute() {
+        if (!state.isCalculatedDistanceToCentroid()) {
+            DistanceToCentroid.calculate(halfEdgeDataStructure);
+            state.setCalculatedDistance(true);
+        }
+
         MeshAttribute attribute = new DistanceToCentroid();
         state.setMeshAttribute(attribute);
         infoLogger.setAttribute(attribute.getName());
@@ -303,6 +300,11 @@ public class Controller implements GLEventListener {
 
 
     public MeshAttribute setGaussianCurvature() {
+        if (!state.isCalculatedGaussian()) {
+            GaussianCurvature.calculate(halfEdgeDataStructure);
+            state.setCalculatedGaussian(true);
+        }
+
         MeshAttribute attribute = new GaussianCurvature();
         state.setMeshAttribute(attribute);
         infoLogger.setAttribute(attribute.getName());
