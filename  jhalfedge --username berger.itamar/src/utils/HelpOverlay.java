@@ -83,6 +83,10 @@ public class HelpOverlay implements GLEventListener {
         gl.glRasterPos2i(x, y);
         glut.glutBitmapString(GLUT.BITMAP_HELVETICA_12, infoLogger.getPath());
         maxx = Math.max(maxx, OFFSET + glut.glutBitmapLength(GLUT.BITMAP_HELVETICA_12, infoLogger.getPath()));
+        y += OFFSET;
+        gl.glRasterPos2i(x, y);
+        glut.glutBitmapString(GLUT.BITMAP_HELVETICA_12, infoLogger.getAttribute());
+        maxx = Math.max(maxx, OFFSET + glut.glutBitmapLength(GLUT.BITMAP_HELVETICA_12, infoLogger.getAttribute()));
         y += OFFSET * 2;
 
         if (showHelp){

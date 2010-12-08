@@ -13,6 +13,7 @@ public class InfoLogger{
     private   static InfoLogger infoLogger;
 
     private String path;
+    private String attribute;
 
     private InfoLogger() {      
     }
@@ -25,7 +26,11 @@ public class InfoLogger{
         return path;
     }
 
-    public static InfoLogger get() {
+    public String getAttribute(){
+        return attribute;
+    }
+
+    public static InfoLogger getInfoLogger() {
         if (infoLogger == null){
                 infoLogger = new InfoLogger();
         }
@@ -33,6 +38,10 @@ public class InfoLogger{
     }
 
     public static void setOut(GLDisplay display) {
-        display.addInfoLogListener(get());
+        display.addInfoLogListener(getInfoLogger());
+    }
+
+    public void setAttribute(String attribute) {
+        this.attribute = "Current mesh attribute: " + attribute;
     }
 }

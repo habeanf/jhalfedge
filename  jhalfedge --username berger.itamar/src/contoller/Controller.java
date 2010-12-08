@@ -1,5 +1,6 @@
 package contoller;
 
+import attributes.*;
 import colormaps.ColorMapFactory;
 import colormaps.IColorMap;
 import model.HalfEdgeDataStructure;
@@ -41,7 +42,6 @@ public class Controller implements GLEventListener {
 
     // display settings
     private boolean isSmooth = true;
-    private boolean isTransparent = true;
 
     // current handlers state
     private float xrot;
@@ -64,9 +64,12 @@ public class Controller implements GLEventListener {
     private int height = 480;
     private boolean isIsoColorMap = false;
 
-    RenderState state;
+    private RenderState state;
 
-    private InfoLogger infoLogger = InfoLogger.get();
+    private MeshAttribute meshAttribute = setNoAttribute();
+    private HalfEdgeDataStructure halfEdgeDataStructure = null;
+
+    private static InfoLogger infoLogger = InfoLogger.getInfoLogger();
 
     public Controller() {
         sliceColorMap = ColorMapFactory.getNextColorMap();
@@ -85,15 +88,11 @@ public class Controller implements GLEventListener {
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\elk_48k.obj");
         halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get(path);
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\sample.obj");
-        infoLogger.setModelPath(path);
-
+        infoLogger.setModelPath("Model path:" + path);
 
         meshRenderer = new MeshRenderer(halfEdgeDataStructure);
-
         state = new RenderState();
     }
-
-    private HalfEdgeDataStructure halfEdgeDataStructure = null;
 
     public void display(GLAutoDrawable gLDrawable) {
         update();
@@ -121,15 +120,11 @@ public class Controller implements GLEventListener {
 //        meshRenderer.renderFace(gl);
 
         if (enableGrid) {
-            drawWireFrame(gl);            
+            drawWireFrame(gl);
             gridRenderer.render(gl);
         }
 
         gl.glFlush();
-    }
-
-    private String createInfoLine() {
-        return "Testing Testing Testing";
     }
 
     private void drawWireFrame(GL gl) {
@@ -188,13 +183,13 @@ public class Controller implements GLEventListener {
 
     private void update() {
         if (decreaseX)
-            xrot -= 4f;
+            xrot -= 2f;
         if (increaseX)
-            xrot += 4f;
+            xrot += 2f;
         if (decreaseY)
-            yrot -= 4f;
+            yrot -= 2f;
         if (increaseY)
-            yrot += 4f;
+            yrot += 2f;
         if (zoomIn)
             z += 0.1f;
         if (zoomOut)
@@ -277,10 +272,34 @@ public class Controller implements GLEventListener {
     }
 
     public void setInfoLogger(InfoLogger infoLogger) {
-        this.infoLogger = infoLogger;
+        Controller.infoLogger = infoLogger;
     }
 
     public void toggleCloud() {
         state.toggleCloud();
+    }
+
+    public MeshAttribute setNoAttribute() {
+        MeshAttribute attribute = new NoAttribute();
+        infoLogger.setAttribute(attribute.getName());
+        return attribute;
+    }
+
+    public MeshAttribute setCentricityAttribute() {
+        MeshAttribute attribute = new Centricity();
+        infoLogger.setAttribute(attribute.getName());
+        return attribute;
+    }
+
+    public MeshAttribute setDistanceToCentroidAttribute() {
+        MeshAttribute attribute = new DistanceToCentroid();
+        infoLogger.setAttribute(attribute.getName());
+        return attribute;
+    }
+
+    public MeshAttribute setGaussianCurvature() {
+        MeshAttribute attribute = new GaussianCurvature();
+        infoLogger.setAttribute(attribute.getName());
+        return attribute;
     }
 }
