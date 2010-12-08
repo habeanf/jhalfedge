@@ -156,6 +156,10 @@ public class GLDisplay {
         glCanvas.addMouseListener( l );
     }
 
+        public void addMouseWheelListener( MouseWheelListener l ) {
+        glCanvas.addMouseWheelListener( l );
+    }
+
     public void addMouseMotionListener( MouseMotionListener l ) {
         glCanvas.addMouseMotionListener( l );
     }

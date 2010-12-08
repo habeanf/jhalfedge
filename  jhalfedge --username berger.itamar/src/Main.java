@@ -18,12 +18,13 @@ import utils.GLDisplay;
  */
 public class Main {
     public static void main(String[] args) {
-        GLDisplay display = GLDisplay.createGLDisplay("3D Meshes processing & analysis");
+        GLDisplay display = GLDisplay.createGLDisplay("3D Meshes processing");
         Controller Controller = new Controller();
         InputHandler keyboardInputHandler = new InputHandler(Controller, display);
         MouseInputHandler mouseInputHandler = new MouseInputHandler(Controller);
 
         display.addMouseListener(mouseInputHandler);
+        display.addMouseWheelListener(mouseInputHandler);
         display.addMouseMotionListener(mouseInputHandler);
         display.addGLEventListener(Controller);
         display.addKeyListener(keyboardInputHandler);

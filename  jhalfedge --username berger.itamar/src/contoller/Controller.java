@@ -263,4 +263,8 @@ public class Controller implements GLEventListener {
     public void toggleIsoColorMapping() {
         isIsoColorMap = !isIsoColorMap;
     }
+
+    public void zoom(int wheelRotation) {
+        z+=wheelRotation/2.0f;
+    }
 }

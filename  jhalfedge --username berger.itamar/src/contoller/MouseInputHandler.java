@@ -3,6 +3,7 @@ package contoller;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 /**
  * This class enable the user to rotate the bounding box with mouse.
@@ -27,5 +28,10 @@ public class MouseInputHandler extends MouseInputAdapter {
         if (SwingUtilities.isLeftMouseButton(mouseEvent)) {
             Controller.drag(mouseEvent.getPoint());
         }
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        Controller.zoom(e.getWheelRotation());
     }
 }
