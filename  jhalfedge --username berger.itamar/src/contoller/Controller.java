@@ -73,13 +73,18 @@ public class Controller implements GLEventListener {
 
     public Controller() {
         gridRenderer = new GridRenderer(freq);
+        paths = new ArrayList<File>();
 
         File modelDirectory = new File("./Models");
+        if(modelDirectory.isDirectory()){
 
-        paths = new ArrayList<File>();
         Collections.addAll(paths, modelDirectory.listFiles());
 
         selectFile(paths.get(meshIterator));
+        }
+        else{
+            loadNewFile();
+        }
     }
 
     public void display(GLAutoDrawable gLDrawable) {
