@@ -1,11 +1,11 @@
 package contoller;
 
 import colormaps.ColorMapFactory;
-import colormaps.ValueRedColorMap;
 import colormaps.IColorMap;
 import model.HalfEdgeDataStructure;
 import parser.HalfEdgeDataStructureGenerator;
 import render.*;
+import utils.InfoLogger;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -25,7 +25,6 @@ public class Controller implements GLEventListener {
     // specific renders
     private MeshRenderer meshRenderer;
     private GridRenderer gridRenderer;
-
 
 
     // current color ColorMaps
@@ -56,7 +55,7 @@ public class Controller implements GLEventListener {
     private boolean enableGrid = false;
 
 
-    private float z = -5.0f;			// Depth Into The Screen
+    private float z = -5.0f;            // Depth Into The Screen
     private boolean zoomIn;
     private boolean zoomOut;
 
@@ -67,11 +66,14 @@ public class Controller implements GLEventListener {
 
     RenderState state;
 
+    private InfoLogger infoLogger = InfoLogger.get();
+
     public Controller() {
         sliceColorMap = ColorMapFactory.getNextColorMap();
 
         gridRenderer = new GridRenderer(freq);
 
+        String path =      "C:\\Workspace\\ex2\\src\\Models\\BEAR_KLA.off";
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\Armadillo_f40000.obj");
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\BEAR_KLA.off");
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\cheetah.off");
@@ -82,6 +84,8 @@ public class Controller implements GLEventListener {
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\elk_48k.obj");
         halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\homer.obj");
 //        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\sample.obj");
+  //      infoLogger.setModelPath(path);
+
 
         meshRenderer = new MeshRenderer(halfEdgeDataStructure);
 
@@ -112,7 +116,7 @@ public class Controller implements GLEventListener {
             gl.glDisable(GL.GL_LIGHTING);
 
 
-        meshRenderer.render(gl,state);
+        meshRenderer.render(gl, state);
 
 //        meshRenderer.renderFace(gl);
 
@@ -121,6 +125,10 @@ public class Controller implements GLEventListener {
         }
 
         gl.glFlush();
+    }
+
+    private String createInfoLine() {
+        return "Testing Testing Testing";
     }
 
     private void drawWireFrame(GL gl) {
@@ -265,6 +273,10 @@ public class Controller implements GLEventListener {
     }
 
     public void zoom(int wheelRotation) {
-        z+=wheelRotation/2.0f;
+        z += wheelRotation / 2.0f;
+    }
+
+    public void setInfoLogger(InfoLogger infoLogger) {
+        this.infoLogger = infoLogger;
     }
 }

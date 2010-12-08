@@ -16,6 +16,7 @@ import java.nio.IntBuffer;
 
 /**
  * itamar: modified vesrsion from NEHE tutorials
+ *
  * @author Pepijn Van Eeckhoudt
  */
 public class HelpOverlay implements GLEventListener {
@@ -30,6 +31,11 @@ public class HelpOverlay implements GLEventListener {
     private static final String KEYBOARD_CONTROLS = "Keyboard controls";
     private static final String MOUSE_CONTROLS = "Mouse controls";
 
+    private static final String INFO_LINE = "Testing Testing Testing Testing";
+
+    private  boolean showHelp = false;
+    private InfoLogger infoLogger;
+
     public boolean isVisible() {
         return visible;
     }
@@ -38,76 +44,87 @@ public class HelpOverlay implements GLEventListener {
         this.visible = visible;
     }
 
+    public void toggleHelp(){
+        showHelp = !showHelp;
+    }
+
     public void display(GLAutoDrawable glDrawable) {
-        GL gl = glDrawable.getGL();
-
-        // Store old matrices
-        gl.glMatrixMode(GL.GL_MODELVIEW);
-        gl.glPushMatrix();
-        gl.glLoadIdentity();
-        gl.glMatrixMode(GL.GL_PROJECTION);
-        gl.glPushMatrix();
-        gl.glLoadIdentity();
-
-        gl.glViewport(0, 0, glDrawable.getWidth(), glDrawable.getHeight());
-
-        // Store enabled state and disable lighting, texture mapping and the depth buffer
-        gl.glPushAttrib(GL.GL_ENABLE_BIT);
-        gl.glDisable(GL.GL_BLEND);
-        gl.glDisable(GL.GL_LIGHTING);
-        gl.glDisable(GL.GL_TEXTURE_2D);
-        gl.glDisable(GL.GL_DEPTH_TEST);
-
-        // Retrieve the current viewport and switch to orthographic mode
-        IntBuffer viewPort = BufferUtil.newIntBuffer(4);
-        gl.glGetIntegerv(GL.GL_VIEWPORT, viewPort);
-        glu.gluOrtho2D(0, viewPort.get(2), viewPort.get(3), 0);
-
-        // Render the text
-        gl.glColor3f(1, 1, 1);
-
-        int x = OFFSET;
-        int maxx = 0;
-        int y = OFFSET + CHAR_HEIGHT;
-
-        if (keyboardEntries.size() > 0) {
-            gl.glRasterPos2i(x, y);
-            glut.glutBitmapString(GLUT.BITMAP_HELVETICA_12, KEYBOARD_CONTROLS);
-            maxx = Math.max(maxx, OFFSET + glut.glutBitmapLength(GLUT.BITMAP_HELVETICA_12, KEYBOARD_CONTROLS));
-
-            y += OFFSET;
-            x += INDENT;
-            for (int i = 0; i < keyboardEntries.size(); i++) {
-                gl.glRasterPos2f(x, y);
-                String text = (String) keyboardEntries.get(i);
-                glut.glutBitmapString(GLUT.BITMAP_HELVETICA_12, text);
-                maxx = Math.max(maxx, OFFSET + glut.glutBitmapLength(GLUT.BITMAP_HELVETICA_12, text));
-                y += OFFSET;
-            }
-        }
-
-        if (mouseEntries.size() > 0) {
-            x = maxx + OFFSET;
-            y = OFFSET + CHAR_HEIGHT;
-            gl.glRasterPos2i(x, y);
-            glut.glutBitmapString(GLUT.BITMAP_HELVETICA_12, MOUSE_CONTROLS);
-
-            y += OFFSET;
-            x += INDENT;
-            for (int i = 0; i < mouseEntries.size(); i++) {
-                gl.glRasterPos2f(x, y);
-                glut.glutBitmapString(GLUT.BITMAP_HELVETICA_12, (String) mouseEntries.get(i));
-                y += OFFSET;
-            }
-        }
-
-        // Restore enabled state
-        gl.glPopAttrib();
-
-        // Restore old matrices
-        gl.glPopMatrix();
-        gl.glMatrixMode(GL.GL_MODELVIEW);
-        gl.glPopMatrix();
+//        GL gl = glDrawable.getGL();
+//
+//        // Store old matrices
+//        gl.glMatrixMode(GL.GL_MODELVIEW);
+//        gl.glPushMatrix();
+//        gl.glLoadIdentity();
+//        gl.glMatrixMode(GL.GL_PROJECTION);
+//        gl.glPushMatrix();
+//        gl.glLoadIdentity();
+//
+//        gl.glViewport(0, 0, glDrawable.getWidth(), glDrawable.getHeight());
+//
+//        // Store enabled state and disable lighting, texture mapping and the depth buffer
+//        gl.glPushAttrib(GL.GL_ENABLE_BIT);
+//        gl.glDisable(GL.GL_BLEND);
+//        gl.glDisable(GL.GL_LIGHTING);
+//        gl.glDisable(GL.GL_TEXTURE_2D);
+//        gl.glDisable(GL.GL_DEPTH_TEST);
+//
+//        // Retrieve the current viewport and switch to orthographic mode
+//        IntBuffer viewPort = BufferUtil.newIntBuffer(4);
+//        gl.glGetIntegerv(GL.GL_VIEWPORT, viewPort);
+//        glu.gluOrtho2D(0, viewPort.get(2), viewPort.get(3), 0);
+//
+//        // Render the text
+//        gl.glColor3f(1, 1, 1);
+//
+//        int x = OFFSET;
+//        int maxx = 0;
+//        int y = OFFSET + CHAR_HEIGHT;
+//
+////        gl.glRasterPos2i(x, y);
+////        glut.glutBitmapString(GLUT.BITMAP_HELVETICA_12, infoLogger.getPath());
+////        maxx = Math.max(maxx, OFFSET + glut.glutBitmapLength(GLUT.BITMAP_HELVETICA_12, infoLogger.getPath()));
+////        y += OFFSET * 2;
+//
+////        if (showHelp){
+////            if (keyboardEntries.size() > 0) {
+////            gl.glRasterPos2i(x, y);
+////            glut.glutBitmapString(GLUT.BITMAP_HELVETICA_12, KEYBOARD_CONTROLS);
+////            maxx = Math.max(maxx, OFFSET + glut.glutBitmapLength(GLUT.BITMAP_HELVETICA_12, KEYBOARD_CONTROLS));
+////
+////            y += OFFSET;
+////            x += INDENT;
+////            for (int i = 0; i < keyboardEntries.size(); i++) {
+////                gl.glRasterPos2f(x, y);
+////                String text = (String) keyboardEntries.get(i);
+////                glut.glutBitmapString(GLUT.BITMAP_HELVETICA_12, text);
+////                maxx = Math.max(maxx, OFFSET + glut.glutBitmapLength(GLUT.BITMAP_HELVETICA_12, text));
+////                y += OFFSET;
+////            }
+////        }
+////
+////        if (mouseEntries.size() > 0) {
+////            x = maxx + OFFSET;
+////            y = OFFSET + CHAR_HEIGHT;
+////            gl.glRasterPos2i(x, y);
+////            glut.glutBitmapString(GLUT.BITMAP_HELVETICA_12, MOUSE_CONTROLS);
+////
+////            y += OFFSET;
+////            x += INDENT;
+////            for (int i = 0; i < mouseEntries.size(); i++) {
+////                gl.glRasterPos2f(x, y);
+////                glut.glutBitmapString(GLUT.BITMAP_HELVETICA_12, (String) mouseEntries.get(i));
+////                y += OFFSET;
+////            }
+////        }
+////        }
+//
+//        // Restore enabled state
+//        gl.glPopAttrib();
+//
+//        // Restore old matrices
+//        gl.glPopMatrix();
+//        gl.glMatrixMode(GL.GL_MODELVIEW);
+//        gl.glPopMatrix();
     }
 
     public void displayChanged(GLAutoDrawable glDrawable, boolean b, boolean b1) {
@@ -124,8 +141,8 @@ public class HelpOverlay implements GLEventListener {
         String keyText = KeyEvent.getKeyText(keyStroke.getKeyCode());
         keyboardEntries.add(
                 (modifiersText.length() != 0 ? modifiersText + " " : "") +
-                keyText + ": " +
-                description
+                        keyText + ": " +
+                        description
         );
     }
 
@@ -158,5 +175,13 @@ public class HelpOverlay implements GLEventListener {
                 mouseText + ": " + description
         );
 
+    }
+
+    public void setHelp(boolean showHelp) {
+                            this.showHelp = showHelp;
+    }
+
+    public void registerLogger(InfoLogger infoLogger) {
+        this.infoLogger = infoLogger;
     }
 }

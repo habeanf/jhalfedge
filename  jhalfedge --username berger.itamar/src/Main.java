@@ -2,6 +2,7 @@ import contoller.Controller;
 import contoller.InputHandler;
 import contoller.MouseInputHandler;
 import utils.GLDisplay;
+import utils.InfoLogger;
 
 /**
  * User: itamar
@@ -22,6 +23,7 @@ public class Main {
         Controller Controller = new Controller();
         InputHandler keyboardInputHandler = new InputHandler(Controller, display);
         MouseInputHandler mouseInputHandler = new MouseInputHandler(Controller);
+       // InfoLogger.setOut(display);
 
         display.addMouseListener(mouseInputHandler);
         display.addMouseWheelListener(mouseInputHandler);

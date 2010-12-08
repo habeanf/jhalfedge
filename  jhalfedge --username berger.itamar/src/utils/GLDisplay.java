@@ -192,6 +192,10 @@ public class GLDisplay {
         frame.setTitle( title );
     }
 
+    public void addInfoLogListener(InfoLogger infoLogger) {
+        helpOverlayGLEventListener.registerInfoLogger(infoLogger);
+    }
+
 
     private class MyKeyAdapter extends KeyAdapter {
         public MyKeyAdapter() {
@@ -260,7 +264,8 @@ public class GLDisplay {
             for ( int i = 0; i < eventListeners.size(); i++ ) {
                 ( (GLEventListener) eventListeners.get( i ) ).display( glDrawable );
             }
-            if ( showHelp )
+
+            helpOverlay.setHelp(showHelp);                
                 helpOverlay.display( glDrawable );
         }
 
@@ -280,6 +285,10 @@ public class GLDisplay {
             for ( int i = 0; i < eventListeners.size(); i++ ) {
                 ( (GLEventListener) eventListeners.get( i ) ).reshape( glDrawable, i0, i1, i2, i3 );
             }
+        }
+
+        public void registerInfoLogger(InfoLogger infoLogger) {
+            helpOverlay.registerLogger(infoLogger);
         }
     }
 }
