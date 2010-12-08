@@ -67,8 +67,20 @@ public class HalfEdgeDataStructureGenerator {
             fileReader.close();
 
             // normalize vertices
+            float[] mean = {0,0,0};
             for (Vertex vertex : vertexMap.values()) {
                 vertex.normalize(max);
+                final float[] xyz = vertex.getXyz();
+                mean[0]+=xyz[0];
+                mean[1]+=xyz[1];
+                mean[2]+=xyz[2];
+            }
+
+            float meanx = mean[0]/vertexMap.values().size();
+            float meany = mean[1]/vertexMap.values().size();
+            float meanz = mean[2]/vertexMap.values().size();
+            for (Vertex vertex : vertexMap.values()) {
+                vertex.offset(meanx,meany,meanz);
             }
 
             for (int[] ids : faceIds) {

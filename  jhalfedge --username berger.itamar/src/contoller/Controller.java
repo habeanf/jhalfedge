@@ -11,6 +11,9 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import java.awt.*;
+import java.awt.List;
+import java.io.File;
+import java.util.*;
 
 /**
  * This class is responsible the handling the events and passing them to the display.
@@ -67,26 +70,9 @@ public class Controller implements GLEventListener {
 
     public Controller() {
         gridRenderer = new GridRenderer(freq);
-
-//        String path = "C:\\\\Workspace\\\\ex2\\\\src\\\\Models\\\\Candil.obj";
-//        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\Armadillo_f40000.obj");
-//        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\BEAR_KLA.off");
-//        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\cheetah.off");
-//        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\Dinopet_stripped.off");
-//        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\gargoyle.off");
-//        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\Candil.obj");
-//        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\Candil.obj");
-//        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\elk_48k.obj");
-//        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get("C:\\Workspace\\ex2\\src\\Models\\sample.obj");
-        loadNextObject();
-    }
-
-    private void loadNextObject() {
-        state = new RenderState();
-        String path = "C:\\Workspace\\ex2\\src\\Models\\homer.obj";
-        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get(path);
-        meshRenderer = new MeshRenderer(halfEdgeDataStructure);
-        infoLogger.setModelPath("Model path:" + path);
+        
+//        loadFile("C:\\Workspace\\ex2\\src\\Models", "Y5276_DINO.obj");
+        loadFile("C:\\Workspace\\ex2\\src\\Models", "Candil.obj");
     }
 
     public void display(GLAutoDrawable gLDrawable) {
@@ -171,7 +157,7 @@ public class Controller implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, h, 1, 60.0);
+        glu.gluPerspective(45.0f, h, 1, 100.0);
         gl.glMatrixMode(GL.GL_MODELVIEW);
         gl.glLoadIdentity();
     }
@@ -309,5 +295,14 @@ public class Controller implements GLEventListener {
         state.setMeshAttribute(attribute);
         infoLogger.setAttribute(attribute.getName());
         return attribute;
+    }
+
+
+    public void loadFile(String directory, String fileName) {
+        state = new RenderState();
+        File file = new File(directory, fileName);
+        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get(file.getPath());
+        meshRenderer = new MeshRenderer(halfEdgeDataStructure);
+        infoLogger.setModelPath("Model path:" + file.getPath());
     }
 }

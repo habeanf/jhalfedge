@@ -32,7 +32,7 @@ public class HelpOverlay implements GLEventListener {
     private static final String MOUSE_CONTROLS = "Mouse controls";
 
     IntBuffer viewPort = BufferUtil.newIntBuffer(4);
-    
+
     private  boolean showHelp = false;
     private InfoLogger infoLogger;
 

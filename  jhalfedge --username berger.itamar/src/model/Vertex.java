@@ -79,4 +79,10 @@ public class Vertex {
     public void setGaussianCurvature(float gaussianCurvature) {
         this.gaussianCurvature = gaussianCurvature;
     }
+
+    public void offset(float meanx, float meany, float meanz) {
+           xyz[0] = xyz[0] - meanx;
+           xyz[1] = xyz[1] - meany;
+           xyz[2] = xyz[2] - meanz;
+    }
 }

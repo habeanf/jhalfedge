@@ -86,11 +86,13 @@ public class MeshRenderer {
 
     private void renderTriangles(GL gl, MeshAttribute attribute, float alpha) {
         gl.glBegin(GL.GL_TRIANGLES);
-        for (Face face : halfEdgeDataStructure.getAllFaces()) {
+        for (Face face : halfEdgeDataStructure.getAllFaces()) {            
             HalfEdge firstHalfEdge = face.getHalfEdge();
             HalfEdge nextHalfEdge = firstHalfEdge;
+            int counter = 0;
 
             do {
+
                 Vertex vertex = nextHalfEdge.getVertex();
 
                 if (attribute != null) {
@@ -101,8 +103,15 @@ public class MeshRenderer {
 
                 gl.glVertex3fv(vertex.getXyz(), 0);
                 nextHalfEdge = nextHalfEdge.getNext();
+                counter++;
 
+                if (counter>10){
+                    break;
+                }
             } while (nextHalfEdge != firstHalfEdge);
+
+
+
         }
         gl.glEnd();
     }

@@ -2,6 +2,7 @@ package contoller;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
@@ -21,6 +22,13 @@ public class MouseInputHandler extends MouseInputAdapter {
     public void mousePressed(MouseEvent mouseEvent) {
         if (SwingUtilities.isLeftMouseButton(mouseEvent)) {
             Controller.startDrag(mouseEvent.getPoint());
+        }
+        if (SwingUtilities.isRightMouseButton(mouseEvent)) {
+            Frame f = new Frame();
+            final FileDialog fd = new FileDialog(f, "Select mesh files", FileDialog.LOAD);
+            fd.setVisible(true);
+
+            Controller.loadFile(fd.getDirectory(), fd.getFile());
         }
     }
 
