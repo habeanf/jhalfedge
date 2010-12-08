@@ -27,6 +27,11 @@ public class HalfEdgeReader {
     boolean loopEdges;
     boolean parallelEdges;
 
+    public HalfEdgeReader(boolean loopEdges, boolean parallelEdges) {
+        this.loopEdges      = loopEdges;
+        this.parallelEdges  = parallelEdges;
+    }
+
     public HalfEdge findFreeIncident(HalfEdge startingFrom, HalfEdge andBefore) {
         if (startingFrom == andBefore)
             return null;
@@ -206,7 +211,7 @@ public class HalfEdgeReader {
                 }
             }
             
-            int[] curr_ids;
+            int[] curr_ids = null;
             for (int i=0;i<faceIds.size();++i) {
                 curr_ids = faceIds.get(i);
 
@@ -222,7 +227,7 @@ public class HalfEdgeReader {
                     Edge     edge        = addEdge(vertexFrom,vertexTo);
                     HalfEdge half        = halfEdgeMap.get(edge);
                     
-                    faceEdges.set(j,half);
+                    faceEdges.add(half);
                 }
 
                 // add face
