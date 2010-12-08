@@ -212,7 +212,7 @@ public class HalfEdgeReader {
 
                 /* create edges by iterating over vertex ids pair-wise */
 
-                // faceEdges will contain the halfe edges of the polygon created/retrieved by
+                // faceEdges will contain the half edges of the polygon created/retrieved by
                 // addEdge
                 ArrayList<HalfEdge> faceEdges = new ArrayList<HalfEdge>(curr_ids.length);
                 for (int j=0;j<curr_ids.length;++j) {
