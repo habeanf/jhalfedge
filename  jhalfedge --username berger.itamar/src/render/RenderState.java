@@ -8,8 +8,8 @@ package render;
 public class RenderState {
 
     private boolean shouldUpdate = false;
-
     private boolean transparent = true;
+    private boolean isMesh = true;
 
     public boolean getTransparent() {
         return transparent;
@@ -21,10 +21,19 @@ public class RenderState {
         shouldUpdate = true;
     }
 
-    boolean isChanged(){
+    boolean isChanged() {
         boolean stateChanged = shouldUpdate;
         shouldUpdate = false;
         return stateChanged;
 
+    }
+
+    public void toggleCloud() {
+        isMesh = !isMesh;
+        shouldUpdate = true;
+    }
+
+    public boolean isMesh() {
+        return isMesh;
     }
 }

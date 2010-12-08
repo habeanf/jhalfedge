@@ -27,7 +27,6 @@ public class MeshRenderer {
     }
 
     public void render(GL gl, RenderState state) {
-
         if (displayList == 0 || state.isChanged()) {
             if (displayList != 0) {
                 gl.glDeleteLists(1, 1);
@@ -37,19 +36,25 @@ public class MeshRenderer {
             gl.glNewList(displayList, GL.GL_COMPILE);
 
             gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
-            if (state.getTransparent()) {
-                                gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
-                gl.glColor4f(1f, 1f, 1f, 0.4f);
-                renderTriangles(gl);
-                
-                gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
-                gl.glColor4f(1f, 1, 1f, 0.4f);
-                renderTriangles(gl);
 
+            if (state.isMesh()) {
+                if (state.getTransparent()) {
+                    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+                    gl.glColor4f(1f, 1f, 1f, 0.4f);
+                    renderTriangles(gl);
+
+                    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+                    gl.glColor4f(1f, 1, 1f, 0.4f);
+                    renderTriangles(gl);
+
+                } else {
+                    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+                    gl.glColor4f(1f, 1, 1f, 1f);
+                    renderTriangles(gl);
+                }
             } else {
-                gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
-                gl.glColor4f(1f, 1, 1f, 1f);
-                renderTriangles(gl);
+                gl.glColor4f(1f, 1f, 1f, 0.8f);
+                renderVertices(gl);
             }
 
 
@@ -58,6 +63,14 @@ public class MeshRenderer {
         }
 
         gl.glCallList(displayList);
+    }
+
+    private void renderVertices(GL gl) {
+        gl.glBegin(GL.GL_POINTS);
+        for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
+            gl.glVertex3fv(vertex.getXyz(), 0);
+        }
+        gl.glEnd();
     }
 
     private void renderTriangles(GL gl) {

@@ -28,6 +28,7 @@ public class InputHandler extends KeyAdapter {
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_L, 0), "Toggle lighting");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), "Toggle shade model");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_T, 0), "Toggle transparent");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "Show vertices");
 
     }
 
@@ -40,9 +41,6 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_G:
                 controller.toggleGrid();
                 break;
-            case KeyEvent.VK_C:
-                controller.switchColorMap();
-                break;
             case KeyEvent.VK_L:
                 controller.toggleLighting();
                 break;
@@ -51,6 +49,9 @@ public class InputHandler extends KeyAdapter {
                 break;
             case KeyEvent.VK_T:
                 controller.toggleTransparent();
+                break;
+            case KeyEvent.VK_C:
+                controller.toggleCloud();
                 break;
             default:
                 processKeyEvent(e, false);

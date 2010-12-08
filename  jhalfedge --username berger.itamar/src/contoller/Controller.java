@@ -279,4 +279,8 @@ public class Controller implements GLEventListener {
     public void setInfoLogger(InfoLogger infoLogger) {
         this.infoLogger = infoLogger;
     }
+
+    public void toggleCloud() {
+        state.toggleCloud();
+    }
 }
