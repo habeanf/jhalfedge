@@ -55,7 +55,7 @@ public class Controller implements GLEventListener {
     private boolean enableGrid = false;
 
 
-    private float z = -5.0f;            // Depth Into The Screen
+    private float z = -3.0f;            // Depth Into The Screen
     private boolean zoomIn;
     private boolean zoomOut;
 
@@ -181,7 +181,7 @@ public class Controller implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, h, 0.2, 60.0);
+        glu.gluPerspective(45.0f, h, 1, 60.0);
         gl.glMatrixMode(GL.GL_MODELVIEW);
         gl.glLoadIdentity();
     }
