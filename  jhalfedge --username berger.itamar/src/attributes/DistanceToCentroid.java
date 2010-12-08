@@ -19,8 +19,9 @@ public class DistanceToCentroid implements MeshAttribute {
 
     public static void calculate(HalfEdgeDataStructure halfEdgeDataStructure) {
         for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
-            //TODO
-            vertex.setDistance(0.4f);
+            final float[] xyz = vertex.getXyz();
+            float value = (float) (Math.sqrt(xyz[0]*xyz[0])+(xyz[1]*xyz[1])+(xyz[2]*xyz[2]));
+            vertex.setDistance(value);
         }
     }
 }

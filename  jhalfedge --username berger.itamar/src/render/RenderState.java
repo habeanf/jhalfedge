@@ -75,4 +75,9 @@ public class RenderState {
     public void setCalculatedDistance(boolean calculatedDistance) {
         this.calculatedDistance = calculatedDistance;
     }
+
+    public void transperacy(boolean transparent) {
+        this.transparent =transparent;
+        shouldUpdate = true;
+    }
 }

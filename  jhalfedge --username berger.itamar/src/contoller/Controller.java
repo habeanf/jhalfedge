@@ -263,6 +263,7 @@ public class Controller implements GLEventListener {
         MeshAttribute attribute = null;
         state.setMeshAttribute(attribute);
         infoLogger.setAttribute("None");
+        state.transperacy(true);
         return attribute;
     }
 
@@ -274,6 +275,7 @@ public class Controller implements GLEventListener {
 
         MeshAttribute attribute = new Centricity();
         state.setMeshAttribute(attribute);
+        state.transperacy(false);
         infoLogger.setAttribute(attribute.getName());
         return attribute;
     }
@@ -286,6 +288,7 @@ public class Controller implements GLEventListener {
 
         MeshAttribute attribute = new DistanceToCentroid();
         state.setMeshAttribute(attribute);
+        state.transperacy(false);
         infoLogger.setAttribute(attribute.getName());
         return attribute;
     }
@@ -299,6 +302,7 @@ public class Controller implements GLEventListener {
 
         MeshAttribute attribute = new GaussianCurvature();
         state.setMeshAttribute(attribute);
+        state.transperacy(false);
         infoLogger.setAttribute(attribute.getName());
         return attribute;
     }
