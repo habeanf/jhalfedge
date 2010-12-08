@@ -3,6 +3,8 @@ package attributes;
 import model.HalfEdgeDataStructure;
 import model.Vertex;
 
+import java.util.List;
+
 /**
  * User: itamar
  * Date: Dec 8, 2010
@@ -13,13 +15,13 @@ public class GaussianCurvature implements MeshAttribute {
         return "Gaussian Curvature";
     }
 
-    public float getValue(Vertex vertex) {
+    public float getValue(Vertex vertex, HalfEdgeDataStructure halfEdgeDataStructure) {
         return vertex.getGaussianCurvature();
     }
 
     public static void calculate(HalfEdgeDataStructure halfEdgeDataStructure) {
         for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
-            //TODO
+            //final List<Vertex> neigbVertices = halfEdgeDataStructure.getNeighbours(vertex);
             vertex.setGaussianCurvature(0.6f);
         }
     }

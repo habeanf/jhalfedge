@@ -13,7 +13,7 @@ public class Centricity implements MeshAttribute {
         return "Centricity";
     }
 
-    public float getValue(Vertex vertex) {
+    public float getValue(Vertex vertex, HalfEdgeDataStructure halfEdgeDataStructure) {
         return vertex.getCentricity();
     }
 

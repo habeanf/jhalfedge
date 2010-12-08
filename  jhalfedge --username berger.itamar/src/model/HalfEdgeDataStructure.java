@@ -40,11 +40,11 @@ public class HalfEdgeDataStructure {
         HalfEdge firstHalfEdge = vertex.getHalfEdge();
         HalfEdge nextHalfEdge = firstHalfEdge.getNext();
 
-        do{
+        do {
             result.add(nextHalfEdge.getVertex());
             nextHalfEdge = nextHalfEdge.getOpp().getNext();
 
-        }while (firstHalfEdge!=nextHalfEdge);
+        } while (firstHalfEdge != nextHalfEdge);
 
         return result;
     }

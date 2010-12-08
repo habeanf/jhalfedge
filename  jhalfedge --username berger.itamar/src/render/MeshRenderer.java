@@ -96,7 +96,7 @@ public class MeshRenderer {
                 Vertex vertex = nextHalfEdge.getVertex();
 
                 if (attribute != null) {
-                    final float value = attribute.getValue(vertex);
+                    final float value = attribute.getValue(vertex,halfEdgeDataStructure);
                     final float[] color = colormap.getColor(value);
                     gl.glColor4f(color[0], color[1], color[2], alpha);
                 }

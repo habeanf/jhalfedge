@@ -13,7 +13,7 @@ public class DistanceToCentroid implements MeshAttribute {
         return "Distance To Centroid";
     }
 
-    public float getValue(Vertex vertex) {
+    public float getValue(Vertex vertex, HalfEdgeDataStructure halfEdgeDataStructure) {
         return vertex.getDistance();
     }
 

@@ -1,5 +1,6 @@
 package attributes;
 
+import model.HalfEdgeDataStructure;
 import model.Vertex;
 
 /**
@@ -10,5 +11,5 @@ import model.Vertex;
 public interface MeshAttribute {
     String getName();
 
-    float getValue(Vertex vertex);
+    float getValue(Vertex vertex, HalfEdgeDataStructure halfEdgeDataStructure);
 }
