@@ -23,12 +23,13 @@ import java.util.List;
  * Time: 10:14:56 AM
  */
 public class Controller implements GLEventListener {
+    private static InfoLogger infoLogger = InfoLogger.getInfoLogger();
+
     private GLU glu = new GLU();
 
     // specific renders
     private MeshRenderer meshRenderer;
     private GridRenderer gridRenderer;
-
 
     public static final float WORLD_SIZE = 2f;
     private static final float freq = 1 / 20f;
@@ -50,11 +51,11 @@ public class Controller implements GLEventListener {
     private boolean increaseY;
     private boolean decreaseY;
 
-    // default value for renderes
+    // default value for renders
     private boolean enableGrid = false;
 
-
-    private float z = -3.0f;            // Depth Into The Screen
+    // Depth Into The Screen
+    private float z = -3.0f;
     private boolean zoomIn;
     private boolean zoomOut;
 
@@ -62,27 +63,23 @@ public class Controller implements GLEventListener {
     private int width = 640;
     private int height = 480;
 
+    // current render state
     private RenderState state;
 
+    // current mesh inside halfEdgeDS
     private HalfEdgeDataStructure halfEdgeDataStructure = null;
-
-    private static InfoLogger infoLogger = InfoLogger.getInfoLogger();
-
-    int meshIterator = 0;
-
 
     public Controller() {
         gridRenderer = new GridRenderer(freq);
         paths = new ArrayList<File>();
 
         File modelDirectory = new File("./Models");
-        if(modelDirectory.isDirectory()){
+        if (modelDirectory.isDirectory()) {
 
-        Collections.addAll(paths, modelDirectory.listFiles());
+            Collections.addAll(paths, modelDirectory.listFiles());
 
-        selectFile(paths.get(meshIterator));
-        }
-        else{
+            selectFile(paths.get(meshIterator));
+        } else {
             loadNewFile();
         }
     }
@@ -228,7 +225,6 @@ public class Controller implements GLEventListener {
 
     int prevMouseX;
     int prevMouseY;
-
     public void startDrag(Point point) {
         prevMouseX = point.x;
         prevMouseY = point.y;
@@ -255,10 +251,6 @@ public class Controller implements GLEventListener {
 
     public void zoom(int wheelRotation) {
         z += wheelRotation / 2.0f;
-    }
-
-    public void setInfoLogger(InfoLogger infoLogger) {
-        Controller.infoLogger = infoLogger;
     }
 
     public void toggleCloud() {
@@ -314,7 +306,7 @@ public class Controller implements GLEventListener {
     }
 
     private List<File> paths;
-
+    int meshIterator = 0;
     public void loadNewFile() {
         Frame f = new Frame();
         final FileDialog fd = new FileDialog(f, "Select mesh files", FileDialog.LOAD);
@@ -322,7 +314,7 @@ public class Controller implements GLEventListener {
 
         File file = new File(fd.getDirectory(), fd.getFile());
         paths.add(file);
-        meshIterator = paths.size()-1;
+        meshIterator = paths.size() - 1;
         selectFile(file);
 
     }

@@ -21,7 +21,7 @@ public class RenderState {
     private boolean calculatedCentricity = false;
     private boolean calculatedDistance = false;
 
-    private IColorMap colorMap = ColorMapFactory.getNextColorMap();
+    private IColorMap colorMap = ColorMapFactory.getFirstColorMap();
 
     public boolean getTransparent() {
         return transparent;

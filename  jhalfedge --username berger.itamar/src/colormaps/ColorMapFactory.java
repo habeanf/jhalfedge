@@ -25,4 +25,9 @@ public class ColorMapFactory {
         counter %= colormapList.size();
         return colormapList.get(counter++);
     }
+
+    public static IColorMap getFirstColorMap() {
+        counter = 0;
+        return colormapList.get(counter++);
+    }
 }
