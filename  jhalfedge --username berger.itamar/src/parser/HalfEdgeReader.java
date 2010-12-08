@@ -45,6 +45,29 @@ public class HalfEdgeReader {
     }
 
     public boolean makeAdjacent(HalfEdge in, HalfEdge out) {
+        if (in.getNext() == out) {
+            return true;
+        }
+
+        HalfEdge b = in.getNext();
+        HalfEdge d = out.getPrev();
+
+        HalfEdge g = findFreeIncident(out.getOpp(), in);
+        if (g==null) {
+            return false;
+        }
+
+        HalfEdge h = g.getNext();
+
+        in.setNext(out,true);
+        out.setPrev(in);
+
+        g.setNext(b,true);
+        b.setPrev(g);
+
+        d.setNext(h,true);
+        h.setPrev(d);
+
         return true;
     }
 
