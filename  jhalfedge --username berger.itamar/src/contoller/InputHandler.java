@@ -25,13 +25,16 @@ public class InputHandler extends KeyAdapter {
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), "zoom-out");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_G, 0), "toggle Grid");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_L, 0), "Toggle lighting");
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), "Toggle shade model");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "Toggle shade model");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_T, 0), "Toggle transparent");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "Show vertices");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_1, 0), "No Attributes");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_2, 0), "Attribute: Centricity");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_3, 0), "Attribute: Distance to centroid");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_4, 0), "Attribute: Gaussian Curvature");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0), "Load file");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), "Next mesh");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_N, 0), "Prev mesh");
     }
 
     public void keyPressed(KeyEvent e) {
@@ -46,7 +49,7 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_L:
                 controller.toggleLighting();
                 break;
-            case KeyEvent.VK_M:
+            case KeyEvent.VK_S:
                 controller.toggleShadeModel();
                 break;
             case KeyEvent.VK_T:
@@ -66,6 +69,15 @@ public class InputHandler extends KeyAdapter {
                 break;
             case KeyEvent.VK_4:
                 controller.setGaussianCurvature();
+                break;
+            case KeyEvent.VK_INSERT:
+                controller.loadNewFile();
+                break;
+            case KeyEvent.VK_M:
+                controller.nextFile();
+                break;
+            case KeyEvent.VK_N:
+                controller.prevFile();
                 break;
             default:
                 processKeyEvent(e, false);

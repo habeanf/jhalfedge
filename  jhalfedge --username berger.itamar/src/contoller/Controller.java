@@ -11,9 +11,9 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import java.awt.*;
-import java.awt.List;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 
 /**
  * This class is responsible the handling the events and passing them to the display.
@@ -60,7 +60,6 @@ public class Controller implements GLEventListener {
     // need for mouse
     private int width = 640;
     private int height = 480;
-    private boolean isIsoColorMap = false;
 
     private RenderState state;
 
@@ -68,11 +67,18 @@ public class Controller implements GLEventListener {
 
     private static InfoLogger infoLogger = InfoLogger.getInfoLogger();
 
+    int meshIterator = 0;
+
+
     public Controller() {
         gridRenderer = new GridRenderer(freq);
-        
-//        loadFile("C:\\Workspace\\ex2\\src\\Models", "Y5276_DINO.obj");
-        loadFile("C:\\Workspace\\ex2\\src\\Models", "Candil.obj");
+
+        File modelDirectory = new File("./Models");
+
+        paths = new ArrayList<File>();
+        Collections.addAll(paths, modelDirectory.listFiles());
+
+        selectFile(paths.get(meshIterator));
     }
 
     public void display(GLAutoDrawable gLDrawable) {
@@ -297,12 +303,39 @@ public class Controller implements GLEventListener {
         return attribute;
     }
 
+    private List<File> paths;
 
-    public void loadFile(String directory, String fileName) {
+    public void loadNewFile() {
+        Frame f = new Frame();
+        final FileDialog fd = new FileDialog(f, "Select mesh files", FileDialog.LOAD);
+        fd.setVisible(true);
+
+        File file = new File(fd.getDirectory(), fd.getFile());
+        paths.add(file);
+        meshIterator = paths.size()-1;
+        selectFile(file);
+
+    }
+
+    public void selectFile(File file) {
         state = new RenderState();
-        File file = new File(directory, fileName);
         halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get(file.getPath());
         meshRenderer = new MeshRenderer(halfEdgeDataStructure);
         infoLogger.setModelPath("Model path:" + file.getPath());
+    }
+
+    public void nextFile() {
+        meshIterator++;
+        if (paths.size() == meshIterator)
+            meshIterator = 0;
+
+        selectFile(paths.get(meshIterator));
+    }
+
+    public void prevFile() {
+        meshIterator--;
+        if (meshIterator == -1)
+            meshIterator = paths.size() - 1;
+        selectFile(paths.get(meshIterator));
     }
 }
