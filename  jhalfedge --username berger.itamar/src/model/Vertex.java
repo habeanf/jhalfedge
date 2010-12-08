@@ -17,6 +17,7 @@ public class Vertex {
     public Vertex(int id,float x, float y, float z) {
         this.xyz = new float[]{x, y, z};
         this.id = id;
+        this.halfEdge = null;
     }
 
     @Override

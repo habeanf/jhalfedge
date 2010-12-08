@@ -65,4 +65,10 @@ public class HalfEdge {
         if (this.opp == null)
             this.opp = opp;
     }
+
+    public void initialize(HalfEdge otherEdge) {
+        this.next = otherEdge;
+        this.prev = otherEdge;
+        this.opp  = otherEdge;
+    }
 }
