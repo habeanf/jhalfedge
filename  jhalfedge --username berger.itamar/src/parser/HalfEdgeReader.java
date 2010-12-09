@@ -88,6 +88,19 @@ public class HalfEdgeReader {
         return null;
     }
 
+    public boolean testFailHalfEdge(int vertexId, HalfEdge newEdge) {
+        List<HalfEdge> freeList = vertexFreeList.get(vertexId);
+        Vertex         vertex   = vertexMap.get(vertexId);
+        if (freeList.size() == 0) {
+            return false;
+        }
+        else {
+            if (findFreeIncident(vertexId)!=null)
+                return false;
+        }
+        return true;
+
+    }
     public void installHalfEdge(int vertexId, HalfEdge newEdge) {
         List<HalfEdge> freeList = vertexFreeList.get(vertexId);
         Vertex         vertex   = vertexMap.get(vertexId);
@@ -130,6 +143,10 @@ public class HalfEdgeReader {
         toFromHalf.initialize(fromToHalf);
 
         // Install new half edges
+        if (testFailHalfEdge(fromVertex,fromToHalf) || testFailHalfEdge(toVertex,toFromHalf)) {
+            return null;    
+        }
+
         installHalfEdge(fromVertex,fromToHalf);
         installHalfEdge(toVertex,toFromHalf);
 
@@ -223,25 +240,39 @@ public class HalfEdgeReader {
                 // faceEdges will contain the half edges of the polygon created/retrieved by
                 // addEdge
                 //LinkedList<HalfEdge> faceEdgeList = new LinkedList<HalfEdge>();
-
+                boolean skipFace = false;
                 ArrayList<HalfEdge> faceEdges = new ArrayList<HalfEdge>(curr_ids.length);
                 for (int j=0;j<curr_ids.length;++j) {
                     int      vertexFrom  = curr_ids[j];
                     int      vertexTo    = curr_ids[(j+1)%curr_ids.length];
 
                     Edge     edge        = addEdge(vertexFrom,vertexTo);
-                    if (edge==null)
-                        throw new Exception("Face #" + i + ", Edge #" + j + " not loaded.");
-                    HalfEdge half        = halfEdgeMap.get(edge);
-
-                    faceEdges.add(j,half);
+                    if (edge==null) {
+                        System.out.println("Face #" + i + ", Edge " + j + " discarded.");
+                        skipFace = true;
+                        break;
+                        //throw new Exception("Face #" + i + ", Edge #" + j + " not loaded.");
+                    }
+                    else {
+                        HalfEdge half        = halfEdgeMap.get(edge);
+                        faceEdges.add(j,half);
+                    }
                 }
 
                 //ArrayList<HalfEdge> faceEdges = new ArrayList<HalfEdge>(faceEdgeList);
                 // add face
-                //System.out.println("At face #" + i);
+                if (i%100==0)
+                    System.out.println("At face #" + i);
          //       try {
-                Face face = addFace(faceEdges);
+                if (!skipFace) {
+                    try {
+                    Face face = addFace(faceEdges);
+                    }
+                    catch (Exception e)
+                    {
+                        System.out.println("Face #" + i + " discarded due to " + e.getMessage());
+                    }
+                }
             //    }
             //    catch (Exception e) {
                 
@@ -251,7 +282,7 @@ public class HalfEdgeReader {
             }
         }
         catch (Exception e) {
-            //System.out.println("Failed on face #" + i);
+            System.out.println("Failed on face #" + i);
             e.printStackTrace();
         }
 
