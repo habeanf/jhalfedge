@@ -39,8 +39,8 @@ public class HalfEdgeDataStructure {
 
         do {
             nextHalfEdge = nextHalfEdge.getOpp().getNext();
-            result.add(nextHalfEdge.getVertex());            
-        } while (firstHalfEdge != nextHalfEdge);
+            result.add(nextHalfEdge.getNext().getVertex());            
+        } while (!firstHalfEdge.equals(nextHalfEdge));
 
         return result;
     }
