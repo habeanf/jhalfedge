@@ -11,7 +11,6 @@ import colormaps.IColorMap;
  * Time: 9:59:28 AM
  */
 public class RenderState {
-
     private boolean shouldUpdate = false;
     private boolean transparent = true;
     private boolean isMesh = true;

@@ -3,6 +3,9 @@ package attributes;
 import model.HalfEdgeDataStructure;
 import model.Vertex;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * User: itamar
  * Date: Dec 8, 2010
@@ -18,9 +21,24 @@ public class Centricity implements MeshAttribute {
     }
 
     public static void calculate(HalfEdgeDataStructure halfEdgeDataStructure) {
+        GeodesicDistanceCalculator geodesicDistanceCalculator = new GeodesicDistanceCalculator(halfEdgeDataStructure);
+
         for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
-            //TODO
-            vertex.setCentricity(0.2f);
+            float value = 0.2f;
+
+            final Map<Integer, Float> vertexIdToDistance = geodesicDistanceCalculator.getGeodesicDistances(vertex);
+
+            float size = vertexIdToDistance.size();
+
+            if (size > 0) {
+                float sum = 0;
+                for (Float distance : vertexIdToDistance.values()) {
+                    sum += distance;
+                }
+                value = sum / size;
+            }
+
+            vertex.setCentricity(value);
         }
     }
 }
