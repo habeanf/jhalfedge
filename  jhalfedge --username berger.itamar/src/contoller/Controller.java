@@ -3,7 +3,6 @@ package contoller;
 import attributes.*;
 import colormaps.ColorMapFactory;
 import model.HalfEdgeDataStructure;
-import model.Vertex;
 import parser.HalfEdgeNormalCreator;
 import parser.HalfEdgeReader;
 import render.*;
@@ -355,7 +354,11 @@ public class Controller implements GLEventListener {
         state.setAttributeColorMap(ColorMapFactory.getNextColorMap());
     }
 
-    public void toggleNeighbourTest() {
-        state.toggleNeighbourTest();
+    public void toggleVertexNeighbourTest() {
+        state.toggleVertexNeighbourTest();
+    }
+
+    public void toggleFaceNeighbourTest() {
+        state.toggleFaceNeighbourTest();
     }
 }

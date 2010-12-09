@@ -37,10 +37,10 @@ public class HalfEdgeNormalCreator {
 
     private void calcNormalForCorner(Vertex vertex){
         // get neighbour faces
-        final Set<Face> faces = halfEdgeDataStructure.getFaceNeighbours(vertex);
-        for (Face face : faces) {
-            //TODO
-        }
+//        final Set<Face> faces = halfEdgeDataStructure.getFaceNeighbours(vertex);
+//        for (Face face : faces) {
+//            //TODO
+//        }
     }
 
     private float[] calcNormalForFace(Vertex[] vertices) {

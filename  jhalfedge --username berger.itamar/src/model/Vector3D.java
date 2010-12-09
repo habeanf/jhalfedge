@@ -68,7 +68,7 @@ public class Vector3D {
         return (float) Math.sqrt(x * x + y * y + z * z);
     }
 
-    ;
+    
 
     public void normalize()                                // normalize() normalizes this Vector3D that its direction remains the same but its length is 1.
     {

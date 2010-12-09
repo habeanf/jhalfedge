@@ -2,7 +2,6 @@ package render;
 
 import attributes.MeshAttribute;
 import colormaps.ColorMapFactory;
-import colormaps.HueColorMap;
 import colormaps.IColorMap;
 
 /**
@@ -20,7 +19,8 @@ public class RenderState {
     private boolean calculatedCentricity = false;
     private boolean calculatedDistance = false;
 
-    private boolean neihbourTest = false;
+    private boolean vertexNeighbourTest = false;
+    private boolean faceNeighbourTest = false;
 
     private IColorMap colorMap = ColorMapFactory.getFirstColorMap();
 
@@ -83,7 +83,7 @@ public class RenderState {
     }
 
     public void transperacy(boolean transparent) {
-        this.transparent =transparent;
+        this.transparent = transparent;
         shouldUpdate = true;
     }
 
@@ -96,12 +96,23 @@ public class RenderState {
         return colorMap;
     }
 
-    public void toggleNeighbourTest() {
-       neihbourTest = !neihbourTest;
-       shouldUpdate = true;     
+    public void toggleVertexNeighbourTest() {
+        vertexNeighbourTest = !vertexNeighbourTest;
+        faceNeighbourTest = false;
+        shouldUpdate = true;
     }
 
-    public boolean isNeihbourTest() {
-        return neihbourTest;
+    public void toggleFaceNeighbourTest() {
+        faceNeighbourTest = !faceNeighbourTest;
+        vertexNeighbourTest = false;
+        shouldUpdate = true;
+    }
+
+    public boolean isVertexNeihbourTest() {
+        return vertexNeighbourTest;
+    }
+
+    public boolean isFaceNeihbourTest() {
+        return faceNeighbourTest;
     }
 }

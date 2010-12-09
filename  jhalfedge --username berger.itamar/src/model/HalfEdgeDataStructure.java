@@ -38,8 +38,12 @@ public class HalfEdgeDataStructure {
         HalfEdge nextHalfEdge = firstHalfEdge;
 
         do {
+            if (nextHalfEdge == null) {
+                break;
+            }
+
             nextHalfEdge = nextHalfEdge.getOpp().getNext();
-            result.add(nextHalfEdge.getNext().getVertex());            
+            result.add(nextHalfEdge.getNext().getVertex());
         } while (!firstHalfEdge.equals(nextHalfEdge));
 
         return result;
@@ -63,18 +67,22 @@ public class HalfEdgeDataStructure {
         return result;
     }
 
-   public Set<Face> getFaceNeighbours(Vertex vertex) {
+    public Set<Face> getFaceNeighbours(Vertex vertex) {
         Set<Face> result = new HashSet<Face>();
 
         HalfEdge firstHalfEdge = vertex.getHalfEdge();
         HalfEdge nextHalfEdge = firstHalfEdge;
 
         do {
-            if (nextHalfEdge.getFace()!=null){
+            if (nextHalfEdge == null) {
+                break;
+            }
+
+            if (nextHalfEdge.getFace() != null) {
                 result.add(nextHalfEdge.getFace());
             }
 
-            if (nextHalfEdge.getOpp().getFace()!=null){
+            if (nextHalfEdge.getOpp().getFace() != null) {
                 result.add(nextHalfEdge.getOpp().getFace());
             }
 
