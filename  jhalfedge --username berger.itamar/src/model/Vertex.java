@@ -86,4 +86,16 @@ public class Vertex {
            xyz[1] = xyz[1] - meany;
            xyz[2] = xyz[2] - meanz;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vertex v = (Vertex) o;
+
+        if (this.id != v.getId()) return false;
+
+        return true;
+    }
 }

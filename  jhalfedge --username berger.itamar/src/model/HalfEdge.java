@@ -57,18 +57,29 @@ public class HalfEdge {
     }
 
     public void setPrev(HalfEdge prev) {
-        if (this.prev == null)
-            this.prev = prev;
+        this.prev = prev;
     }
 
     public void setOpp(HalfEdge opp) {
-        if (this.opp == null)
-            this.opp = opp;
+        this.opp = opp;
     }
 
     public void initialize(HalfEdge otherEdge) {
         this.next = otherEdge;
         this.prev = otherEdge;
         this.opp  = otherEdge;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HalfEdge edge = (HalfEdge) o;
+
+        if (!this.getVertex().equals(edge.getVertex())) return false;
+        if (!this.getNext().getVertex().equals(edge.getNext().getVertex())) return false;
+
+        return true;
     }
 }

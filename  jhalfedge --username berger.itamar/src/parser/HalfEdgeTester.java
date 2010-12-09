@@ -2,15 +2,14 @@ package parser;
 
 import model.HalfEdge;
 import model.HalfEdgeDataStructure;
-import parser.HalfEdgeReader;
 
 
 /**
  * Created by IntelliJ IDEA.
- * User: amirmore
+ * User: habeanf
  * Date: Dec 8, 2010
  * Time: 11:10:50 PM
- * To change this template use File | Settings | File Templates.
+ * 
  */
 public class HalfEdgeTester {
     public static void main(String[] args) {
@@ -18,7 +17,7 @@ public class HalfEdgeTester {
 
             HalfEdgeReader gen = new HalfEdgeReader(true,true);
             final HalfEdgeDataStructure halfEdgeDataStructure =
-                    gen.get("/Users/amirmore/Downloads/ex2/src/Models/sample.obj",true);
+                    gen.get("/Users/amirmore/Downloads/ex2/src/Models/Candil.obj",true);
 
             int halfCountFace =0 ;
             for (HalfEdge halfEdge : halfEdgeDataStructure.getAllHalfEdges()) {

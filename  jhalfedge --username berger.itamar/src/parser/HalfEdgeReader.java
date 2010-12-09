@@ -45,14 +45,16 @@ public class HalfEdgeReader {
                 // current.next().pair()
                 current = current.getNext().getOpp();
             }
-        } while (current != andBefore);
+        } while (!current.equals(andBefore));
         return null;
     }
 
     public boolean makeAdjacent(HalfEdge in, HalfEdge out) {
-        if (in.getNext() == out) {
+        if (in.getNext().equals(out)) {
             return true;
         }
+
+        ArrayList<HalfEdge> freeList = vertexFreeList.get(in.getNext().getVertex().getId());
 
         HalfEdge b = in.getNext();
         HalfEdge d = out.getPrev();
@@ -92,7 +94,6 @@ public class HalfEdgeReader {
         Vertex         vertex   = vertexMap.get(vertexId);
         if (freeList.size() == 0) {
             vertex.setHalfEdge(newEdge);
-            freeList.add(newEdge);
         }
         else {
             HalfEdge in     = findFreeIncident(vertexId);
@@ -101,9 +102,10 @@ public class HalfEdgeReader {
             in.setNext(newEdge, true);
             newEdge.setPrev(in);
 
-            newEdge.setNext(out, true);
+            newEdge.getOpp().setNext(out, true);
             out.setPrev(newEdge);
         }
+        freeList.add(newEdge.getOpp());
     }
 
     public Edge addEdge(int fromVertex, int toVertex) {
@@ -115,7 +117,7 @@ public class HalfEdgeReader {
 
         Edge edge = new Edge(fromVertex,toVertex);
 
-        if (!parallelEdges && halfEdgeMap.containsKey(edge)) {
+        if (halfEdgeMap.containsKey(edge)) {
             return edge;
         }
 
@@ -146,9 +148,9 @@ public class HalfEdgeReader {
         // check edges are free and form a chain
         for(int i=0;i<halfEdgeLoop.size();++i) {
             HalfEdge current    = halfEdgeLoop.get(i);
-            HalfEdge next       = halfEdgeLoop.get(i%(halfEdgeLoop.size()));
+            HalfEdge next       = halfEdgeLoop.get((i+1)%(halfEdgeLoop.size()));
 
-            if (current.getNext().getVertex()!=next.getVertex()) {
+            if (!current.getNext().getVertex().equals(next.getVertex())) {
                 return null;
             }
             if (current.getFace()!=null) {
@@ -158,7 +160,7 @@ public class HalfEdgeReader {
 
         // try to reorder the links to get a proper orientation
         for (int i=0;i<halfEdgeLoop.size();++i) {
-            if (!makeAdjacent(halfEdgeLoop.get(i),halfEdgeLoop.get(i%(halfEdgeLoop.size()))))
+            if (!makeAdjacent(halfEdgeLoop.get(i),halfEdgeLoop.get((i+1)%(halfEdgeLoop.size()))))
                 return null;
         }
 
@@ -224,23 +226,32 @@ public class HalfEdgeReader {
 
                 // faceEdges will contain the half edges of the polygon created/retrieved by
                 // addEdge
+                //LinkedList<HalfEdge> faceEdgeList = new LinkedList<HalfEdge>();
+
                 ArrayList<HalfEdge> faceEdges = new ArrayList<HalfEdge>(curr_ids.length);
                 for (int j=0;j<curr_ids.length;++j) {
                     int      vertexFrom  = curr_ids[j];
                     int      vertexTo    = curr_ids[(j+1)%curr_ids.length];
 
                     Edge     edge        = addEdge(vertexFrom,vertexTo);
+                    if (edge==null)
+                        throw new Exception("Face #" + i + ", Edge #" + j + " not loaded.");
                     HalfEdge half        = halfEdgeMap.get(edge);
                     
-                    faceEdges.add(half);
+                    faceEdges.add(j,half);
                 }
 
+                //ArrayList<HalfEdge> faceEdges = new ArrayList<HalfEdge>(faceEdgeList);
                 // add face
-                addFace(faceEdges);
+                Face face = addFace(faceEdges);
+
+                if (face == null)
+                    throw new Exception("Face #" + i + " not loaded.");
+                //System.out.println("At face #" + i);
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return new HalfEdgeDataStructure(halfEdgeMap.values(), faces, vertexMap);
