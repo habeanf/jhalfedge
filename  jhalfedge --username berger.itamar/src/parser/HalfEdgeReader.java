@@ -13,7 +13,7 @@ import java.util.*;
  * User: habeanf
  * Date: Dec 8, 2010
  * Time: 7:20:34 PM
- * 
+ *
  * Based on code at http://www.cgafaq.info/wiki/Half_edge_implementation
  * Initial tutorial on Half Edge structure http://www.cgafaq.info/wiki/Half_edge_general
  */
@@ -58,7 +58,7 @@ public class HalfEdgeReader {
         HalfEdge d = out.getPrev();
 
         HalfEdge g = findFreeIncident(out.getOpp(), in);
-        
+
         if (g==null) {
             return false;
         }
@@ -170,7 +170,7 @@ public class HalfEdgeReader {
         }
 
         faces.add(face);
-        
+
         return face;
     }
 
@@ -196,6 +196,7 @@ public class HalfEdgeReader {
 
             meshReader.preProcess(lineIterator);
 
+            // read mesh from file
             while (lineIterator.hasNext()) {
                 final String[] fields = lineIterator.nextLine().split("\\s+");
                 if (meshReader.isVertex(fields)) {
@@ -210,14 +211,9 @@ public class HalfEdgeReader {
             }
             lineIterator.close();
             fileReader.close();
-
-            // normalize vertices
-            if(normalizeVertices) {
-                for (Vertex vertex : vertexMap.values()) {
-                    vertex.normalize(max);
-                }
-            }
             
+            postProcessVertices(normalizeVertices, max);
+
             int[] curr_ids = null;
             for (i=0;i<faceIds.size();++i) {
                 curr_ids = faceIds.get(i);
@@ -237,7 +233,7 @@ public class HalfEdgeReader {
                     if (edge==null)
                         throw new Exception("Face #" + i + ", Edge #" + j + " not loaded.");
                     HalfEdge half        = halfEdgeMap.get(edge);
-                    
+
                     faceEdges.add(j,half);
                 }
 
@@ -255,7 +251,28 @@ public class HalfEdgeReader {
 
         return new HalfEdgeDataStructure(halfEdgeMap.values(), faces, vertexMap);
     }
-    
+
+    private void postProcessVertices(boolean normalizeVertices, float max) {
+        // normalize vertices
+        float[] mean = {0,0,0};
+        for (Vertex vertex : vertexMap.values()) {
+            if (normalizeVertices){
+                vertex.normalize(max);
+            }
+            final float[] xyz = vertex.getXyz();
+            mean[0]+=xyz[0];
+            mean[1]+=xyz[1];
+            mean[2]+=xyz[2];
+        }
+
+        float meanx = mean[0]/vertexMap.values().size();
+        float meany = mean[1]/vertexMap.values().size();
+        float meanz = mean[2]/vertexMap.values().size();
+        for (Vertex vertex : vertexMap.values()) {
+            vertex.offset(meanx,meany,meanz);
+        }
+    }
+
     public class Edge {
         int from;
         int to;

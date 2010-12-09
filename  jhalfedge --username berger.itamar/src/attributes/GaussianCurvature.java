@@ -24,7 +24,17 @@ public class GaussianCurvature implements MeshAttribute {
     public static void calculate(HalfEdgeDataStructure halfEdgeDataStructure) {
         for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
             //final List<Vertex> neigbVertices = halfEdgeDataStructure.getNeighbours(vertex);
-            vertex.setGaussianCurvature(0.6f);
+            vertex.setGaussianCurvature((float) Math.random());
         }
+    }
+
+    private float calcAngle(Vertex v1, Vertex v2, Vertex v3){
+        
+        return 1;
+    }
+
+    private float calcTriangleArea(Vertex v1, Vertex v2, Vertex v3){
+        // TODO
+        return 1;
     }
 }

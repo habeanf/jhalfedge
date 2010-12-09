@@ -1,9 +1,6 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: itamar
@@ -13,10 +10,10 @@ import java.util.Map;
 public class HalfEdgeDataStructure {
 
     private final Collection<HalfEdge> halfEdges;
-    private final Collection<Face> faces;
+    private final List<Face> faces;
     private final Map<Integer, Vertex> vertexes;
 
-    public HalfEdgeDataStructure(Collection<HalfEdge> halfEdges, Collection<Face> faces, Map<Integer, Vertex> vertexes) {
+    public HalfEdgeDataStructure(Collection<HalfEdge> halfEdges, List<Face> faces, Map<Integer, Vertex> vertexes) {
         this.halfEdges = halfEdges;
         this.faces = faces;
         this.vertexes = vertexes;
@@ -26,7 +23,7 @@ public class HalfEdgeDataStructure {
         return halfEdges;
     }
 
-    public Collection<Face> getAllFaces() {
+    public List<Face> getAllFaces() {
         return faces;
     }
 
@@ -34,29 +31,67 @@ public class HalfEdgeDataStructure {
         return vertexes.values();
     }
 
-    public List<Vertex> getNeighbours(Vertex vertex) {
-        List<Vertex> result = new ArrayList<Vertex>();
+    public Set<Vertex> getNeighbours(Vertex vertex) {
+        Set<Vertex> result = new HashSet<Vertex>();
 
         HalfEdge firstHalfEdge = vertex.getHalfEdge();
-        HalfEdge nextHalfEdge = firstHalfEdge.getNext();
+        HalfEdge nextHalfEdge = firstHalfEdge;
 
         do {
-            result.add(nextHalfEdge.getVertex());
             nextHalfEdge = nextHalfEdge.getOpp().getNext();
-
+            result.add(nextHalfEdge.getVertex());            
         } while (firstHalfEdge != nextHalfEdge);
 
         return result;
     }
 
-    public List<Face> getNeighbours(Face face) {
-        List<Face> result = new ArrayList<Face>();
+    public Set<Face> getNeighbours(Face face) {
+        Set<Face> result = new HashSet<Face>();
+
+        if (face.getHalfEdge() != null) {
+            HalfEdge firstHalfEdge = face.getHalfEdge();
+            HalfEdge nextHalfEdge = firstHalfEdge;
+
+            do {
+                Face neighbourFace = nextHalfEdge.getOpp().getFace();
+                if (neighbourFace != null) {
+                    result.add(neighbourFace);
+                }
+                nextHalfEdge = nextHalfEdge.getNext();
+            } while (firstHalfEdge != nextHalfEdge);
+        }
+        return result;
+    }
+
+   public Set<Face> getFaceNeighbours(Vertex vertex) {
+        Set<Face> result = new HashSet<Face>();
+
+        HalfEdge firstHalfEdge = vertex.getHalfEdge();
+        HalfEdge nextHalfEdge = firstHalfEdge;
+
+        do {
+            if (nextHalfEdge.getFace()!=null){
+                result.add(nextHalfEdge.getFace());
+            }
+
+            if (nextHalfEdge.getOpp().getFace()!=null){
+                result.add(nextHalfEdge.getOpp().getFace());
+            }
+
+            nextHalfEdge = nextHalfEdge.getOpp().getNext();
+        } while (firstHalfEdge != nextHalfEdge);
 
         return result;
     }
 
+    public Vertex[] getFaceVertices(Face face) {
+        return null;
+        //To change body of created methods use File | Settings | File Templates.
+    }
 
     public Vertex getVertex(int vertexId) {
         return vertexes.get(vertexId);
     }
+
+
 }

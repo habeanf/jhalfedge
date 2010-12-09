@@ -83,6 +83,9 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_C:
                 controller.switchColorMap();
                 break;
+            case KeyEvent.VK_0:
+                controller.toggleNeighbourTest();
+                break;
             default:
                 processKeyEvent(e, false);
         }

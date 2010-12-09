@@ -7,6 +7,7 @@ package model;
  */
 public class Face {
     public HalfEdge halfEdge;
+    public float[] normal;
 
     public Face(HalfEdge halfEdge) {
         this.halfEdge = halfEdge;
@@ -14,5 +15,13 @@ public class Face {
 
     public HalfEdge getHalfEdge() {
         return halfEdge;
+    }
+
+    public float[] getNormal() {
+        return normal;
+    }
+
+    public void setNormal(float[] normal) {
+        this.normal = normal;
     }
 }

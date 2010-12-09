@@ -10,6 +10,7 @@ public class HalfEdge {
     private HalfEdge next;
     private HalfEdge prev;
     private HalfEdge opp;
+    private float[] cornerNormal = {1,0,0};
 
     public Vertex getVertex() {
         return vertex;
@@ -81,5 +82,13 @@ public class HalfEdge {
         if (!this.getNext().getVertex().equals(edge.getNext().getVertex())) return false;
 
         return true;
+    }
+
+    public float[] getCornerNormal() {
+        return cornerNormal;
+    }
+
+    public void setCornerNormal(float[] cornerNormal) {
+        this.cornerNormal = cornerNormal;
     }
 }

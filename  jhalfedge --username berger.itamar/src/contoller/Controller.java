@@ -3,7 +3,9 @@ package contoller;
 import attributes.*;
 import colormaps.ColorMapFactory;
 import model.HalfEdgeDataStructure;
-import parser.HalfEdgeDataStructureGenerator;
+import model.Vertex;
+import parser.HalfEdgeNormalCreator;
+import parser.HalfEdgeReader;
 import render.*;
 import utils.InfoLogger;
 
@@ -225,6 +227,7 @@ public class Controller implements GLEventListener {
 
     int prevMouseX;
     int prevMouseY;
+
     public void startDrag(Point point) {
         prevMouseX = point.x;
         prevMouseY = point.y;
@@ -307,21 +310,28 @@ public class Controller implements GLEventListener {
 
     private List<File> paths;
     int meshIterator = 0;
+
     public void loadNewFile() {
         Frame f = new Frame();
         final FileDialog fd = new FileDialog(f, "Select mesh files", FileDialog.LOAD);
         fd.setVisible(true);
-
-        File file = new File(fd.getDirectory(), fd.getFile());
-        paths.add(file);
-        meshIterator = paths.size() - 1;
-        selectFile(file);
+        if (fd.getFile() != null) {
+            File file = new File(fd.getDirectory(), fd.getFile());
+            paths.add(file);
+            meshIterator = paths.size() - 1;
+            selectFile(file);
+        }
 
     }
 
     public void selectFile(File file) {
         state = new RenderState();
-        halfEdgeDataStructure = HalfEdgeDataStructureGenerator.get(file.getPath());
+        HalfEdgeReader reader = new HalfEdgeReader(true, true);
+        halfEdgeDataStructure = reader.get(file.getPath(), true);
+
+        HalfEdgeNormalCreator halfEdgeNormalCreator = new HalfEdgeNormalCreator(halfEdgeDataStructure);
+        halfEdgeNormalCreator.calcNormals();
+
         meshRenderer = new MeshRenderer(halfEdgeDataStructure);
         infoLogger.setModelPath("Model path:" + file.getPath());
     }
@@ -343,5 +353,9 @@ public class Controller implements GLEventListener {
 
     public void switchColorMap() {
         state.setAttributeColorMap(ColorMapFactory.getNextColorMap());
+    }
+
+    public void toggleNeighbourTest() {
+        state.toggleNeighbourTest();
     }
 }

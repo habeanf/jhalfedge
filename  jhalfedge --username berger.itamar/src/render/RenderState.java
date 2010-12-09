@@ -20,6 +20,8 @@ public class RenderState {
     private boolean calculatedCentricity = false;
     private boolean calculatedDistance = false;
 
+    private boolean neihbourTest = false;
+
     private IColorMap colorMap = ColorMapFactory.getFirstColorMap();
 
     public boolean getTransparent() {
@@ -92,5 +94,14 @@ public class RenderState {
 
     public IColorMap getColorMap() {
         return colorMap;
+    }
+
+    public void toggleNeighbourTest() {
+       neihbourTest = !neihbourTest;
+       shouldUpdate = true;     
+    }
+
+    public boolean isNeihbourTest() {
+        return neihbourTest;
     }
 }

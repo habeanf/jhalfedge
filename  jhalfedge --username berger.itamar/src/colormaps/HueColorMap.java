@@ -7,6 +7,6 @@ package colormaps;
  */
 public class HueColorMap implements IColorMap {
     public float[] getColor(float value) {
-        return RGB2HSV.toRgb(360-value * 360, 1f, 1f);
+        return RGB2HSV.toRgb(((180+value * 360))%360, 1f, 1f);
     }
 }
