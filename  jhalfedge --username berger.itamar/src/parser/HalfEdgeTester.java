@@ -17,7 +17,7 @@ public class HalfEdgeTester {
 
             HalfEdgeReader gen = new HalfEdgeReader(true,true);
             final HalfEdgeDataStructure halfEdgeDataStructure =
-                    gen.get("/Users/amirmore/Downloads/ex2/src/Models/Candil.obj",true);
+                    gen.get("/Users/amirmore/Downloads/Models/tests.off",true);
 
             int halfCountFace =0 ;
             for (HalfEdge halfEdge : halfEdgeDataStructure.getAllHalfEdges()) {

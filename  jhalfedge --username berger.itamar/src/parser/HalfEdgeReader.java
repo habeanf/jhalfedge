@@ -54,12 +54,11 @@ public class HalfEdgeReader {
             return true;
         }
 
-        ArrayList<HalfEdge> freeList = vertexFreeList.get(in.getNext().getVertex().getId());
-
         HalfEdge b = in.getNext();
         HalfEdge d = out.getPrev();
 
         HalfEdge g = findFreeIncident(out.getOpp(), in);
+        
         if (g==null) {
             return false;
         }
@@ -117,9 +116,9 @@ public class HalfEdgeReader {
 
         Edge edge = new Edge(fromVertex,toVertex);
 
-        if (halfEdgeMap.containsKey(edge)) {
-            return edge;
-        }
+ //       if (halfEdgeMap.containsKey(edge)) {
+ //           return edge;
+ //       }
 
         // Allocate
         HalfEdge fromToHalf = new HalfEdge(vertexMap.get(fromVertex));
@@ -140,7 +139,7 @@ public class HalfEdgeReader {
         return edge;
     }
 
-    public Face addFace(ArrayList<HalfEdge> halfEdgeLoop) {
+    public Face addFace(ArrayList<HalfEdge> halfEdgeLoop) throws Exception {
         // validity check
         if (halfEdgeLoop.size()==0)
             return null;
@@ -151,17 +150,17 @@ public class HalfEdgeReader {
             HalfEdge next       = halfEdgeLoop.get((i+1)%(halfEdgeLoop.size()));
 
             if (!current.getNext().getVertex().equals(next.getVertex())) {
-                return null;
+                throw new Exception("Half-edges not in a loop");
             }
             if (current.getFace()!=null) {
-                return null;
+                throw new Exception("Non free faces founds");
             }
         }
 
         // try to reorder the links to get a proper orientation
         for (int i=0;i<halfEdgeLoop.size();++i) {
             if (!makeAdjacent(halfEdgeLoop.get(i),halfEdgeLoop.get((i+1)%(halfEdgeLoop.size()))))
-                return null;
+                throw new Exception("Unadjacent edges");
         }
 
         Face face = new Face(halfEdgeLoop.get(0));
@@ -187,6 +186,7 @@ public class HalfEdgeReader {
 
         // used for normalization vertices
         float   max = 0;
+        int i=0;
 
         // get reader
         MeshReader meshReader = getReader(path);
@@ -219,7 +219,7 @@ public class HalfEdgeReader {
             }
             
             int[] curr_ids = null;
-            for (int i=0;i<faceIds.size();++i) {
+            for (i=0;i<faceIds.size();++i) {
                 curr_ids = faceIds.get(i);
 
                 /* create edges by iterating over vertex ids pair-wise */
@@ -245,12 +245,11 @@ public class HalfEdgeReader {
                 // add face
                 Face face = addFace(faceEdges);
 
-                if (face == null)
-                    throw new Exception("Face #" + i + " not loaded.");
                 //System.out.println("At face #" + i);
             }
         }
         catch (Exception e) {
+            //System.out.println("Failed on face #" + i);
             //e.printStackTrace();
         }
 

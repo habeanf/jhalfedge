@@ -1,12 +1,10 @@
 package render;
 
 import attributes.MeshAttribute;
-import colormaps.HueColorMap;
 import colormaps.IColorMap;
-import model.Face;
-import model.HalfEdge;
 import model.HalfEdgeDataStructure;
 import model.Vertex;
+import model.*;
 
 import javax.media.opengl.GL;
 import java.util.List;
@@ -83,8 +81,9 @@ public class MeshRenderer {
     }
 
     private void renderTriangles(GL gl, MeshAttribute attribute, float alpha, IColorMap colormap) {
-        gl.glBegin(GL.GL_TRIANGLES);
-        for (Face face : halfEdgeDataStructure.getAllFaces()) {            
+
+        for (Face face : halfEdgeDataStructure.getAllFaces()) {
+            gl.glBegin(GL.GL_TRIANGLES);
             HalfEdge firstHalfEdge = face.getHalfEdge();
             HalfEdge nextHalfEdge = firstHalfEdge;
             int counter = 0;
@@ -109,9 +108,8 @@ public class MeshRenderer {
             } while (nextHalfEdge != firstHalfEdge);
 
 
-
+            gl.glEnd();
         }
-        gl.glEnd();
     }
 
     public void renderFace(GL gl) {

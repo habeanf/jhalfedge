@@ -40,7 +40,7 @@ public class HalfEdge {
     public HalfEdge(Vertex vertex) {
         try {
             this.vertex = vertex;
-            vertex.halfEdge = this;
+//            vertex.halfEdge = this;
         }
         catch (Exception e) {
             e.printStackTrace();
