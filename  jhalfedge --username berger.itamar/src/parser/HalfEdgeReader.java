@@ -102,7 +102,7 @@ public class HalfEdgeReader {
             newEdge.setPrev(in);
 
             newEdge.getOpp().setNext(out, true);
-            out.setPrev(newEdge);
+            out.setPrev(newEdge.getOpp());
         }
         freeList.add(newEdge.getOpp());
     }
@@ -116,9 +116,9 @@ public class HalfEdgeReader {
 
         Edge edge = new Edge(fromVertex,toVertex);
 
- //       if (halfEdgeMap.containsKey(edge)) {
- //           return edge;
- //       }
+        if (halfEdgeMap.containsKey(edge)) {
+            return edge;
+        }
 
         // Allocate
         HalfEdge fromToHalf = new HalfEdge(vertexMap.get(fromVertex));
@@ -239,14 +239,20 @@ public class HalfEdgeReader {
 
                 //ArrayList<HalfEdge> faceEdges = new ArrayList<HalfEdge>(faceEdgeList);
                 // add face
-                Face face = addFace(faceEdges);
-
                 //System.out.println("At face #" + i);
+         //       try {
+                Face face = addFace(faceEdges);
+            //    }
+            //    catch (Exception e) {
+                
+            //    }
+
+
             }
         }
         catch (Exception e) {
             //System.out.println("Failed on face #" + i);
-            //e.printStackTrace();
+            e.printStackTrace();
         }
 
         return new HalfEdgeDataStructure(halfEdgeMap.values(), faces, vertexMap);
