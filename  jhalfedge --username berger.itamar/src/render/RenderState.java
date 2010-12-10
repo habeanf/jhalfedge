@@ -21,6 +21,7 @@ public class RenderState {
 
     private boolean vertexNeighbourTest = false;
     private boolean faceNeighbourTest = false;
+    private boolean showCornerNormals = false;
 
     private IColorMap colorMap = ColorMapFactory.getFirstColorMap();
 
@@ -114,5 +115,14 @@ public class RenderState {
 
     public boolean isFaceNeihbourTest() {
         return faceNeighbourTest;
+    }
+
+    public void toggleShowCornerNormals() {
+        showCornerNormals = !showCornerNormals;
+        shouldUpdate = true;
+    }
+
+    public boolean isShowCornerNormals() {
+        return showCornerNormals;
     }
 }

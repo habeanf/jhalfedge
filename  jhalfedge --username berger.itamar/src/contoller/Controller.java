@@ -361,4 +361,16 @@ public class Controller implements GLEventListener {
     public void toggleFaceNeighbourTest() {
         state.toggleFaceNeighbourTest();
     }
+
+    public void toggleShowCornerNormals() {
+        state.toggleShowCornerNormals();
+    }
+
+    public void toggleGeodesicTest() {
+        Centricity.calculateOnePointOnly(halfEdgeDataStructure);
+        MeshAttribute attribute = new Centricity();
+        state.setMeshAttribute(attribute);
+        state.transperacy(false);
+        infoLogger.setAttribute(attribute.getName() + "Debug Mode - ony point only");
+    }
 }

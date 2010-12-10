@@ -98,4 +98,9 @@ public class Vertex {
 
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

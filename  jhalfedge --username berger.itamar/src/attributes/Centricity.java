@@ -24,21 +24,14 @@ public class Centricity implements MeshAttribute {
         GeodesicDistanceCalculator geodesicDistanceCalculator = new GeodesicDistanceCalculator(halfEdgeDataStructure);
 
         for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
-            float value = 0.2f;
-
-            final Map<Integer, Float> vertexIdToDistance = geodesicDistanceCalculator.getGeodesicDistances(vertex);
-
-            float size = vertexIdToDistance.size();
-
-            if (size > 0) {
-                float sum = 0;
-                for (Float distance : vertexIdToDistance.values()) {
-                    sum += distance;
-                }
-                value = sum / size;
-            }
-
-            vertex.setCentricity(value);
+            vertex.setCentricity(geodesicDistanceCalculator.getGeodesicDistances(vertex));
         }
+    }
+
+    public static void calculateOnePointOnly(HalfEdgeDataStructure halfEdgeDataStructure) {
+        GeodesicDistanceCalculator geodesicDistanceCalculator = new GeodesicDistanceCalculator(halfEdgeDataStructure);
+
+        geodesicDistanceCalculator.showGeodesicForVertex(halfEdgeDataStructure.getVertex((int) (Math.random() *
+                halfEdgeDataStructure.getVertexes().size() + 1)));
     }
 }

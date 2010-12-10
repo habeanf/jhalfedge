@@ -36,6 +36,10 @@ public class InputHandler extends KeyAdapter {
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), "Next mesh");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_N, 0), "Prev mesh");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "Switch colormap");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_7, 0), "Debug - Show one point geodesic");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_8, 0), "Debug - Show Faces Neighbour test");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_9, 0), "Debug - Show Vertex Neighbout test");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_0, 0), "Debug - Show Normals");
     }
 
     public void keyPressed(KeyEvent e) {
@@ -83,10 +87,16 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_C:
                 controller.switchColorMap();
                 break;
-            case KeyEvent.VK_9:
+           case KeyEvent.VK_0:
+                controller.toggleShowCornerNormals();
+                break;
+           case KeyEvent.VK_7:
+                controller.toggleGeodesicTest();
+                break;
+            case KeyEvent.VK_8:
                 controller.toggleFaceNeighbourTest();
                 break;
-            case KeyEvent.VK_0:
+            case KeyEvent.VK_9:
                 controller.toggleVertexNeighbourTest();
                 break;
             default:
