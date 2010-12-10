@@ -2,7 +2,9 @@ package contoller;
 
 import attributes.*;
 import colormaps.ColorMapFactory;
+import com.sun.corba.se.spi.orbutil.fsm.Input;
 import model.HalfEdgeDataStructure;
+import model.Vertex;
 import parser.HalfEdgeNormalCreator;
 import parser.HalfEdgeReader;
 import render.*;
@@ -12,8 +14,11 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.io.File;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.*;
 import java.util.List;
 
@@ -259,28 +264,27 @@ public class Controller implements GLEventListener {
         state.toggleCloud();
     }
 
-    public MeshAttribute setNoAttribute() {
+    public void setNoAttribute() {
         MeshAttribute attribute = null;
         state.setMeshAttribute(attribute);
         infoLogger.setAttribute("None");
         state.transperacy(true);
-        return attribute;
     }
 
-    public MeshAttribute setCentricityAttribute() {
+    public void setCentricityAttribute() {
         if (!state.isCalculatedCentricity()) {
-            Centricity.calculate(halfEdgeDataStructure);
-            state.setCalculatedCentricity(true);
+            Centricity.calculate(halfEdgeDataStructure,infoLogger, state);
+        } else {
+            MeshAttribute attribute = new Centricity();
+            state.setMeshAttribute(attribute);
+            state.transperacy(false);
+            infoLogger.setAttribute(attribute.getName());
+            infoLogger.setDebugRow("");
+            InputHandler.keyboardLock = false;
         }
-
-        MeshAttribute attribute = new Centricity();
-        state.setMeshAttribute(attribute);
-        state.transperacy(false);
-        infoLogger.setAttribute(attribute.getName());
-        return attribute;
     }
 
-    public MeshAttribute setDistanceToCentroidAttribute() {
+    public void setDistanceToCentroidAttribute() {
         if (!state.isCalculatedDistanceToCentroid()) {
             DistanceToCentroid.calculate(halfEdgeDataStructure);
             state.setCalculatedDistance(true);
@@ -290,11 +294,10 @@ public class Controller implements GLEventListener {
         state.setMeshAttribute(attribute);
         state.transperacy(false);
         infoLogger.setAttribute(attribute.getName());
-        return attribute;
     }
 
 
-    public MeshAttribute setGaussianCurvature() {
+    public void setGaussianCurvature() {
         if (!state.isCalculatedGaussian()) {
             GaussianCurvature.calculate(halfEdgeDataStructure);
             state.setCalculatedGaussian(true);
@@ -304,21 +307,22 @@ public class Controller implements GLEventListener {
         state.setMeshAttribute(attribute);
         state.transperacy(false);
         infoLogger.setAttribute(attribute.getName());
-        return attribute;
     }
 
     private List<File> paths;
     int meshIterator = 0;
 
     public void loadNewFile() {
-        Frame f = new Frame();
-        final FileDialog fd = new FileDialog(f, "Select mesh files", FileDialog.LOAD);
-        fd.setVisible(true);
-        if (fd.getFile() != null) {
-            File file = new File(fd.getDirectory(), fd.getFile());
-            paths.add(file);
-            meshIterator = paths.size() - 1;
-            selectFile(file);
+        if (!InputHandler.keyboardLock) {
+            Frame f = new Frame();
+            final FileDialog fd = new FileDialog(f, "Select mesh files", FileDialog.LOAD);
+            fd.setVisible(true);
+            if (fd.getFile() != null) {
+                File file = new File(fd.getDirectory(), fd.getFile());
+                paths.add(file);
+                meshIterator = paths.size() - 1;
+                selectFile(file);
+            }
         }
 
     }

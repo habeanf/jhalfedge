@@ -10,10 +10,11 @@ import contoller.Controller;
  * To change this template use File | Settings | File Templates.
  */
 public class InfoLogger{
-    private   static InfoLogger infoLogger;
+    private static InfoLogger infoLogger;
 
     private String path;
     private String attribute = "Current mesh attribute: None";
+    private String debug = "";
 
     private InfoLogger() {      
     }
@@ -30,6 +31,10 @@ public class InfoLogger{
         return attribute;
     }
 
+    public String getDebug() {
+        return debug;
+    }
+
     public static InfoLogger getInfoLogger() {
         if (infoLogger == null){
                 infoLogger = new InfoLogger();
@@ -43,5 +48,9 @@ public class InfoLogger{
 
     public void setAttribute(String attribute) {
         this.attribute = "Current mesh attribute: " + attribute;
+    }
+
+    public void setDebugRow(String debug) {
+        this.debug = debug;
     }
 }

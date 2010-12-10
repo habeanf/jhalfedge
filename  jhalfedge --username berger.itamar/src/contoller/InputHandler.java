@@ -13,6 +13,8 @@ import java.awt.event.KeyEvent;
  * Time: 10:14:56 AM
  */
 public class InputHandler extends KeyAdapter {
+    public static boolean keyboardLock = false;
+
     private Controller controller;
 
     public InputHandler(Controller Controller, GLDisplay glDisplay) {
@@ -43,10 +45,18 @@ public class InputHandler extends KeyAdapter {
     }
 
     public void keyPressed(KeyEvent e) {
+        if (keyboardLock) {
+            return;
+        }
+        
         processKeyEvent(e, true);
     }
 
     public void keyReleased(KeyEvent e) {
+        if (keyboardLock) {
+            return;
+        }
+
         switch (e.getKeyCode()) {
             case KeyEvent.VK_G:
                 controller.toggleGrid();
@@ -87,10 +97,10 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_C:
                 controller.switchColorMap();
                 break;
-           case KeyEvent.VK_0:
+            case KeyEvent.VK_0:
                 controller.toggleShowCornerNormals();
                 break;
-           case KeyEvent.VK_7:
+            case KeyEvent.VK_7:
                 controller.toggleGeodesicTest();
                 break;
             case KeyEvent.VK_8:
