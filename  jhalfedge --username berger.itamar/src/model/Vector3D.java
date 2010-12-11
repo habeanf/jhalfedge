@@ -31,6 +31,14 @@ public class Vector3D {
         this.z = xyz[2];
     }
 
+    public Vector3D(float[] xyz)            // Constructor that initializes this Vector3D to the intended values of x, y and z
+    {
+        this.x = xyz[0];
+        this.y = xyz[1];
+        this.z = xyz[2];
+    }
+
+
     public Vector3D(double x, double y, double z)            // Constructor that initializes this Vector3D to the intended values of x, y and z
     {
         this.x = x;
