@@ -5,9 +5,7 @@ import model.HalfEdgeDataStructure;
 import model.Vector3D;
 import model.Vertex;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 
 /**
@@ -28,6 +26,8 @@ public class HalfEdgeNormalCreator {
 
     public void calcNormals() {        
         // calc normal for all the half edges
+        // the normal of a half edges represents the normal of the vertex for the face to the left of the half edge
+        // only one such half edge should exist for each vertex
         for (HalfEdge edge : halfEdgeDataStructure.getAllHalfEdges()) {
             Vector3D vp         = new Vector3D(edge.getPrev().getVertex());
             Vector3D v          = new Vector3D(edge.getVertex());
@@ -35,20 +35,29 @@ public class HalfEdgeNormalCreator {
 
             Vector3D vector1    = v.sub(vp);
             Vector3D vector2    = v.sub(vn);
+
+            // normal is calculated as the cross product of the incoming and outgoing half edges on a vertex
             float result[]      = vector1.calculateCrossProductWith(vector2).normalize().getFloatArray();
             edge.setCornerNormal(result);
+
         }
 
+        // for each vertex find contiguous faces with a dihedral angle less than given constant and average
+        // contiguous faces
         for (Vertex v : halfEdgeDataStructure.getVertexes()) {
+            // initializations
+
             HalfEdge firstHalfEdge = v.getHalfEdge();
-            List<NormalRange> angleRanges = new ArrayList<NormalRange>();
+            LinkedList<NormalRange> angleRanges = new LinkedList<NormalRange>();
 
             double currentAngle = 0.0;
             Vector3D currentNormal;
             NormalRange lastRange = null;
             HalfEdge nextEdge = firstHalfEdge;
+
             // iterate edges to calculate angle ranges
             do {
+                // for empty vertexes (usually due to corrupt data)
                 if (nextEdge==null){
                     break;
                 }
@@ -58,9 +67,12 @@ public class HalfEdgeNormalCreator {
                     currentAngle = currentNormal.calculateAngleTo((new Vector3D(nextEdge.getCornerNormal())));
                 }
                 if( lastRange != null && currentAngle<MAX_ANGLE_RADIANS) {
+                    // new vertex or dihedral angle less than max
                     lastRange.addNormal(nextEdge,currentNormal);
                 }
                 else {
+                    // null face or large than dihedral max
+                    // so create new range
                     lastRange = new NormalRange(firstHalfEdge,firstHalfEdge.getOpp().getNext(),currentNormal);
                     angleRanges.add(lastRange);
                 }
@@ -69,7 +81,7 @@ public class HalfEdgeNormalCreator {
 
             } while (firstHalfEdge != nextEdge);
 
-            // set average normal
+            // for each range update it's edges to the average normal of the range
             for (NormalRange range : angleRanges) {
 
                 range.calculateAverageNormal();
@@ -82,6 +94,9 @@ public class HalfEdgeNormalCreator {
         }
     }
 
+    /**Helper class stores a range of normal values for average calculation
+     *
+     */
     private class NormalRange {
         HalfEdge from,to;
         Vector3D totalNormal;
