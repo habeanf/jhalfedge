@@ -174,9 +174,9 @@ public class MeshRenderer {
             int counter = 0;
 
             do {
-                gl.glNormal3fv(nextHalfEdge.getCornerNormal(), 0);
+                final float[] cornerNormal = nextHalfEdge.getCornerNormal();
                 Vertex vertex = nextHalfEdge.getVertex();
-                renderNormal(gl, vertex.getXyz(), nextHalfEdge.getCornerNormal());
+                renderNormal(gl, vertex.getXyz(), cornerNormal);
                 gl.glVertex3fv(vertex.getXyz(), 0);
                 nextHalfEdge = nextHalfEdge.getNext();
                 counter++;
@@ -194,11 +194,12 @@ public class MeshRenderer {
 
     private void renderNormal(GL gl, float[] xyz, float[] cornerNormal) {
         gl.glBegin(GL.GL_LINES);
-        gl.glVertex3fv(xyz, 0);
 
-        float[] to = {(xyz[0] + cornerNormal[0] / 20), (xyz[1] + cornerNormal[1] / 20), (xyz[2] + cornerNormal[2] / 20)};
+        float[] to = {(xyz[0] - cornerNormal[0] / 20), (xyz[1] - cornerNormal[1] / 20), (xyz[2] - cornerNormal[2] / 20)};
 
         gl.glVertex3fv(to, 0);
+        gl.glVertex3fv(xyz, 0);
+
         gl.glEnd();
     }
 
