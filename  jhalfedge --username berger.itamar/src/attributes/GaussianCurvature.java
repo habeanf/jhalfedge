@@ -29,22 +29,25 @@ public class GaussianCurvature implements MeshAttribute {
             
             Vector3D prevVertex,currentVertex,nextVertex;
             Vector3D vector1,vector2;
-            do {
-                currentVertex   = new Vector3D(currentEdge.getVertex());
-                prevVertex      = new Vector3D(currentEdge.getPrev().getVertex());
-                nextVertex      = new Vector3D(currentEdge.getNext().getVertex());
+            if (currentEdge != null) {  // for problem models like liberty
+                do {
+                    currentVertex   = new Vector3D(currentEdge.getVertex());
+                    prevVertex      = new Vector3D(currentEdge.getPrev().getVertex());
+                    nextVertex      = new Vector3D(currentEdge.getNext().getVertex());
 
-                // calculate area and triangle for current face
-                vector1         = currentVertex.sub(prevVertex);
-                vector2         = currentVertex.sub(nextVertex);
+                    // calculate area and triangle for current face
+                    vector1         = currentVertex.sub(prevVertex);
+                    vector2         = currentVertex.sub(nextVertex);
 
-                totalArea       += vector1.calculateTriangleArea(vector2);
-                totalAngle      += vector1.calculateAngleTo(vector2);
+                    totalArea       += vector1.calculateTriangleArea(vector2);
+                    totalAngle      += vector1.calculateAngleTo(vector2);
 
-                // get next face
-                currentEdge = currentEdge.getOpp().getNext();
-            } while (!currentEdge.equals(firstEdge));
-            vertex.setGaussianCurvature((float)((2*Math.PI - totalAngle)/totalArea));
+                    // get next face
+                    currentEdge = currentEdge.getOpp().getNext();
+                } while (!currentEdge.equals(firstEdge));
+
+                vertex.setGaussianCurvature((float)((2*Math.PI - totalAngle)/totalArea));
+            }
         }
     }
 }
