@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
+ * Calculate the cenricity attribute of a mesh by using the GeodesicDistanceCalculator.
  * User: itamar
  * Date: Dec 8, 2010
  * Time: 5:03:17 PM
@@ -27,6 +28,7 @@ public class Centricity implements MeshAttribute {
         return vertex.getCentricity();
     }
 
+    
     public static void calculate(final HalfEdgeDataStructure halfEdgeDataStructure, final InfoLogger infoLogger, final RenderState state) {
             Thread thread = new Thread(new Runnable() {
                 public void run() {
@@ -36,6 +38,8 @@ public class Centricity implements MeshAttribute {
                     float size = halfEdgeDataStructure.getVertexes().size();
                     NumberFormatter formater = new NumberFormatter();
                     formater.setFormat(new DecimalFormat());
+
+                    // calculate the centricity value for each vertex
                     for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
                         vertex.setCentricity(geodesicDistanceCalculator.getGeodesicDistances(vertex));
                         try {
@@ -59,6 +63,10 @@ public class Centricity implements MeshAttribute {
             thread.start();
     }
 
+    /**
+     * For debuging - show the geodesic distance from one point only
+     * @param halfEdgeDataStructure
+     */
     public static void calculateOnePointOnly(HalfEdgeDataStructure halfEdgeDataStructure) {
         GeodesicDistanceCalculator geodesicDistanceCalculator = new GeodesicDistanceCalculator(halfEdgeDataStructure);
 

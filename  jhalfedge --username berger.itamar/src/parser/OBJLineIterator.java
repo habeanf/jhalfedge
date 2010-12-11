@@ -5,6 +5,7 @@ import org.apache.commons.io.LineIterator;
 import java.io.Reader;
 
 /**
+ * Line Iterator for reading mesh files
  * User: itamar
  * Date: Nov 27, 2010
  * Time: 4:56:02 PM

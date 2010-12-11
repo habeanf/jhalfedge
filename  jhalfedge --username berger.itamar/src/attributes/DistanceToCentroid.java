@@ -4,6 +4,8 @@ import model.HalfEdgeDataStructure;
 import model.Vertex;
 
 /**
+ * Calculate the distance to centroid. The mesh is align to (0,0,0), so the function
+ * computes the distance from center.
  * User: itamar
  * Date: Dec 8, 2010
  * Time: 5:15:26 PM

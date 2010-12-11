@@ -109,8 +109,6 @@ public class Controller implements GLEventListener {
 
         meshRenderer.render(gl, state);
 
-//        meshRenderer.renderFace(gl);
-
         if (enableGrid) {
             drawWireFrame(gl);
             gridRenderer.render(gl);
@@ -329,7 +327,7 @@ public class Controller implements GLEventListener {
 
         HalfEdgeNormalCreator halfEdgeNormalCreator = new HalfEdgeNormalCreator(halfEdgeDataStructure);
         halfEdgeNormalCreator.calcNormals();
-        z = -12.0f;
+        z = -10.0f;
         meshRenderer = new MeshRenderer(halfEdgeDataStructure);
         infoLogger.setModelPath("Model path:" + file.getPath());
     }

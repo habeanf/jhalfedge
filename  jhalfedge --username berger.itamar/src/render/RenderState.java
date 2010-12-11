@@ -5,6 +5,8 @@ import colormaps.ColorMapFactory;
 import colormaps.IColorMap;
 
 /**
+ * This class hold the current state of the renderer, if one of the field is changed, the renderer will recreate
+ * a display list.
  * User: itamar
  * Date: Dec 8, 2010
  * Time: 9:59:28 AM

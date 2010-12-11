@@ -5,7 +5,9 @@ import model.HalfEdgeDataStructure;
 import model.Vector3D;
 import model.Vertex;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -35,13 +37,11 @@ public class HalfEdgeNormalCreator {
             Vector3D vector2    = v.sub(vn);
             float result[]      = vector1.calculateCrossProductWith(vector2).normalize().getFloatArray();
             edge.setCornerNormal(result);
-
         }
-
 
         for (Vertex v : halfEdgeDataStructure.getVertexes()) {
             HalfEdge firstHalfEdge = v.getHalfEdge();
-            LinkedList<NormalRange> angleRanges = new LinkedList<NormalRange>();
+            List<NormalRange> angleRanges = new ArrayList<NormalRange>();
 
             double currentAngle = 0.0;
             Vector3D currentNormal;

@@ -18,22 +18,9 @@ import java.util.*;
             this.id = id;
         }
 
-
         public Map<Node,Float> getNeighbours(){
             return neighbourDist;
         }
-
-
-//    public int compareTo(Node o) {
-//        if (this.dist > o.dist){
-//            return -1;
-//        }
-//        else if (this.dist < o.dist){
-//            return 1;
-//        }
-//
-//        return 0;
-//    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,20 +1,18 @@
 package attributes.graph;
 
-import model.HalfEdgeDataStructure;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.PriorityQueue;
 
 /**
+ * An implementation of dijkstra algorithm. based on: http://en.wikipedia.org/wiki/Dijkstra's_algorithm
  * User: itamar
  * Date: Dec 10, 2010
  * Time: 6:26:04 PM
  */
 
 public class Dijkstra {
-
     public void calcShortestPaths(Collection<Node> nodes, Node source) {
         PriorityQueue<Node> queue = new PriorityQueue<Node>(nodes.size(), new Comparator<Node>() {
             public int compare(Node o1, Node o2) {

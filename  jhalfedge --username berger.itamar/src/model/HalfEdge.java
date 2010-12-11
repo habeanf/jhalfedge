@@ -41,15 +41,10 @@ public class HalfEdge {
     public HalfEdge(Vertex vertex) {
         try {
             this.vertex = vertex;
-//            vertex.halfEdge = this;
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void setVertex(Vertex vertex) {
-        this.vertex = vertex;
     }
 
     public void setNext(HalfEdge next, boolean override) {

@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 /**
- * This class enable the user to rotate the bounding box with mouse.
+ * This class enable the user to rotate the bounding box with mouse and zoom using the mouse wheel.
  * User: itamar
  * Date: Oct 30, 2010
  * Time: 10:14:56 AM

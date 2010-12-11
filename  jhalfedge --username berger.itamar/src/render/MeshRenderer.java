@@ -97,7 +97,6 @@ public class MeshRenderer {
                 float[] values = {(float) Math.random(), (float) Math.random(), (float) Math.random()};
                 gl.glColor4f(values[0], values[1], values[2], 1f);
                 renderVertices(gl, neighbours);
-//                renderTriangles(gl, 0.5f, prevState, halfEdgeDataStructure.getFaceNeighbours(candidate));
 
                 gl.glColor4f(1f, 1f, 1f, 1f);
                 renderVertices(gl, Arrays.asList(candidate));
