@@ -3,6 +3,9 @@ package parser;
 import model.HalfEdge;
 import model.HalfEdgeDataStructure;
 import model.Vector3D;
+import model.Vertex;
+
+import java.util.LinkedList;
 
 
 /**
@@ -12,7 +15,8 @@ import model.Vector3D;
  */
 public class HalfEdgeNormalCreator {
 
-    private static final float MAX_ANGLE = 100;
+    private static final double MAX_ANGLE = 100;
+    private static final double MAX_ANGLE_RADIANS = Math.toRadians(MAX_ANGLE);
 
     HalfEdgeDataStructure halfEdgeDataStructure;
 
@@ -31,13 +35,78 @@ public class HalfEdgeNormalCreator {
             Vector3D vector2    = v.sub(vn);
             float result[]      = vector1.calculateCrossProductWith(vector2).normalize().getFloatArray();
             edge.setCornerNormal(result);
+
         }
 
 
-//        for (Vertex v : halfEdgeDataStructure.getVertexes()) {
-//            HalfEdge currentEdge = v.getHalfEdge();
-//
-//        }
+        for (Vertex v : halfEdgeDataStructure.getVertexes()) {
+            HalfEdge currentEdge = v.getHalfEdge();
+            LinkedList<NormalRange> angleRanges = new LinkedList<NormalRange>();
+
+            double currentAngle = 0.0;
+            Vector3D currentNormal;
+            NormalRange lastRange = null;
+            HalfEdge nextEdge;
+            // iterate edges to calculate angle ranges
+            int i=0;
+            do {
+                currentNormal = new Vector3D(currentEdge.getCornerNormal());
+                nextEdge = currentEdge.getOpp().getNext();
+                if (nextEdge.getFace()!=null) {
+                    currentAngle = currentNormal.calculateAngleTo((new Vector3D(nextEdge.getCornerNormal())));
+                }
+                if( lastRange != null && currentAngle<MAX_ANGLE_RADIANS) {
+                    lastRange.addNormal(nextEdge,currentNormal);
+                }
+                else {
+                    lastRange = new NormalRange(currentEdge,nextEdge,currentNormal);
+                    angleRanges.add(lastRange);
+                }
+
+                currentEdge = nextEdge;
+            } while (!currentEdge.equals(v.getHalfEdge()));
+
+            // set average normal
+            for (NormalRange range : angleRanges) {
+
+                range.calculateAverageNormal();
+
+                for(currentEdge = range.from; !currentEdge.equals(range.to); currentEdge = currentEdge.getOpp().getNext()) {
+                    currentEdge.setCornerNormal(range.getAverageNormal().getFloatArray());
+                }
+            }
+
+        }
+    }
+
+    private class NormalRange {
+        HalfEdge from,to;
+        Vector3D totalNormal;
+        int      numberOfNormals;
+        Vector3D averageNormal;
+
+        public void calculateAverageNormal() {
+            totalNormal.scale(1/numberOfNormals);
+            averageNormal = totalNormal.normalize();
+        }
+
+        public Vector3D getAverageNormal() {
+            return averageNormal;
+        }
+        
+        public void addNormal(HalfEdge to, Vector3D normal) {
+            this.to = to;
+            totalNormal.add(normal);
+            numberOfNormals++;
+        }
+
+        public NormalRange(HalfEdge from, HalfEdge to, Vector3D normal) {
+            this.from = from;
+            this.to = to;
+            this.totalNormal = normal;
+            numberOfNormals = 1;
+            averageNormal = null;
+        }
     }
 
 }
