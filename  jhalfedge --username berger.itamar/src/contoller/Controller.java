@@ -61,7 +61,7 @@ public class Controller implements GLEventListener {
     private boolean enableGrid = false;
 
     // Depth Into The Screen
-    private float z = -3.0f;
+    private float z = -12.0f;
     private boolean zoomIn;
     private boolean zoomOut;
 
@@ -96,8 +96,9 @@ public class Controller implements GLEventListener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
         gl.glTranslatef(0f, 0.0f, this.z);
-        gl.glRotatef(45.0f + xrot, 1.0f, 0.0f, 0.0f);
-        gl.glRotatef(45.0f + yrot, 0.0f, 1.0f, 0.0f);
+        gl.glScalef(3.0f,3.0f,3.0f);
+        gl.glRotatef((45.0f + xrot)%360, 1.0f, 0.0f, 0.0f);
+        gl.glRotatef((45.0f + yrot)%360, 0.0f, 1.0f, 0.0f);
 
         if (isSmooth)
             gl.glShadeModel(GL.GL_SMOOTH);
@@ -172,7 +173,7 @@ public class Controller implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, h, 1, 100.0);
+        glu.gluPerspective(45.0f, h, 0.001f, 20.0);
         gl.glMatrixMode(GL.GL_MODELVIEW);
         gl.glLoadIdentity();
     }

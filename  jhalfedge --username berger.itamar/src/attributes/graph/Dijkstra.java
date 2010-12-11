@@ -36,9 +36,7 @@ public class Dijkstra {
             queue.add(node);
         }
 
-        int counter = 0;
         while (!queue.isEmpty()) {
-            counter++;
             Node minNode = queue.poll();
 
             if (minNode.dist == Integer.MAX_VALUE) {
@@ -61,6 +59,5 @@ public class Dijkstra {
             }
         }
 
-        System.out.println(counter);
     }
 }
