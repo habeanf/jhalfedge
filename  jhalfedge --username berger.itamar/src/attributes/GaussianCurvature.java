@@ -20,6 +20,12 @@ public class GaussianCurvature implements MeshAttribute {
         return vertex.getGaussianCurvature();
     }
 
+    /**Calculate Gaussian Curvature of vertexes
+     * Formula implemented uses the full area of the triangle when dividing 2*PI - total angles
+     * (as opposed to the local area) 
+     *
+     * @param halfEdgeDataStructure
+     */
     public static void calculate(HalfEdgeDataStructure halfEdgeDataStructure) {
         for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
             HalfEdge firstEdge      = vertex.getHalfEdge();
