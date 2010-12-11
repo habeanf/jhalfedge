@@ -51,7 +51,7 @@ public class MeshRenderer {
                     setMinMax(halfEdgeDataStructure);
 
                     if (state.getTransparent()) {
-                        float alpha = 0.4f;
+                        float alpha = 0.5f;
                         if (state.getMeshAttribute() == null) {
                             gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
                             gl.glColor4f(1f, 1f, 1f, alpha);
@@ -59,7 +59,7 @@ public class MeshRenderer {
                         }
 
                         gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
-                        gl.glColor4f(1f, 1, 1f, 0.4f);
+                        gl.glColor4f(1f, 1, 1f, 0.5f);
                         renderTriangles(gl, alpha, state, halfEdgeDataStructure.getAllFaces());
 
                     } else {
