@@ -40,13 +40,13 @@ public class HalfEdgeNormalCreator {
 
 
         for (Vertex v : halfEdgeDataStructure.getVertexes()) {
-            HalfEdge firsHalfEdge = v.getHalfEdge();
+            HalfEdge firstHalfEdge = v.getHalfEdge();
             LinkedList<NormalRange> angleRanges = new LinkedList<NormalRange>();
 
             double currentAngle = 0.0;
             Vector3D currentNormal;
             NormalRange lastRange = null;
-            HalfEdge nextEdge = firsHalfEdge;
+            HalfEdge nextEdge = firstHalfEdge;
             // iterate edges to calculate angle ranges
             do {
                 if (nextEdge==null){
@@ -61,13 +61,13 @@ public class HalfEdgeNormalCreator {
                     lastRange.addNormal(nextEdge,currentNormal);
                 }
                 else {
-                    lastRange = new NormalRange(firsHalfEdge,nextEdge,currentNormal);
+                    lastRange = new NormalRange(firstHalfEdge,firstHalfEdge.getOpp().getNext(),currentNormal);
                     angleRanges.add(lastRange);
                 }
 
                 nextEdge = nextEdge.getOpp().getNext();
 
-            } while (firsHalfEdge != nextEdge);
+            } while (firstHalfEdge != nextEdge);
 
             // set average normal
             for (NormalRange range : angleRanges) {
