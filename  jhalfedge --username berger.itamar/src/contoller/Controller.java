@@ -2,9 +2,7 @@ package contoller;
 
 import attributes.*;
 import colormaps.ColorMapFactory;
-import com.sun.corba.se.spi.orbutil.fsm.Input;
 import model.HalfEdgeDataStructure;
-import model.Vertex;
 import parser.HalfEdgeNormalCreator;
 import parser.HalfEdgeReader;
 import render.*;
@@ -14,11 +12,8 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
-import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.io.File;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.*;
 import java.util.List;
 

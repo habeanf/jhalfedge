@@ -39,7 +39,7 @@ public class Centricity implements MeshAttribute {
                     for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
                         vertex.setCentricity(geodesicDistanceCalculator.getGeodesicDistances(vertex));
                         try {
-                            infoLogger.setDebugRow("Calculating centricity: " + formater.valueToString(counter++ / size) + "% done");
+                            infoLogger.setDebugRow("Calculating centricity: " + formater.valueToString(counter++ / size*100) + "% done");
                         } catch (ParseException e) {
                         }
                     }
