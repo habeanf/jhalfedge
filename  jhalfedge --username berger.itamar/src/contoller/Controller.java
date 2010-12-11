@@ -335,7 +335,7 @@ public class Controller implements GLEventListener {
 
         HalfEdgeNormalCreator halfEdgeNormalCreator = new HalfEdgeNormalCreator(halfEdgeDataStructure);
         halfEdgeNormalCreator.calcNormals();
-
+        z = -12.0f;
         meshRenderer = new MeshRenderer(halfEdgeDataStructure);
         infoLogger.setModelPath("Model path:" + file.getPath());
     }
