@@ -40,18 +40,17 @@ public class HalfEdgeNormalCreator {
 
 
         for (Vertex v : halfEdgeDataStructure.getVertexes()) {
-            HalfEdge currentEdge = v.getHalfEdge();
+            HalfEdge firsHalfEdge = v.getHalfEdge();
             LinkedList<NormalRange> angleRanges = new LinkedList<NormalRange>();
 
             double currentAngle = 0.0;
             Vector3D currentNormal;
             NormalRange lastRange = null;
-            HalfEdge nextEdge;
+            HalfEdge nextEdge = firsHalfEdge;
             // iterate edges to calculate angle ranges
             int i=0;
             do {
-                currentNormal = new Vector3D(currentEdge.getCornerNormal());
-                nextEdge = currentEdge.getOpp().getNext();
+                currentNormal = new Vector3D(nextEdge.getCornerNormal());
                 if (nextEdge.getFace()!=null) {
                     currentAngle = currentNormal.calculateAngleTo((new Vector3D(nextEdge.getCornerNormal())));
                 }
@@ -59,19 +58,20 @@ public class HalfEdgeNormalCreator {
                     lastRange.addNormal(nextEdge,currentNormal);
                 }
                 else {
-                    lastRange = new NormalRange(currentEdge,nextEdge,currentNormal);
+                    lastRange = new NormalRange(nextEdge,nextEdge,currentNormal);
                     angleRanges.add(lastRange);
                 }
 
-                currentEdge = nextEdge;
-            } while (!currentEdge.equals(v.getHalfEdge()));
+                nextEdge = nextEdge.getOpp().getNext();
+
+            } while (firsHalfEdge != nextEdge);
 
             // set average normal
             for (NormalRange range : angleRanges) {
 
                 range.calculateAverageNormal();
 
-                for(currentEdge = range.from; !currentEdge.equals(range.to); currentEdge = currentEdge.getOpp().getNext()) {
+                for(HalfEdge currentEdge = range.from; currentEdge!=range.to; currentEdge = currentEdge.getOpp().getNext()) {
                     currentEdge.setCornerNormal(range.getAverageNormal().getFloatArray());
                 }
             }
@@ -86,7 +86,7 @@ public class HalfEdgeNormalCreator {
         Vector3D averageNormal;
 
         public void calculateAverageNormal() {
-            totalNormal.scale(1/numberOfNormals);
+            totalNormal.scale(1f/numberOfNormals);
             averageNormal = totalNormal.normalize();
         }
 
