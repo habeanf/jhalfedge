@@ -1,10 +1,9 @@
 package parser;
 
-import model.Face;
+import model.HalfEdge;
 import model.HalfEdgeDataStructure;
-import model.Vertex;
+import model.Vector3D;
 
-import java.util.Set;
 
 /**
  * User: itamar
@@ -22,29 +21,22 @@ public class HalfEdgeNormalCreator {
     }
 
     public void calcNormals() {        
-        // calc normal for all the faces
-        for (Face face : halfEdgeDataStructure.getAllFaces()) {
-            final Vertex[] vertices = halfEdgeDataStructure.getFaceVertices(face);
-            float[] normal = calcNormalForFace(vertices);
-            face.setNormal(normal);
+        // calc normal for all the half edges
+        for (HalfEdge edge : halfEdgeDataStructure.getAllHalfEdges()) {
+            Vector3D vp         = new Vector3D(edge.getPrev().getVertex());
+            Vector3D v          = new Vector3D(edge.getVertex());
+            Vector3D vn         = new Vector3D(edge.getNext().getVertex());
+
+            Vector3D vector1    = v.sub(vp);
+            Vector3D vector2    = v.sub(vn);
+            edge.setCornerNormal(vector1.calculateCrossProductWith(vector2).getFloatArray());
         }
 
-        // for each vertices calculate its normal
-        for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
-            calcNormalForCorner(vertex);
-        }
-    }
 
-    private void calcNormalForCorner(Vertex vertex){
-        // get neighbour faces
-//        final Set<Face> faces = halfEdgeDataStructure.getFaceNeighbours(vertex);
-//        for (Face face : faces) {
-//            //TODO
+//        for (Vertex v : halfEdgeDataStructure.getVertexes()) {
+//            HalfEdge currentEdge = v.getHalfEdge();
+//
 //        }
     }
 
-    private float[] calcNormalForFace(Vertex[] vertices) {
-        ///TODO
-        return new float[0];  //To change body of created methods use File | Settings | File Templates.
-    }
 }

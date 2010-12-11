@@ -67,6 +67,12 @@ public class Vector3D {
         return this;
     }
 
+    public float[] getFloatArray()
+    {
+        float[] result = {(float)x, (float)y,(float)z};
+        return result;
+    }
+
     public Vector3D scale(double value)            // operator*= is used to scale this Vector3D by a value.
     {
         x *= value;
@@ -114,7 +120,12 @@ public class Vector3D {
         return 0.5*length()*withVector.length()*Math.sin(calculateAngleTo(withVector));
     }
 
-
+    public Vector3D calculateCrossProductWith(Vector3D v2) {
+        Vector3D cross = new Vector3D(y * v2.z - v2.y * z,     // x coordinate of cross
+                                      z * v2.x - v2.z * x,     // y coordinate of cross
+                                      x * v2.y - v2.x * y);    // z coordinate of cross
+        return cross;
+    }
     public String toString() {
         return x + ", " + y + ", " + z;
     }
