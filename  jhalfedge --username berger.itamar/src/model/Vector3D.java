@@ -6,9 +6,9 @@ package model;
  * Time: 12:38:05 PM
  */
 public class Vector3D {
-    public float x;                                    // the x value of this Vector3D
-    public float y;                                    // the y value of this Vector3D
-    public float z;                                    // the z value of this Vector3D
+    public double x;                                    // the x value of this Vector3D
+    public double y;                                    // the y value of this Vector3D
+    public double z;                                    // the z value of this Vector3D
 
     public Vector3D()                                    // Constructor to set x = y = z = 0
     {
@@ -24,14 +24,14 @@ public class Vector3D {
         z = vector.z;
     }
 
-        public Vector3D(float[] xyz)            // Constructor that initializes this Vector3D to the intended values of x, y and z
+        public Vector3D(double[] xyz)            // Constructor that initializes this Vector3D to the intended values of x, y and z
     {
         this.x = xyz[0];
         this.y = xyz[1];
         this.z = xyz[2];
     }
 
-    public Vector3D(float x, float y, float z)            // Constructor that initializes this Vector3D to the intended values of x, y and z
+    public Vector3D(double x, double y, double z)            // Constructor that initializes this Vector3D to the intended values of x, y and z
     {
         this.x = x;
         this.y = y;
@@ -54,7 +54,7 @@ public class Vector3D {
         return this;
     }
 
-    public Vector3D scale(float value)            // operator*= is used to scale this Vector3D by a value.
+    public Vector3D scale(double value)            // operator*= is used to scale this Vector3D by a value.
     {
         x *= value;
         y *= value;
@@ -70,16 +70,16 @@ public class Vector3D {
         return this;
     }
 
-    public float length()                                // length() returns the length of this Vector3D
+    public double length()                                // length() returns the length of this Vector3D
     {
-        return (float) Math.sqrt(x * x + y * y + z * z);
+        return Math.sqrt(x * x + y * y + z * z);
     }
 
     
 
     public void normalize()                                // normalize() normalizes this Vector3D that its direction remains the same but its length is 1.
     {
-        float length = length();
+        double length = length();
 
         if (length == 0)
             return;

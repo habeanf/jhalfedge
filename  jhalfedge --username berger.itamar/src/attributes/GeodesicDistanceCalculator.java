@@ -82,7 +82,7 @@ public class GeodesicDistanceCalculator {
 
             for (Vertex neighbour : neighbours) {
                 Vector3D neighbourVec = new Vector3D(neighbour.getXyz());
-                currentNode.neighbourDist.put(nodes.get(neighbour.getId()), neighbourVec.sub(vertexVec).length());
+                currentNode.neighbourDist.put(nodes.get(neighbour.getId()), (float)neighbourVec.sub(vertexVec).length());
             }
         }
     }
