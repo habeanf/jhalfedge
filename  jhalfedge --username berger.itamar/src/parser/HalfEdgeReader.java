@@ -259,25 +259,16 @@ public class HalfEdgeReader {
                     }
                 }
 
-                //ArrayList<HalfEdge> faceEdges = new ArrayList<HalfEdge>(faceEdgeList);
-                // add face
-                if (i%100==0)
-                    System.out.println("At face #" + i);
-         //       try {
+
                 if (!skipFace) {
                     try {
-                    Face face = addFace(faceEdges);
+                        Face face = addFace(faceEdges);
                     }
                     catch (Exception e)
                     {
                         System.out.println("Face #" + i + " discarded due to " + e.getMessage());
                     }
                 }
-            //    }
-            //    catch (Exception e) {
-                
-            //    }
-
 
             }
         }
