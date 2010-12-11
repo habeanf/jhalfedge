@@ -93,8 +93,13 @@ public class HalfEdgeDataStructure {
     }
 
     public Vertex[] getFaceVertices(Face face) {
-        return null;
-        //To change body of created methods use File | Settings | File Templates.
+        HalfEdge edge = face.getHalfEdge();
+        List<Vertex> vertexList = new ArrayList<Vertex>(3);
+        do {
+            vertexList.add(edge.getVertex());
+            edge = edge.getNext();
+        } while(!edge.equals(face.getHalfEdge()));
+        return (Vertex[])vertexList.toArray();
     }
 
     public Vertex getVertex(int vertexId) {
