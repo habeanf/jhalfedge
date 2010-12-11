@@ -99,7 +99,7 @@ public class HalfEdgeDataStructure {
             vertexList.add(edge.getVertex());
             edge = edge.getNext();
         } while(!edge.equals(face.getHalfEdge()));
-        return (Vertex[])vertexList.toArray();
+        return vertexList.toArray(new Vertex[vertexList.size()]);
     }
 
     public Vertex getVertex(int vertexId) {

@@ -2,6 +2,7 @@ package attributes;
 
 import model.HalfEdge;
 import model.HalfEdgeDataStructure;
+import model.Vector3D;
 import model.Vertex;
 
 /**
@@ -26,53 +27,24 @@ public class GaussianCurvature implements MeshAttribute {
             double totalArea         = 0.0;
             double totalAngle        = 0.0;
             
-            double vector1Size,vector2Size,currentAngle;
-            Vertex prevVertex,currentVertex,nextVertex;
-            double[] vector1,vector2;
+            Vector3D prevVertex,currentVertex,nextVertex;
+            Vector3D vector1,vector2;
             do {
-                currentVertex   = currentEdge.getVertex();
-                prevVertex      = currentEdge.getPrev().getVertex();
-                nextVertex      = currentEdge.getNext().getVertex();
+                currentVertex   = new Vector3D(currentEdge.getVertex());
+                prevVertex      = new Vector3D(currentEdge.getPrev().getVertex());
+                nextVertex      = new Vector3D(currentEdge.getNext().getVertex());
 
                 // calculate area and triangle for current face
-                vector1         = calculateVector(currentVertex,prevVertex);
-                vector2         = calculateVector(currentVertex,nextVertex);
+                vector1         = currentVertex.sub(prevVertex);
+                vector2         = currentVertex.sub(nextVertex);
 
-                vector1Size     = calculateSize(vector1);
-                vector2Size     = calculateSize(vector2);
-                currentAngle    = calculateAngle(vector1,vector2,vector1Size,vector2Size);
-                totalArea       += calculateTriangleArea(vector1Size,vector2Size,currentAngle);
-                totalAngle      += currentAngle;
+                totalArea       += vector1.calculateTriangleArea(vector2);
+                totalAngle      += vector1.calculateAngleTo(vector2);
 
                 // get next face
                 currentEdge = currentEdge.getOpp().getNext();
             } while (!currentEdge.equals(firstEdge));
             vertex.setGaussianCurvature((float)((2*Math.PI - totalAngle)/totalArea));
         }
-    }
-
-    private static double[] calculateVector(Vertex vertex1, Vertex vertex2) {
-        float v1[]      = vertex1.getXyz();
-        float v2[]      = vertex2.getXyz();
-
-        double result[] = {(double)(v2[0]-v1[0]),(double)(v2[1]-v1[1]),(double)(v2[2]-v1[2])};
-
-        return result;
-    }
-
-    private static double calculateDot(double[] vector1, double[] vector2) {
-        return vector1[0]*vector2[0] + vector1[1]*vector2[1] + vector1[2]*vector2[2];
-    }
-
-    private static double calculateSize(double[] vector) {
-        return Math.sqrt(calculateDot(vector,vector));
-    }
-    
-    private static double calculateAngle(double[] vector1, double[] vector2, double vector1Size, double vector2Size) {
-        return Math.acos((calculateDot(vector1,vector2)/(vector1Size*vector2Size)));
-    }
-
-    private static double calculateTriangleArea(double vector1Size, double vector2Size, double angle) {
-        return 0.5*vector1Size*vector2Size*Math.sin(angle);
     }
 }

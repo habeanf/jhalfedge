@@ -72,7 +72,7 @@ public class GeodesicDistanceCalculator {
         for (Node currentNode : nodes.values()) {
             Vertex vertex = halfEdgeDataStructure.getVertex(currentNode.id);
 
-            Vector3D vertexVec = new Vector3D(vertex.getXyz());
+            Vector3D vertexVec = new Vector3D(vertex);
 
             final Set<Vertex> neighbours = halfEdgeDataStructure.getNeighbours(vertex);
             currentNode.neighbourDist = new HashMap<Node, Float>(neighbours.size());
@@ -81,7 +81,7 @@ public class GeodesicDistanceCalculator {
             neighbours.addAll(createShortcutPaths(vertex));
 
             for (Vertex neighbour : neighbours) {
-                Vector3D neighbourVec = new Vector3D(neighbour.getXyz());
+                Vector3D neighbourVec = new Vector3D(neighbour);
                 currentNode.neighbourDist.put(nodes.get(neighbour.getId()), (float)neighbourVec.sub(vertexVec).length());
             }
         }

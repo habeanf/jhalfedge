@@ -24,18 +24,23 @@ public class Vector3D {
         z = vector.z;
     }
 
-        public Vector3D(double[] xyz)            // Constructor that initializes this Vector3D to the intended values of x, y and z
+        public Vector3D(double[] xyz)            // Constructor that initializes this Vector3D to the intended double values of x, y and z
     {
         this.x = xyz[0];
         this.y = xyz[1];
         this.z = xyz[2];
     }
 
-    public Vector3D(float[] xyz)            // Constructor that initializes this Vector3D to the intended values of x, y and z
+    public Vector3D(float[] xyz)            // Constructor that initializes this Vector3D to the intended float values of x, y and z
     {
         this.x = xyz[0];
         this.y = xyz[1];
         this.z = xyz[2];
+    }
+
+    public Vector3D(Vertex v)              // Constructor that initializes this Vector3D to the intended values of the Vertex v
+    {
+        this(v.getXyz());
     }
 
 
@@ -96,6 +101,19 @@ public class Vector3D {
         y /= length;
         z /= length;
     }
+
+    public double calculateDotTo(Vector3D toVector) {
+        return this.x*toVector.x + this.y*toVector.y +this.z*toVector.z;
+    }
+    
+    public double calculateAngleTo(Vector3D toVector) {
+        return Math.acos((calculateDotTo(toVector)/(length()*toVector.length())));
+    }
+
+    public double calculateTriangleArea(Vector3D withVector) {
+        return 0.5*length()*withVector.length()*Math.sin(calculateAngleTo(withVector));
+    }
+
 
     public String toString() {
         return x + ", " + y + ", " + z;
