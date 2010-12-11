@@ -29,7 +29,8 @@ public class HalfEdgeNormalCreator {
 
             Vector3D vector1    = v.sub(vp);
             Vector3D vector2    = v.sub(vn);
-            edge.setCornerNormal(vector1.calculateCrossProductWith(vector2).getFloatArray());
+            float result[]      = vector1.calculateCrossProductWith(vector2).normalize().getFloatArray();
+            edge.setCornerNormal(result);
         }
 
 

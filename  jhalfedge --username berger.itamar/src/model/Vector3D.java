@@ -61,10 +61,11 @@ public class Vector3D {
 
     public Vector3D sub(Vector3D v)            // operator-= is used to subtract another Vector3D from this Vector3D.
     {
-        x -= v.x;
-        y -= v.y;
-        z -= v.z;
-        return this;
+        Vector3D result = new Vector3D(this);
+        result.x -= v.x;
+        result.y -= v.y;
+        result.z -= v.z;
+        return result;
     }
 
     public float[] getFloatArray()
@@ -96,16 +97,17 @@ public class Vector3D {
 
     
 
-    public void normalize()                                // normalize() normalizes this Vector3D that its direction remains the same but its length is 1.
+    public Vector3D normalize()                                // normalize() normalizes this Vector3D that its direction remains the same but its length is 1.
     {
         double length = length();
 
         if (length == 0)
-            return;
+            return this;
 
         x /= length;
         y /= length;
         z /= length;
+        return this;
     }
 
     public double calculateDotTo(Vector3D toVector) {
