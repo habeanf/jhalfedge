@@ -27,15 +27,28 @@ public class HalfEdgeReader {
     boolean loopEdges;
     boolean parallelEdges;
 
+    /** Ctor
+     *
+     * @param loopEdges boolean - accept loop edges
+     * @param parallelEdges boolean - accept parallel edges (inactive - will always reject)
+     */
     public HalfEdgeReader(boolean loopEdges, boolean parallelEdges) {
         this.loopEdges      = loopEdges;
         this.parallelEdges  = parallelEdges;
     }
 
+    /** looks for a half edge on a vertex (startingFrom.next().getVertex()) with no face to it's "left" side
+     *
+     *
+     * @param startingFrom halfEdge to startfrom
+     * @param andBefore free half edge before this halfEdge
+     * @return  a free half edge if exists, null otherwise
+     */
     public HalfEdge findFreeIncident(HalfEdge startingFrom, HalfEdge andBefore) {
         if (startingFrom == andBefore)
             return null;
         HalfEdge current = startingFrom;
+        // go through all half edges until a free one is found, else return null
         do {
             // current.left().empty()
             if (current.getFace() == null) {
@@ -49,20 +62,31 @@ public class HalfEdgeReader {
         return null;
     }
 
+    /** makes two half edges adjacent, so in.next()==out.  if the half edges cannot be made adjacent returns false else true
+     *
+     * @param in starting edge
+     * @param out ending edge
+     * @return true if succeeded, else false
+     */
     public boolean makeAdjacent(HalfEdge in, HalfEdge out) {
+        // skip over trivial case
         if (in.getNext().equals(out)) {
             return true;
         }
 
+        // reserve next and prev
         HalfEdge b = in.getNext();
         HalfEdge d = out.getPrev();
 
+        // find a free half edge for switch off
         HalfEdge g = findFreeIncident(out.getOpp(), in);
 
         if (g==null) {
+            // none found, in/out cannot be made adjacent
             return false;
         }
 
+        // switch off in and out by using free half edge to switch off
         HalfEdge h = g.getNext();
 
         in.setNext(out,true);
@@ -77,6 +101,11 @@ public class HalfEdgeReader {
         return true;
     }
 
+    /** find a free half edge on a vertex
+     *
+     * @param vertexId vertex to search on
+     * @return free half edge if exists else null
+     */
     public HalfEdge findFreeIncident(int vertexId) {
         List<HalfEdge> freeList = vertexFreeList.get(vertexId);
 
@@ -88,7 +117,14 @@ public class HalfEdgeReader {
         return null;
     }
 
-    public boolean testFailHalfEdge(int vertexId, HalfEdge newEdge) {
+    /** verifies the existence of a free half edge, useful for testing multiple half edges
+     *  before attempting to apply an operation to the data structures
+     *  this way they are kept in tact (invariant)
+     *
+     * @param vertexId vertex to search on
+     * @return true if a free half edge exists, false otherwise
+     */
+    public boolean testFailHalfEdge(int vertexId) {
         List<HalfEdge> freeList = vertexFreeList.get(vertexId);
         Vertex         vertex   = vertexMap.get(vertexId);
         if (freeList.size() == 0) {
@@ -101,13 +137,22 @@ public class HalfEdgeReader {
         return true;
 
     }
+
+    /** updates data structure with one new half edges
+     *
+     * @param vertexId affected vertex of half edge
+     * @param newEdge edge to add
+     */
     public void installHalfEdge(int vertexId, HalfEdge newEdge) {
         List<HalfEdge> freeList = vertexFreeList.get(vertexId);
         Vertex         vertex   = vertexMap.get(vertexId);
+
         if (freeList.size() == 0) {
+            // empty vertex
             vertex.setHalfEdge(newEdge);
         }
         else {
+            // split a current edge1->edge2 pair
             HalfEdge in     = findFreeIncident(vertexId);
             HalfEdge out    = in.getNext();
 
@@ -117,9 +162,17 @@ public class HalfEdgeReader {
             newEdge.getOpp().setNext(out, true);
             out.setPrev(newEdge.getOpp());
         }
+        // update vertex's free list
         freeList.add(newEdge.getOpp());
     }
 
+    /** adds a full edge to the data structure
+     *  might fail if edge cannot be added - usually do to corrupt input or non-manifold data
+     *
+     * @param fromVertex first vertex of edge
+     * @param toVertex second vertex of edge
+     * @return full edge if succeeded, null otherwise
+     */
     public Edge addEdge(int fromVertex, int toVertex) {
         if (!loopEdges) {
             if (fromVertex == toVertex) {
@@ -129,6 +182,7 @@ public class HalfEdgeReader {
 
         Edge edge = new Edge(fromVertex,toVertex);
 
+        // return existing edge
         if (halfEdgeMap.containsKey(edge)) {
             return edge;
         }
@@ -142,20 +196,29 @@ public class HalfEdgeReader {
         fromToHalf.initialize(toFromHalf);
         toFromHalf.initialize(fromToHalf);
 
-        // Install new half edges
-        if (testFailHalfEdge(fromVertex,fromToHalf) || testFailHalfEdge(toVertex,toFromHalf)) {
+        // make sure the dge can be added
+        if (testFailHalfEdge(fromVertex) || testFailHalfEdge(toVertex)) {
             return null;    
         }
 
+        // Install new half edges
         installHalfEdge(fromVertex,fromToHalf);
         installHalfEdge(toVertex,toFromHalf);
 
+        // add a map so that opposite edge of other faces can find these edges
         halfEdgeMap.put(edge,fromToHalf);
         halfEdgeMap.put(new Edge(toVertex,fromVertex),toFromHalf);
 
         return edge;
     }
 
+    /** add a new face consisting of a closed loop of half edges to the data structure
+     *  if the half edge loop cannot be added, an exception is thrown describing the reason
+     *
+     * @param halfEdgeLoop list of half edges (should be a loop)
+     * @return face object if succeeded, will throw exception otherwise
+     * @throws Exception reason face cannot be added
+     */
     public Face addFace(ArrayList<HalfEdge> halfEdgeLoop) throws Exception {
         // validity check
         if (halfEdgeLoop.size()==0)
@@ -180,6 +243,7 @@ public class HalfEdgeReader {
                 throw new Exception("Unadjacent edges");
         }
 
+        // create face and update all half edges
         Face face = new Face(halfEdgeLoop.get(0));
 
         for (HalfEdge edge : halfEdgeLoop) {
@@ -191,6 +255,14 @@ public class HalfEdgeReader {
         return face;
     }
 
+    /**Process OBJ and OFF files and creates a half edge data structure to store the data in the files
+     * faces which introduce are corrupt or create a non-manifold are silently rejected, see commented code for
+     * cases
+     *
+     * @param path path to file
+     * @param normalizeVertices should normalize vertices or not (in case user has a unit box)
+     * @return HalfEdgeDataStructure containing file data
+     */
     public HalfEdgeDataStructure get(String path, boolean normalizeVertices) {
         // initialize intermediate structures for reading from file
         vertexMap       = new HashMap<Integer,Vertex>();
@@ -228,9 +300,12 @@ public class HalfEdgeReader {
             }
             lineIterator.close();
             fileReader.close();
-            
+
+            // normalization and other preprocessing
             postProcessVertices(normalizeVertices, max);
 
+
+            // main processing loop
             int[] curr_ids = null;
             for (i=0;i<faceIds.size();++i) {
                 curr_ids = faceIds.get(i);
@@ -248,13 +323,13 @@ public class HalfEdgeReader {
 
                     Edge     edge        = addEdge(vertexFrom,vertexTo);
                     if (edge==null) {
-                        System.out.println("Face #" + i + ", Edge " + j + " discarded.");
+                        //System.out.println("Face #" + i + ", Edge " + j + " discarded.");
                         skipFace = true;
                         break;
                         //throw new Exception("Face #" + i + ", Edge #" + j + " not loaded.");
                     }
                     else {
-                        HalfEdge half        = halfEdgeMap.get(edge);
+                        HalfEdge half    = halfEdgeMap.get(edge);
                         faceEdges.add(j,half);
                     }
                 }
@@ -266,20 +341,25 @@ public class HalfEdgeReader {
                     }
                     catch (Exception e)
                     {
-                        System.out.println("Face #" + i + " discarded due to " + e.getMessage());
+                        //System.out.println("Face #" + i + " discarded due to " + e.getMessage());
                     }
                 }
 
             }
         }
         catch (Exception e) {
-            System.out.println("Failed on face #" + i);
+            //System.out.println("Failed on face #" + i);
             e.printStackTrace();
         }
 
         return new HalfEdgeDataStructure(halfEdgeMap.values(), faces, vertexMap);
     }
 
+    /** process some vertex data early
+     *
+     * @param normalizeVertices boolean should normalize
+     * @param max maximum value for normalization (say max=largest vertex for unit box)
+     */
     private void postProcessVertices(boolean normalizeVertices, float max) {
         // normalize vertices
         float[] mean = {0,0,0};
@@ -293,6 +373,7 @@ public class HalfEdgeReader {
             mean[2]+=xyz[2];
         }
 
+        // calculate average
         float meanx = mean[0]/vertexMap.values().size();
         float meany = mean[1]/vertexMap.values().size();
         float meanz = mean[2]/vertexMap.values().size();
@@ -301,6 +382,11 @@ public class HalfEdgeReader {
         }
     }
 
+    // Helper classes only used for processing
+
+    /** Helper class for full edge
+     *
+     */
     public class Edge {
         int from;
         int to;
