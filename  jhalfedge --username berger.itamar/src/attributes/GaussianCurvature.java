@@ -65,7 +65,7 @@ public class GaussianCurvature implements MeshAttribute {
     }
 
     private static double calculateSize(double[] vector) {
-        return calculateDot(vector,vector);
+        return Math.sqrt(calculateDot(vector,vector));
     }
     
     private static double calculateAngle(double[] vector1, double[] vector2, double vector1Size, double vector2Size) {
