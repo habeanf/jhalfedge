@@ -19,7 +19,7 @@ import utils.InfoLogger;
  */
 public class Main {
     public static void main(String[] args) {
-        GLDisplay display = GLDisplay.createGLDisplay("3D Meshes processing");
+        GLDisplay display = GLDisplay.createGLDisplay("3D Meshes processing and analysis");
         Controller Controller = new Controller();
         InputHandler keyboardInputHandler = new InputHandler(Controller, display);
         MouseInputHandler mouseInputHandler = new MouseInputHandler(Controller);

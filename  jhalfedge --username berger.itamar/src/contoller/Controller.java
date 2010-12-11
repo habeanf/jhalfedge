@@ -56,7 +56,7 @@ public class Controller implements GLEventListener {
     private boolean enableGrid = false;
 
     // Depth Into The Screen
-    private float z = -12.0f;
+    private float z = -10.0f;
     private boolean zoomIn;
     private boolean zoomOut;
 
