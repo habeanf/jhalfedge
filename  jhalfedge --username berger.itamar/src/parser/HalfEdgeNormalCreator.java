@@ -58,7 +58,7 @@ public class HalfEdgeNormalCreator {
                     lastRange.addNormal(nextEdge,currentNormal);
                 }
                 else {
-                    lastRange = new NormalRange(nextEdge,nextEdge,currentNormal);
+                    lastRange = new NormalRange(firsHalfEdge,nextEdge,currentNormal);
                     angleRanges.add(lastRange);
                 }
 
