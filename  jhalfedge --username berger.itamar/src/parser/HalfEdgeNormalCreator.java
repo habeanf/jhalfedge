@@ -48,8 +48,11 @@ public class HalfEdgeNormalCreator {
             NormalRange lastRange = null;
             HalfEdge nextEdge = firsHalfEdge;
             // iterate edges to calculate angle ranges
-            int i=0;
             do {
+                if (nextEdge==null){
+                    break;
+                }
+
                 currentNormal = new Vector3D(nextEdge.getCornerNormal());
                 if (nextEdge.getFace()!=null) {
                     currentAngle = currentNormal.calculateAngleTo((new Vector3D(nextEdge.getCornerNormal())));

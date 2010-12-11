@@ -11,7 +11,7 @@ import colormaps.IColorMap;
  */
 public class RenderState {
     public boolean shouldUpdate = false;
-    private boolean transparent = true;
+    private boolean transparent = false;
     private boolean isMesh = true;
     private MeshAttribute meshAttribute;
 

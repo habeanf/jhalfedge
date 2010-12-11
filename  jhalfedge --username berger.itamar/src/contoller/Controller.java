@@ -264,7 +264,6 @@ public class Controller implements GLEventListener {
         MeshAttribute attribute = null;
         state.setMeshAttribute(attribute);
         infoLogger.setAttribute("None");
-        state.transperacy(true);
     }
 
     public void setCentricityAttribute() {
