@@ -5,7 +5,7 @@ import utils.GLDisplay;
 import utils.InfoLogger;
 
 /**
- * User: itamar
+ * User: itamar & amir
  * This is the main class that run the application. it links between the controller display and the event listeners
  * It is based on Nehe tutorial Runner files for running JOGL applications (version jogl-1.1.1-windows-i586)
  * Press F1 to see all keyboard shortcuts.
@@ -19,7 +19,7 @@ import utils.InfoLogger;
  */
 public class Main {
     public static void main(String[] args) {
-        GLDisplay display = GLDisplay.createGLDisplay("3D Meshes processing and analysis");
+        GLDisplay display = GLDisplay.createGLDisplay("Part Based Multi Resolution 3D Meshes");
         Controller Controller = new Controller();
         InputHandler keyboardInputHandler = new InputHandler(Controller, display);
         MouseInputHandler mouseInputHandler = new MouseInputHandler(Controller);
