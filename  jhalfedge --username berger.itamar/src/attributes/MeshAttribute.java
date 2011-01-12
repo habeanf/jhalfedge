@@ -12,4 +12,11 @@ public interface MeshAttribute {
     String getName();
 
     float getValue(Vertex vertex, HalfEdgeDataStructure halfEdgeDataStructure);
+
+    boolean doFaceRendering();
+
+    int getClustersAmount();
+
+
+    void calculate(HalfEdgeDataStructure halfEdgeDataStructure);
 }

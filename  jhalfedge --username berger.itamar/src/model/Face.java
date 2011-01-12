@@ -7,6 +7,7 @@ package model;
  */
 public class Face {
     public HalfEdge halfEdge;
+    private int segment;
 
     public Face(HalfEdge halfEdge) {
         this.halfEdge = halfEdge;
@@ -14,5 +15,13 @@ public class Face {
 
     public HalfEdge getHalfEdge() {
         return halfEdge;
+    }
+
+    public int getSegment() {
+        return segment;
+    }
+
+    public void setSegment(int segment) {
+        this.segment = segment;
     }
 }

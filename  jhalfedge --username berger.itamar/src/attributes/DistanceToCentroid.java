@@ -19,7 +19,15 @@ public class DistanceToCentroid implements MeshAttribute {
         return vertex.getDistance();
     }
 
-    public static void calculate(HalfEdgeDataStructure halfEdgeDataStructure) {
+    public boolean doFaceRendering() {
+        return false;
+    }
+
+    public int getClustersAmount() {
+        return 0;
+    }
+
+    public void calculate(HalfEdgeDataStructure halfEdgeDataStructure) {
         for (Vertex vertex : halfEdgeDataStructure.getVertexes()) {
             final float[] xyz = vertex.getXyz();
             float value = (float) (Math.sqrt(xyz[0]*xyz[0])+(xyz[1]*xyz[1])+(xyz[2]*xyz[2]));

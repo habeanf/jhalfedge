@@ -1,7 +1,6 @@
 package render;
 
 import attributes.MeshAttribute;
-import colormaps.IColorMap;
 import model.HalfEdgeDataStructure;
 import model.Vertex;
 import model.*;
@@ -9,6 +8,7 @@ import model.*;
 import javax.media.opengl.GL;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -50,23 +50,27 @@ public class MeshRenderer {
                 } else {
                     setMinMax(halfEdgeDataStructure);
 
-                    if (state.getTransparent()) {
-                        float alpha = 0.5f;
-                        if (state.getMeshAttribute() == null) {
-                            gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
-                            gl.glColor4f(1f, 1f, 1f, alpha);
-                            renderTriangles(gl, alpha, state, halfEdgeDataStructure.getAllFaces());
-                        }
-
-                        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
-                        gl.glColor4f(1f, 1, 1f, 0.5f);
-                        renderTriangles(gl, alpha, state, halfEdgeDataStructure.getAllFaces());
-
+                    if (state.getMeshAttribute() != null && state.getMeshAttribute().doFaceRendering()) {
+                        renderfaces(gl, state, halfEdgeDataStructure.getAllFaces());
                     } else {
-                        float alpha = 1f;
-                        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
-                        gl.glColor4f(1f, 1, 1f, alpha);
-                        renderTriangles(gl, alpha, state, halfEdgeDataStructure.getAllFaces());
+                        if (state.getTransparent()) {
+                            float alpha = 0.5f;
+                            if (state.getMeshAttribute() == null) {
+                                gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+                                gl.glColor4f(1f, 1f, 1f, alpha);
+                                renderTriangles(gl, alpha, state, halfEdgeDataStructure.getAllFaces(), true);
+                            }
+
+                            gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+                            gl.glColor4f(1f, 1, 1f, 0.5f);
+                            renderTriangles(gl, alpha, state, halfEdgeDataStructure.getAllFaces(), true);
+
+                        } else {
+                            float alpha = 1f;
+                            gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+                            gl.glColor4f(1f, 1, 1f, alpha);
+                            renderTriangles(gl, alpha, state, halfEdgeDataStructure.getAllFaces(), true);
+                        }
                     }
                 }
             } else {
@@ -86,6 +90,19 @@ public class MeshRenderer {
         }
 
         gl.glCallList(displayList);
+    }
+
+    private void renderfaces(GL gl, RenderState state, List<Face> faces) {
+        float amount = state.getMeshAttribute().getClustersAmount();
+
+        for (Face candidate : faces) {
+            if (candidate != null) {
+                final int segment = candidate.getSegment();
+                final float[] color = state.getColorMap().getColor(segment/amount);
+                gl.glColor4f(color[0], color[1], color[2], 1);
+                renderTriangles(gl, 1, state, Arrays.asList(candidate), false);
+            }
+        }
     }
 
     private void renderVertexNeigbours(GL gl, HalfEdgeDataStructure halfEdgeDataStructure) {
@@ -112,14 +129,13 @@ public class MeshRenderer {
                 final Set<Face> neighbours = halfEdgeDataStructure.getNeighbours(candidate);
                 float[] values = {(float) Math.random(), (float) Math.random(), (float) Math.random()};
                 gl.glColor4f(values[0], values[1], values[2], 1f);
-                renderTriangles(gl, 0.5f, prevState, neighbours);
+                renderTriangles(gl, 0.5f, prevState, neighbours, true);
 
                 gl.glColor4f(1f, 1f, 1f, 1f);
-                renderTriangles(gl, 0.5f, prevState, Arrays.asList(candidate));
+                renderTriangles(gl, 0.5f, prevState, Arrays.asList(candidate), true);
             }
         }
     }
-
 
     private void renderVertices(GL gl, Collection<Vertex> vertices) {
         gl.glBegin(GL.GL_POINTS);
@@ -129,7 +145,7 @@ public class MeshRenderer {
         gl.glEnd();
     }
 
-    private void renderTriangles(GL gl, float alpha, RenderState state, Collection<Face> faces) {
+    private void renderTriangles(GL gl, float alpha, RenderState state, Collection<Face> faces, boolean overrideColor) {
         for (Face face : faces) {
             gl.glBegin(GL.GL_TRIANGLES);
             HalfEdge firstHalfEdge = face.getHalfEdge();
@@ -142,11 +158,13 @@ public class MeshRenderer {
                 Vertex vertex = nextHalfEdge.getVertex();
                 MeshAttribute attribute = state.getMeshAttribute();
 
-                if (attribute != null) {
-                    float value = attribute.getValue(vertex, halfEdgeDataStructure);
-                    value = (value / (Math.abs(max - min)));
-                    final float[] color = state.getColorMap().getColor(value);
-                    gl.glColor4f(color[0], color[1], color[2], alpha);
+                if (overrideColor) {
+                    if (attribute != null) {
+                        float value = attribute.getValue(vertex, halfEdgeDataStructure);
+                        value = (value / (Math.abs(max - min)));
+                        final float[] color = state.getColorMap().getColor(value);
+                        gl.glColor4f(color[0], color[1], color[2], alpha);
+                    }
                 }
 
                 gl.glVertex3fv(vertex.getXyz(), 0);

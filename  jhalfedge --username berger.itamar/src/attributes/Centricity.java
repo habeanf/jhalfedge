@@ -28,7 +28,17 @@ public class Centricity implements MeshAttribute {
         return vertex.getCentricity();
     }
 
-    
+    public boolean doFaceRendering() {
+        return false;
+    }
+
+    public int getClustersAmount() {
+        return 0;
+    }
+
+    public void calculate(HalfEdgeDataStructure halfEdgeDataStructure) {
+    }
+
     public static void calculate(final HalfEdgeDataStructure halfEdgeDataStructure, final InfoLogger infoLogger, final RenderState state) {
             Thread thread = new Thread(new Runnable() {
                 public void run() {

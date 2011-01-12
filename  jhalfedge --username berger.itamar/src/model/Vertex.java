@@ -13,6 +13,7 @@ public class Vertex {
     private float centricity;
     private float distance;
     private float gaussianCurvature;
+    private float segmentation;
 
     public Vertex(int id,float x, float y, float z) {
         this.xyz = new float[]{x, y, z};
@@ -63,6 +64,14 @@ public class Vertex {
 
     public void setCentricity(float centricity) {
         this.centricity = centricity;
+    }
+
+    public float getSegmentation() {
+        return segmentation;
+    }
+
+    public void setSegmentation(float segmentation) {
+        this.segmentation = segmentation;
     }
 
     public float getDistance() {

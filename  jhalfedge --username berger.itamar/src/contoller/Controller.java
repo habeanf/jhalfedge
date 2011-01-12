@@ -6,6 +6,7 @@ import model.HalfEdgeDataStructure;
 import parser.HalfEdgeNormalCreator;
 import parser.HalfEdgeReader;
 import render.*;
+import segmentation.PartBasedSegment;
 import utils.InfoLogger;
 
 import javax.media.opengl.GL;
@@ -278,25 +279,24 @@ public class Controller implements GLEventListener {
     }
 
     public void setDistanceToCentroidAttribute() {
+        MeshAttribute attribute = new DistanceToCentroid();
         if (!state.isCalculatedDistanceToCentroid()) {
-            DistanceToCentroid.calculate(halfEdgeDataStructure);
+            attribute.calculate(halfEdgeDataStructure);
             state.setCalculatedDistance(true);
         }
 
-        MeshAttribute attribute = new DistanceToCentroid();
         state.setMeshAttribute(attribute);
         state.transperacy(false);
         infoLogger.setAttribute(attribute.getName());
     }
 
-
     public void setGaussianCurvature() {
+        MeshAttribute attribute = new GaussianCurvature();
         if (!state.isCalculatedGaussian()) {
-            GaussianCurvature.calculate(halfEdgeDataStructure);
+            attribute.calculate(halfEdgeDataStructure);
             state.setCalculatedGaussian(true);
         }
 
-        MeshAttribute attribute = new GaussianCurvature();
         state.setMeshAttribute(attribute);
         state.transperacy(false);
         infoLogger.setAttribute(attribute.getName());
@@ -369,5 +369,17 @@ public class Controller implements GLEventListener {
         state.setMeshAttribute(attribute);
         state.transperacy(false);
         infoLogger.setAttribute(attribute.getName() + "Debug Mode - ony point only");
+    }
+
+    public void setSegmentationAttribute() {
+        MeshAttribute attribute = new PartBasedSegment();
+        if (!state.isCalculateSegmentation()) {
+            attribute.calculate(halfEdgeDataStructure);
+            state.setCalculatedSegmentation(true);
+        }
+
+        state.setMeshAttribute(attribute);
+        state.transperacy(false);
+        infoLogger.setAttribute(attribute.getName());
     }
 }

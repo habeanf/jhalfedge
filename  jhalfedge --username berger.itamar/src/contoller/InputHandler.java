@@ -42,6 +42,8 @@ public class InputHandler extends KeyAdapter {
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_8, 0), "Debug - Show Faces Neighbour test");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_9, 0), "Debug - Show Vertex Neighbout test");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_0, 0), "Debug - Show Normals");
+
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_5, 0), "Create Segmentation");
     }
 
     public void keyPressed(KeyEvent e) {
@@ -108,6 +110,9 @@ public class InputHandler extends KeyAdapter {
                 break;
             case KeyEvent.VK_9:
                 controller.toggleVertexNeighbourTest();
+                break;
+            case KeyEvent.VK_5:
+                controller.setSegmentationAttribute();
                 break;
             default:
                 processKeyEvent(e, false);

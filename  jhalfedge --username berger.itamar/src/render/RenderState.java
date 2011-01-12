@@ -25,6 +25,8 @@ public class RenderState {
     private boolean faceNeighbourTest = false;
     private boolean showCornerNormals = false;
 
+    private boolean calculateSegmentation = false;
+
     private IColorMap colorMap = ColorMapFactory.getFirstColorMap();
 
     public boolean getTransparent() {
@@ -126,5 +128,13 @@ public class RenderState {
 
     public boolean isShowCornerNormals() {
         return showCornerNormals;
+    }
+
+    public boolean isCalculateSegmentation() {
+        return calculateSegmentation;
+    }
+
+    public void setCalculatedSegmentation(boolean segmentation) {
+        this.calculateSegmentation = segmentation;
     }
 }
