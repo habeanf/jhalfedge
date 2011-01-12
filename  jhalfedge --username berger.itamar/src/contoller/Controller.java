@@ -6,7 +6,7 @@ import model.HalfEdgeDataStructure;
 import parser.HalfEdgeNormalCreator;
 import parser.HalfEdgeReader;
 import render.*;
-import segmentation.PartBasedSegment;
+import segmentation.PartSegmentation;
 import utils.InfoLogger;
 
 import javax.media.opengl.GL;
@@ -372,7 +372,7 @@ public class Controller implements GLEventListener {
     }
 
     public void setSegmentationAttribute() {
-        MeshAttribute attribute = new PartBasedSegment();
+        MeshAttribute attribute = new PartSegmentation();
         if (!state.isCalculateSegmentation()) {
             attribute.calculate(halfEdgeDataStructure);
             state.setCalculatedSegmentation(true);

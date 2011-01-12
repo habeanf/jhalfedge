@@ -10,7 +10,7 @@ import model.Vertex;
  * Date: 1/12/11
  * Time: 5:37 PM
  */
-public class PartBasedSegment implements MeshAttribute {
+public class PartSegmentation implements MeshAttribute {
     private int clusterAmount = 0;
 
     public String getName() {
