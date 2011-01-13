@@ -6,6 +6,8 @@ package model;
  * Time: 8:48:45 PM
  */
 public class Face {
+
+    public int id;
     public HalfEdge halfEdge;
     private int segment;
 
@@ -23,5 +25,9 @@ public class Face {
 
     public void setSegment(int segment) {
         this.segment = segment;
+    }
+
+    public int getId(){
+        return id;
     }
 }

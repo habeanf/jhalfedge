@@ -47,4 +47,12 @@ public class Edge implements Comparable<Edge> {
         result = 31 * result + (to != null ? to.hashCode() : 0);
         return result;
     }
+
+    public int getFromId() {
+        return from.id;
+    }
+
+    public int getToId() {
+        return to.id;
+    }
 }
