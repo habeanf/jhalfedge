@@ -55,7 +55,7 @@ public class MultiResRepresentor {
             contract(mesh, record);
 
             // update the information of edges in the queue
-            final Set<Edge> modifiedEdges = mesh.geEdgesAdjacentToVertex(record.otherVertex);
+            final Set<Edge> modifiedEdges = mesh.getEdgesAdjacentToVertex(record.otherVertex);
             updateQueue(queue,  modifiedEdges);
 
             System.out.println("created " + decimationRecords.size() + " records ,queue size: " + queue.size());
@@ -117,11 +117,11 @@ public class MultiResRepresentor {
         // set adjacent triangles
         final List<Face> triangles = mesh.getFacesAdjacentToEdge(edge);
         record.firstRemovedTriangle = triangles.get(0);
-        record.firstTriangleVertices = mesh.getFaceAdjacenVerticestIds(triangles.get(0));
+        record.firstTriangleVertices = mesh.getFaceAdjacentVerticesIds(triangles.get(0));
 
         if (triangles.size() == 2) {
             record.secondRemovedTriangle = triangles.get(1);
-            record.secondTriangleVertices = mesh.getFaceAdjacenVerticestIds(triangles.get(1));
+            record.secondTriangleVertices = mesh.getFaceAdjacentVerticesIds(triangles.get(1));
         }
 
         // the list of triangles that changed one of their vertices from v2 to v1

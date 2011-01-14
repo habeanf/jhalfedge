@@ -17,7 +17,7 @@ public interface IMesh {
 
     List<Face> getFacesAdjacentToEdge(Edge edge);
 
-    int[] getFaceAdjacenVerticestIds(Face triangle);
+    int[] getFaceAdjacentVerticesIds(Face triangle);
 
     Set<Face> getFacesAdjacentToVertex(Vertex vertex);
 
@@ -27,5 +27,5 @@ public interface IMesh {
 
     void updateFacesVertices(Face face, Vertex deletedVertex, Vertex otherVertex);
 
-    Set<Edge> geEdgesAdjacentToVertex(Vertex vertex);
+    Set<Edge> getEdgesAdjacentToVertex(Vertex vertex);
 }

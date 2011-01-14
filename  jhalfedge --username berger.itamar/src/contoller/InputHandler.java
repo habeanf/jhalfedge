@@ -23,8 +23,8 @@ public class InputHandler extends KeyAdapter {
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "Increase X-axis rotation");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Decrease Y-axis rotation");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Increase Y-axis rotation");
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), "zoom-in");
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), "zoom-out");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), "zoom-in");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "zoom-out");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_G, 0), "toggle Grid");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_L, 0), "Toggle lighting");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "Toggle shade model");
@@ -34,7 +34,7 @@ public class InputHandler extends KeyAdapter {
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_2, 0), "Attribute: Centricity");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_3, 0), "Attribute: Distance to centroid");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_4, 0), "Attribute: Gaussian Curvature");
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0), "Load file");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_Z, 0), "Load file");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), "Next mesh");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_N, 0), "Prev mesh");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "Switch colormap");
@@ -48,7 +48,7 @@ public class InputHandler extends KeyAdapter {
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_J, 0), "Move resolution up");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_K, 0), "Move resolution down");
     }
-
+            
     public void keyPressed(KeyEvent e) {
         if (keyboardLock) {
             return;
@@ -90,7 +90,7 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_4:
                 controller.setGaussianCurvature();
                 break;
-            case KeyEvent.VK_INSERT:
+            case KeyEvent.VK_Z:
                 controller.loadNewFile();
                 break;
             case KeyEvent.VK_M:
@@ -143,10 +143,10 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_RIGHT:
                 controller.increaseYrot(pressed);
                 break;
-            case KeyEvent.VK_PAGE_UP:
+            case KeyEvent.VK_Q:
                 controller.zoomIn(pressed);
                 break;
-            case KeyEvent.VK_PAGE_DOWN:
+            case KeyEvent.VK_W:
                 controller.zoomOut(pressed);
                 break;
         }

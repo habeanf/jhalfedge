@@ -14,9 +14,6 @@ public class Face {
     }
 
     public HalfEdge getHalfEdge() {
-        if (!halfEdge.isValid())
-            return null;
-
         return halfEdge;
     }
 

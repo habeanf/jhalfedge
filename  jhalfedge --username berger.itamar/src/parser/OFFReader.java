@@ -28,6 +28,7 @@ public class OFFReader implements MeshReader {
 
     public void preProcess(OBJLineIterator lineIterator) {
         lineIterator.nextLine();
-        lineIterator.nextLine();
+        if (lineIterator.hasNext())
+            lineIterator.nextLine();
     }
 }

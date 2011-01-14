@@ -2,6 +2,9 @@ package parser;
 
 import model.HalfEdge;
 import model.HalfEdgeDataStructure;
+import model.Vertex;
+
+import java.util.Set;
 
 
 /**
@@ -17,7 +20,10 @@ public class HalfEdgeTester {
 
             HalfEdgeReader gen = new HalfEdgeReader(true,true);
             final HalfEdgeDataStructure halfEdgeDataStructure =
-                    gen.get("/Users/amirmore/Downloads/Models/tests.off",true);
+                    gen.get("/Users/amirmore/Downloads/Models/drill.obj",true);
+
+            Set<Vertex> result = halfEdgeDataStructure.getNeighbours(halfEdgeDataStructure.getVertex(69));
+            
 
             int halfCountFace =0 ;
             for (HalfEdge halfEdge : halfEdgeDataStructure.getAllHalfEdges()) {
@@ -25,7 +31,7 @@ public class HalfEdgeTester {
                     halfCountFace++;
                 }
             }
-            System.out.println("halfCount " + halfCountFace);
+            System.out.println("res size " + result.size());
             final long l2 = System.currentTimeMillis();
 
             System.out.println(l2 - l1);

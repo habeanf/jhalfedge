@@ -35,9 +35,6 @@ public class Vertex {
     }
 
     public HalfEdge getHalfEdge() {
-        if (!halfEdge.isValid())
-            return null;
-
         return halfEdge;
     }
 
@@ -114,5 +111,9 @@ public class Vertex {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    public boolean isIsolated() {
+        return halfEdge==null;
     }
 }

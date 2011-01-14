@@ -24,7 +24,7 @@ public class Vector3D {
         z = vector.z;
     }
 
-        public Vector3D(double[] xyz)            // Constructor that initializes this Vector3D to the intended double values of x, y and z
+    public Vector3D(double[] xyz)            // Constructor that initializes this Vector3D to the intended double values of x, y and z
     {
         this.x = xyz[0];
         this.y = xyz[1];

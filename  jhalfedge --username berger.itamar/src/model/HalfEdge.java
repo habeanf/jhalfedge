@@ -11,31 +11,22 @@ public class HalfEdge {
     private HalfEdge prev;
     private HalfEdge opp;
     private float[] cornerNormal = {1, 0, 0};
+    private double dihedralAngle = -1.0;
     private Edge edge;
-    private boolean isValid = true;
 
     public Vertex getVertex() {
         return vertex;
     }
 
     public HalfEdge getNext() {
-        if (!next.isValid())
-            return null;
-
         return next;
     }
 
     public HalfEdge getPrev() {
-        if (!next.isValid())
-            return null;
-
         return prev;
     }
 
     public HalfEdge getOpp() {
-        if (!next.isValid())
-            return null;
-        
         return opp;
     }
 
@@ -102,11 +93,11 @@ public class HalfEdge {
         return edge;
     }
 
-    public void setValid(boolean isValid) {
-        this.isValid = isValid;
+    public void setDihedralAngle(double dihedralAngle) {
+        this.dihedralAngle = dihedralAngle;
     }
 
-    public boolean isValid() {
-        return isValid;
+    public double getDihedralAngle() {
+        return dihedralAngle;
     }
 }

@@ -81,9 +81,9 @@ public class HalfEdgeDataStructure implements IMesh {
                 break;
             }
 
-            if (nextHalfEdge.getFace() != null) {
-                result.add(nextHalfEdge.getFace());
-            }
+                if (nextHalfEdge.getFace() != null) {
+                    result.add(nextHalfEdge.getFace());
+                }
 
             if (nextHalfEdge.getOpp() != null && nextHalfEdge.getOpp().getFace() != null) {
                 result.add(nextHalfEdge.getOpp().getFace());
@@ -135,7 +135,7 @@ public class HalfEdgeDataStructure implements IMesh {
         return result;
     }
 
-    public int[] getFaceAdjacenVerticestIds(Face triangle) {
+    public int[] getFaceAdjacentVerticesIds(Face triangle) {
         return new int[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -143,39 +143,86 @@ public class HalfEdgeDataStructure implements IMesh {
         return getFaceNeighbours(vertex);
     }
 
-
     public void removeFace(Face face) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        HalfEdge firstEdge = face.getHalfEdge();
+        HalfEdge currentEdge = face.getHalfEdge();
+
+        do {
+            currentEdge.setFace(null);
+            currentEdge = currentEdge.getNext();
+        } while (!firstEdge.equals(currentEdge));
+
+        faces.remove(face);
+    }
+
+    public void removeEdge(Edge edge) {
+        HalfEdge fromToEdge = edgeToHalfEdgeMap.get(edge);
+        HalfEdge toFromEdge = fromToEdge.getOpp();
+        if (!(fromToEdge.getFace()==null))
+            removeFace(fromToEdge.getFace());
+        if (!(toFromEdge.getFace()==null))
+            removeFace(toFromEdge.getFace());
+
+        Vertex fromVertex = fromToEdge.getVertex();
+
+        HalfEdge fromIn = fromToEdge.getPrev();
+        HalfEdge fromOut = fromToEdge.getOpp().getNext(); // fromToEdge.rotateNext()
+
+        if (fromVertex.getHalfEdge().equals(fromToEdge)) {
+            if (fromOut.equals(fromToEdge))
+                fromVertex.setHalfEdge(null);
+            else
+                fromVertex.setHalfEdge(fromOut);
+        }
+
+        fromIn.setNext(fromOut, true);
+        fromOut.setPrev(fromIn);
+
+        Vertex toVertex = toFromEdge.getVertex();
+
+        HalfEdge toIn = toFromEdge.getPrev();
+        HalfEdge toOut = toFromEdge.getOpp().getNext(); // toFromEdge.rotateNext()
+
+        if (toVertex.getHalfEdge().equals(toFromEdge)) {
+            if (toOut.equals(toFromEdge))
+                toVertex.setHalfEdge(null);
+            else
+                toVertex.setHalfEdge(toOut);
+        }
+
+        toIn.setNext(toOut,true);
+        toOut.setPrev(toIn);
+
+        halfEdges.remove(toFromEdge);
+        halfEdges.remove(fromToEdge);
+        edgeToHalfEdgeMap.remove(edge);
     }
 
     public void removeVertex(Vertex vertex) {
-        List<HalfEdge> invalidHalfEdges = new ArrayList<HalfEdge>();
+        if (!vertex.isIsolated()) {
+            // Remove every edge that is connected to this vertex
 
-        HalfEdge firstHalfEdge = vertex.getHalfEdge();
-        HalfEdge nextHalfEdge = firstHalfEdge;
 
-        do {
-            if (nextHalfEdge == null) {
-                break;
-            }
+            HalfEdge current;
+            HalfEdge next = vertex.getHalfEdge();
+            do {
+                current = next;
+                next = next.getOpp().getNext(); // next.rotateNext()
+                // Avoid removing the same edge twice in case of an edge loop
 
-            invalidHalfEdges.add(nextHalfEdge);
-            invalidHalfEdges.add(nextHalfEdge.getOpp());
-
-            nextHalfEdge = nextHalfEdge.getOpp().getNext();
-        } while (!firstHalfEdge.equals(nextHalfEdge));
-
-        for (HalfEdge invalidHalfEdge : invalidHalfEdges) {
-            invalidHalfEdge.setValid(false);
+                if (next.getEdge().equals(current.getEdge()))
+                    next = next.getOpp().getNext(); // next.rotateNext()
+                removeEdge(current.getEdge());
+            } while (!current.equals(next));
         }
-
+        vertexes.remove(vertex.getId());
     }
 
     public void updateFacesVertices(Face face, Vertex deletedVertex, Vertex otherVertex) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Set<Edge> geEdgesAdjacentToVertex(Vertex vertex) {
+    public Set<Edge> getEdgesAdjacentToVertex(Vertex vertex) {
         Set<Edge> result = new HashSet<Edge>();
 
         HalfEdge firstHalfEdge = vertex.getHalfEdge();

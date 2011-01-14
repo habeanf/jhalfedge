@@ -2,8 +2,11 @@ package segmentation;
 
 import attributes.MeshAttribute;
 import model.Face;
+import model.HalfEdge;
 import model.HalfEdgeDataStructure;
 import model.Vertex;
+import model.Vector3D;
+import parser.HalfEdgeNormalCreator;
 
 /**
  * User: itamar
@@ -26,8 +29,23 @@ public class PartSegmentation implements MeshAttribute {
     }
 
     public void calculate(HalfEdgeDataStructure halfEdgeDataStructure) {
-        // calulate the segmentation
-        //TODO
+        /* TRY #1: USE DIHEDRAL MEASURE WITH HIERARCHICAL CLUSTERING */
+        // calculate normals, needed for dihedral calculation
+        HalfEdgeNormalCreator normalCreator = new HalfEdgeNormalCreator(halfEdgeDataStructure);
+        normalCreator.calcNormals();
+
+        // calculate dihedral for each edge
+        for (HalfEdge halfEdge : halfEdgeDataStructure.getAllHalfEdges()) {
+            if (halfEdge.getDihedralAngle()<0.0 && halfEdge.getOpp()!=null) {
+                float[] curEdgeNormal = halfEdge.getCornerNormal();
+                float[] oppEdgeNormal = halfEdge.getCornerNormal();
+
+                double dihedralAngle = (new Vector3D(curEdgeNormal)).calculateAngleTo(new Vector3D(oppEdgeNormal));
+
+                halfEdge.setDihedralAngle(dihedralAngle);
+                halfEdge.getOpp().setDihedralAngle(dihedralAngle);
+            }
+        }
 
         // assign an id to each face
         clusterAmount = 5;

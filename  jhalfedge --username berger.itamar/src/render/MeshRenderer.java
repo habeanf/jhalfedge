@@ -177,7 +177,6 @@ public class MeshRenderer {
                 }
             } while (nextHalfEdge != firstHalfEdge);
 
-
             gl.glEnd();
         }
     }
