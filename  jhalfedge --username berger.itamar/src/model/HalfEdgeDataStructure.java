@@ -1,6 +1,5 @@
 package model;
 
-import attributes.graph.Edge;
 
 import java.util.*;
 
@@ -14,11 +13,13 @@ public class HalfEdgeDataStructure implements IMesh {
     private final Collection<HalfEdge> halfEdges;
     private final List<Face> faces;
     private final Map<Integer, Vertex> vertexes;
+    private Map<Edge, HalfEdge> edgeToHalfEdgeMap;
 
-    public HalfEdgeDataStructure(Collection<HalfEdge> halfEdges, List<Face> faces, Map<Integer, Vertex> vertexes) {
+    public HalfEdgeDataStructure(Collection<HalfEdge> halfEdges, List<Face> faces, Map<Integer, Vertex> vertexes, Map<Edge, HalfEdge> edgeToHalfEdgeMap) {
         this.halfEdges = halfEdges;
         this.faces = faces;
         this.vertexes = vertexes;
+        this.edgeToHalfEdgeMap = edgeToHalfEdgeMap;
     }
 
     public Collection<HalfEdge> getAllHalfEdges() {
@@ -100,7 +101,7 @@ public class HalfEdgeDataStructure implements IMesh {
         do {
             vertexList.add(edge.getVertex());
             edge = edge.getNext();
-        } while(!edge.equals(face.getHalfEdge()));
+        } while (!edge.equals(face.getHalfEdge()));
         return vertexList.toArray(new Vertex[vertexList.size()]);
     }
 
@@ -110,34 +111,53 @@ public class HalfEdgeDataStructure implements IMesh {
 
 
     public Set<Edge> getAllEdges() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return edgeToHalfEdgeMap.keySet();
     }
 
-    public Face[] getFacesAdjacentToEdge(Edge edge) {
-        return new Face[0];  //To change body of implemented methods use File | Settings | File Templates.
+    public List<Face> getFacesAdjacentToEdge(Edge edge) {
+        List<Face> result = new ArrayList<Face>();
+
+        final HalfEdge halfEdge = edgeToHalfEdgeMap.get(edge);
+
+        if (halfEdge != null && halfEdge.getFace() != null) {
+            result.add(halfEdge.getFace());
+
+            HalfEdge oppHalfEdge = halfEdge.getOpp();
+
+            if (oppHalfEdge != null && oppHalfEdge.getFace() != null) {
+                result.add(oppHalfEdge.getFace());
+            }
+        }
+
+        return result;
     }
 
     public int[] getFaceAdjacenVerticestIds(Face triangle) {
         return new int[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Set<Face> getFacesAdjacentToVertex(int vertex) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Set<Face> getFacesAdjacentToVertex(Vertex vertex) {
+        return getFaceNeighbours(vertex);
     }
 
-    public void removeFace(int firstRemovedTriangleIndex) {
+
+    public void removeFace(Face face) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void removeVertex(int deletedVertex) {
+    public void removeVertex(Vertex deletedVertex) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void updateFacesVertices(Face face, int deletedVertex, int otherVertex) {
+    public void updateFacesVertices(Face face, Vertex deletedVertex, Vertex otherVertex) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Set<Edge> geEdgesAdjacentToVertex(int vertex) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Set<Edge> geEdgesAdjacentToVertex(Vertex vertex) {
+        Set<Edge> result = new HashSet<Edge>();
+
+        
+
+        return result;
     }
 }

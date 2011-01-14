@@ -1,9 +1,6 @@
 package parser;
 
-import model.Face;
-import model.HalfEdge;
-import model.HalfEdgeDataStructure;
-import model.Vertex;
+import model.*;
 
 import java.io.FileReader;
 import java.util.*;
@@ -180,7 +177,7 @@ public class HalfEdgeReader {
             }
         }
 
-        Edge edge = new Edge(fromVertex,toVertex);
+        Edge edge = new Edge(vertexMap.get(fromVertex),vertexMap.get(toVertex));
 
         // return existing edge
         if (halfEdgeMap.containsKey(edge)) {
@@ -207,7 +204,7 @@ public class HalfEdgeReader {
 
         // add a map so that opposite edge of other faces can find these edges
         halfEdgeMap.put(edge,fromToHalf);
-        halfEdgeMap.put(new Edge(toVertex,fromVertex),toFromHalf);
+        halfEdgeMap.put(new Edge(vertexMap.get(toVertex),vertexMap.get(fromVertex)),toFromHalf);
 
         return edge;
     }
@@ -352,7 +349,7 @@ public class HalfEdgeReader {
             e.printStackTrace();
         }
 
-        return new HalfEdgeDataStructure(halfEdgeMap.values(), faces, vertexMap);
+        return new HalfEdgeDataStructure(halfEdgeMap.values(), faces, vertexMap, halfEdgeMap);
     }
 
     /** process some vertex data early
@@ -379,41 +376,6 @@ public class HalfEdgeReader {
         float meanz = mean[2]/vertexMap.values().size();
         for (Vertex vertex : vertexMap.values()) {
             vertex.offset(meanx,meany,meanz);
-        }
-    }
-
-    // Helper classes only used for processing
-
-    /** Helper class for full edge
-     *
-     */
-    public class Edge {
-        int from;
-        int to;
-
-        public Edge(int from, int to) {
-            this.from = from;
-            this.to = to;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Edge edge = (Edge) o;
-
-            if (from != edge.from) return false;
-            if (to != edge.to) return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = from;
-            result = 31 * result + to;
-            return result;
         }
     }
 

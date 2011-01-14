@@ -1,6 +1,6 @@
 package attributes.contraction;
 
-import attributes.graph.Edge;
+import model.Edge;
 import model.Face;
 import model.IMesh;
 
@@ -79,10 +79,10 @@ public class MultiResRepresentor {
         }
 
         // delete the attached triangles
-        mesh.removeFace(record.firstRemovedTriangleIndex);
+        mesh.removeFace(record.firstRemovedTriangle);
 
-        if (record.secondRemovedTriangleIndex != -1)
-            mesh.removeFace(record.secondRemovedTriangleIndex);
+        if (record.secondRemovedTriangle != null)
+            mesh.removeFace(record.secondRemovedTriangle);
 
         // delete the vertex
         mesh.removeVertex(record.deletedVertex);
@@ -97,35 +97,33 @@ public class MultiResRepresentor {
 
         // choosing one of the vertices randomly
         if (Math.random() > 0.5) {
-            record.deletedVertex = edge.getFromId();
-            record.otherVertex = edge.getToId();
+            record.deletedVertex = edge.getFrom();
+            record.otherVertex = edge.getTo();
         } else {
-            record.deletedVertex = edge.getToId();
-            record.otherVertex = edge.getFromId();
+            record.deletedVertex = edge.getTo();
+            record.otherVertex = edge.getFrom();
         }
 
         // set adjacent triangles
-        final Face[] triangles = mesh.getFacesAdjacentToEdge(edge);
-        record.firstRemovedTriangleIndex = triangles[0].getId();
-        record.firstTriangleVertices = mesh.getFaceAdjacenVerticestIds(triangles[0]);
+        final List<Face> triangles = mesh.getFacesAdjacentToEdge(edge);
+        record.firstRemovedTriangle = triangles.get(0);
+        record.firstTriangleVertices = mesh.getFaceAdjacenVerticestIds(triangles.get(0));
 
-        if (triangles.length == 2) {
-            record.secondRemovedTriangleIndex = triangles[1].getId();
-            record.secondTriangleVertices = mesh.getFaceAdjacenVerticestIds(triangles[1]);
+        if (triangles.size() == 2) {
+            record.secondRemovedTriangle = triangles.get(1);
+            record.secondTriangleVertices = mesh.getFaceAdjacenVerticestIds(triangles.get(1));
         }
 
         // the list of triangles that changed one of their vertices from v2 to v1
         Set<Face> faces = mesh.getFacesAdjacentToVertex(record.deletedVertex);
 
-        List<Integer> changedTrianglesIds = new ArrayList<Integer>(faces.size());
+        List<Face> changedTriangles = new ArrayList<Face>(faces.size());
         for (Face face : faces) {
-            final int id = face.getId();
-
-            if (id != record.firstRemovedTriangleIndex && id != record.secondRemovedTriangleIndex) {
-                changedTrianglesIds.add(id);
+            if (face != record.firstRemovedTriangle && face != record.secondRemovedTriangle) {
+                changedTriangles.add(face);
             }
         }
-        record.changedTrianglesIds = changedTrianglesIds;
+        record.changedTriangles = changedTriangles;
 
         return record;
     }

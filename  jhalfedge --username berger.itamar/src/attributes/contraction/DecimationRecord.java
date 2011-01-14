@@ -1,5 +1,8 @@
 package attributes.contraction;
 
+import model.Face;
+import model.Vertex;
+
 import java.util.List;
 
 /**
@@ -9,20 +12,20 @@ import java.util.List;
  */
 public class DecimationRecord {
     // the vertex that is going to be deleted from the mesh (v2)
-    public int deletedVertex;
+    public Vertex deletedVertex;
 
     // the contracted to vertex (v1)
-    public int otherVertex;
+    public Vertex otherVertex;
 
     // the first deleted triangle
-    public int firstRemovedTriangleIndex = -1;
+    public Face firstRemovedTriangle;
     public int[] firstTriangleVertices;
 
     // the second deleted triangle (optional)    
-    public int secondRemovedTriangleIndex = -1;
+    public Face secondRemovedTriangle;
     public int[] secondTriangleVertices;
 
     // the list of triangles that change one of their vertices from v2 to v1;
-    public List<Integer> changedTrianglesIds;
+    public List<Face> changedTriangles;
     
 }

@@ -1,6 +1,5 @@
 package model;
 
-import attributes.graph.Edge;
 
 import java.util.List;
 import java.util.Set;
@@ -16,17 +15,17 @@ public interface IMesh {
 
     List<Face> getAllFaces();
 
-    Face[] getFacesAdjacentToEdge(Edge edge);
+    List<Face> getFacesAdjacentToEdge(Edge edge);
 
     int[] getFaceAdjacenVerticestIds(Face triangle);
 
-    Set<Face> getFacesAdjacentToVertex(int vertex);
+    Set<Face> getFacesAdjacentToVertex(Vertex vertex);
 
-    void removeFace(int firstRemovedTriangleIndex);
+    void removeFace(Face face);
 
-    void removeVertex(int deletedVertex);
+    void removeVertex(Vertex deletedVertex);
 
-    void updateFacesVertices(Face face, int deletedVertex, int otherVertex);
+    void updateFacesVertices(Face face, Vertex deletedVertex, Vertex otherVertex);
 
-    Set<Edge> geEdgesAdjacentToVertex(int deletedVertex);
+    Set<Edge> geEdgesAdjacentToVertex(Vertex vertex);
 }
