@@ -23,7 +23,7 @@ public class MultiResRepresentor {
 
     public void build(IMesh mesh) {
         // get a set of all edges
-        final Set<Edge> edges = mesh.getEdges();
+        final Set<Edge> edges = mesh.getAllEdges();
 
         // construct priority que from all edges (use their length for rank)
         PriorityQueue<Edge> queue = new PriorityQueue<Edge>(edges);
@@ -31,7 +31,7 @@ public class MultiResRepresentor {
         // initialize a list of decimation records
         decimationRecords = new ArrayList<DecimationRecord>();
 
-        originalNumberOfFaces = mesh.getFaces().size();
+        originalNumberOfFaces = mesh.getAllFaces().size();
 
         // while the mesh is not coarse enough
         while (!isMeshCoarse(mesh)) {
@@ -131,7 +131,7 @@ public class MultiResRepresentor {
     }
 
     private boolean isMeshCoarse(IMesh mesh) {
-        return (mesh.getFaces().size() / (float) originalNumberOfFaces < DECIMATION_RATIO);
+        return (mesh.getAllFaces().size() / (float) originalNumberOfFaces < DECIMATION_RATIO);
     }
 
     public boolean isContractionAllowed() {

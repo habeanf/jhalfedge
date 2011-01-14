@@ -2,6 +2,7 @@ package model;
 
 import attributes.graph.Edge;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -11,9 +12,9 @@ import java.util.Set;
  */
 public interface IMesh {
 
-    Set<Edge> getEdges();
+    Set<Edge> getAllEdges();
 
-    Set<Face> getFaces();
+    List<Face> getAllFaces();
 
     Face[] getFacesAdjacentToEdge(Edge edge);
 

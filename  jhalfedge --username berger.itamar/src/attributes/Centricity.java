@@ -9,9 +9,6 @@ import utils.InfoLogger;
 import javax.swing.text.NumberFormatter;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Calculate the cenricity attribute of a mesh by using the GeodesicDistanceCalculator.

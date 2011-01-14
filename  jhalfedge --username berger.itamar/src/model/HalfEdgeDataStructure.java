@@ -109,11 +109,7 @@ public class HalfEdgeDataStructure implements IMesh {
     }
 
 
-    public Set<Edge> getEdges() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public Set<Face> getFaces() {
+    public Set<Edge> getAllEdges() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -141,7 +137,7 @@ public class HalfEdgeDataStructure implements IMesh {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Set<Edge> geEdgesAdjacentToVertex(int deletedVertex) {
+    public Set<Edge> geEdgesAdjacentToVertex(int vertex) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
