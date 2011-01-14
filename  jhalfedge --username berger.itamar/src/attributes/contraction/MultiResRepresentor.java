@@ -36,12 +36,14 @@ public class MultiResRepresentor {
 
         originalNumberOfFaces = mesh.getAllFaces().size();
 
+        System.out.println("Starting contraction, total faces :" + originalNumberOfFaces);
+
         // while the mesh is not coarse enough
         while (!isMeshCoarse(mesh) && queue.size() > 0) {
             final Edge edge = queue.poll();
 
             // if the contraction is not allowed continue to the next
-            if (!isContractionAllowed()) {
+            if (!isContractionAllowed(mesh, edge)) {
                 continue;
             }
 
@@ -61,6 +63,8 @@ public class MultiResRepresentor {
             System.out.println("created " + decimationRecords.size() + " records ,queue size: " + queue.size());
         }
 
+        System.out.println("done");
+
 
     }
 
@@ -75,6 +79,8 @@ public class MultiResRepresentor {
         for (Edge edge : modifiedEdges) {
             queue.remove(edge);
         }
+
+        updateWeights(modifiedEdges);
 
         // add again all the edges of the other vertex
         queue.addAll(modifiedEdges);
@@ -116,8 +122,10 @@ public class MultiResRepresentor {
 
         // set adjacent triangles
         final List<Face> triangles = mesh.getFacesAdjacentToEdge(edge);
+        if (triangles.size() >0) {
         record.firstRemovedTriangle = triangles.get(0);
         record.firstTriangleVertices = mesh.getFaceAdjacentVerticesIds(triangles.get(0));
+        }
 
         if (triangles.size() == 2) {
             record.secondRemovedTriangle = triangles.get(1);
@@ -142,7 +150,10 @@ public class MultiResRepresentor {
         return (mesh.getAllFaces().size() / (float) originalNumberOfFaces < DECIMATION_RATIO);
     }
 
-    public boolean isContractionAllowed() {
+    public boolean isContractionAllowed(IMesh mesh, Edge edge) {
+        if (!mesh.isEdgeValid(edge))
+            return false;
+
         return true;  // TODO
     }
 

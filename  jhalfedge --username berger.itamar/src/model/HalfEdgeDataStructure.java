@@ -144,6 +144,10 @@ public class HalfEdgeDataStructure implements IMesh {
     }
 
     public void removeFace(Face face) {
+        if (face == null){
+            return;
+        }
+
         HalfEdge firstEdge = face.getHalfEdge();
         HalfEdge currentEdge = face.getHalfEdge();
 
@@ -242,5 +246,11 @@ public class HalfEdgeDataStructure implements IMesh {
         } while (!firstHalfEdge.equals(nextHalfEdge));
 
         return result;
+    }
+
+    public boolean isEdgeValid(Edge edge) {
+        final HalfEdge halfEdge = edgeToHalfEdgeMap.get(edge);
+
+        return (halfEdge!= null);
     }
 }

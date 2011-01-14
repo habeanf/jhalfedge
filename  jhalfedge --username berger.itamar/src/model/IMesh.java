@@ -28,4 +28,6 @@ public interface IMesh {
     void updateFacesVertices(Face face, Vertex deletedVertex, Vertex otherVertex);
 
     Set<Edge> getEdgesAdjacentToVertex(Vertex vertex);
+
+    boolean isEdgeValid(Edge edge);
 }
