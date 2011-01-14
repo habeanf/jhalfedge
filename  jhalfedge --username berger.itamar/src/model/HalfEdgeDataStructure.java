@@ -121,7 +121,7 @@ public class HalfEdgeDataStructure implements IMesh {
         return new Face[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public int[] getFaceAdjacentIds(Face triangle) {
+    public int[] getFaceAdjacenVerticestIds(Face triangle) {
         return new int[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 

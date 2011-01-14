@@ -2,7 +2,6 @@ package attributes.contraction;
 
 import attributes.graph.Edge;
 import model.Face;
-import model.HalfEdgeDataStructure;
 import model.IMesh;
 
 import java.util.*;
@@ -108,11 +107,11 @@ public class MultiResRepresentor {
         // set adjacent triangles
         final Face[] triangles = mesh.getFacesAdjacentToEdge(edge);
         record.firstRemovedTriangleIndex = triangles[0].getId();
-        record.firstTriangleVertices = mesh.getFaceAdjacentIds(triangles[0]);
+        record.firstTriangleVertices = mesh.getFaceAdjacenVerticestIds(triangles[0]);
 
         if (triangles.length == 2) {
             record.secondRemovedTriangleIndex = triangles[1].getId();
-            record.secondTriangleVertices = mesh.getFaceAdjacentIds(triangles[1]);
+            record.secondTriangleVertices = mesh.getFaceAdjacenVerticestIds(triangles[1]);
         }
 
         // the list of triangles that changed one of their vertices from v2 to v1
@@ -132,7 +131,7 @@ public class MultiResRepresentor {
     }
 
     private boolean isMeshCoarse(IMesh mesh) {
-        return (mesh.getFaces().size() / (float) originalNumberOfFaces > DECIMATION_RATIO);
+        return (mesh.getFaces().size() / (float) originalNumberOfFaces < DECIMATION_RATIO);
     }
 
     public boolean isContractionAllowed() {
@@ -140,7 +139,6 @@ public class MultiResRepresentor {
     }
 
     int p = 0;
-
     public void decreaseResolution(IMesh mesh) {
 
         if (p == decimationRecords.size())

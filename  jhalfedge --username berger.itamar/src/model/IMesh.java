@@ -17,7 +17,7 @@ public interface IMesh {
 
     Face[] getFacesAdjacentToEdge(Edge edge);
 
-    int[] getFaceAdjacentIds(Face triangle);
+    int[] getFaceAdjacenVerticestIds(Face triangle);
 
     Set<Face> getFacesAdjacentToVertex(int vertex);
 
