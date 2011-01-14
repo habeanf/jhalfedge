@@ -35,6 +35,9 @@ public class Vertex {
     }
 
     public HalfEdge getHalfEdge() {
+        if (!halfEdge.isValid())
+            return null;
+
         return halfEdge;
     }
 

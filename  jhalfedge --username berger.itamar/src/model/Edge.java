@@ -9,6 +9,8 @@ public class Edge implements Comparable<Edge> {
     Vertex from;
     Vertex to;
 
+    float weight;
+
     public Edge(Vertex from, Vertex to) {
         this.from = from;
         this.to = to;
@@ -42,7 +44,21 @@ public class Edge implements Comparable<Edge> {
         return to;
     }
 
-    public int compareTo(Edge o) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    public int compareTo(final Edge argEdge) {
+        if (weight > argEdge.weight) {
+            return 1;
+        }
+        if (weight < argEdge.weight) {
+            return -1;
+        }
+
+        return 0;
+    }
+
+    public void updateWeight() {
+       Vector3D fromVec = new Vector3D(from);
+       Vector3D toVec = new Vector3D(to);
+
+       weight = (float) fromVec.sub(toVec).length();
     }
 }

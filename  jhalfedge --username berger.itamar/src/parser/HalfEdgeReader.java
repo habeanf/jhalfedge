@@ -185,8 +185,8 @@ public class HalfEdgeReader {
         }
 
         // Allocate
-        HalfEdge fromToHalf = new HalfEdge(vertexMap.get(fromVertex));
-        HalfEdge toFromHalf = new HalfEdge(vertexMap.get(toVertex));
+        HalfEdge fromToHalf = new HalfEdge(vertexMap.get(fromVertex),edge);
+        HalfEdge toFromHalf = new HalfEdge(vertexMap.get(toVertex),edge);
 
 
         // Initialize half edges

@@ -85,11 +85,14 @@ public class HalfEdgeDataStructure implements IMesh {
                 result.add(nextHalfEdge.getFace());
             }
 
-            if (nextHalfEdge.getOpp().getFace() != null) {
+            if (nextHalfEdge.getOpp() != null && nextHalfEdge.getOpp().getFace() != null) {
                 result.add(nextHalfEdge.getOpp().getFace());
             }
+            
+            if (nextHalfEdge.getOpp() != null) {
+                nextHalfEdge = nextHalfEdge.getOpp().getNext();
+            }
 
-            nextHalfEdge = nextHalfEdge.getOpp().getNext();
         } while (firstHalfEdge != nextHalfEdge);
 
         return result;
@@ -145,8 +148,27 @@ public class HalfEdgeDataStructure implements IMesh {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void removeVertex(Vertex deletedVertex) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void removeVertex(Vertex vertex) {
+        List<HalfEdge> invalidHalfEdges = new ArrayList<HalfEdge>();
+
+        HalfEdge firstHalfEdge = vertex.getHalfEdge();
+        HalfEdge nextHalfEdge = firstHalfEdge;
+
+        do {
+            if (nextHalfEdge == null) {
+                break;
+            }
+
+            invalidHalfEdges.add(nextHalfEdge);
+            invalidHalfEdges.add(nextHalfEdge.getOpp());
+
+            nextHalfEdge = nextHalfEdge.getOpp().getNext();
+        } while (!firstHalfEdge.equals(nextHalfEdge));
+
+        for (HalfEdge invalidHalfEdge : invalidHalfEdges) {
+            invalidHalfEdge.setValid(false);
+        }
+
     }
 
     public void updateFacesVertices(Face face, Vertex deletedVertex, Vertex otherVertex) {
@@ -156,7 +178,21 @@ public class HalfEdgeDataStructure implements IMesh {
     public Set<Edge> geEdgesAdjacentToVertex(Vertex vertex) {
         Set<Edge> result = new HashSet<Edge>();
 
-        
+        HalfEdge firstHalfEdge = vertex.getHalfEdge();
+        HalfEdge nextHalfEdge = firstHalfEdge;
+
+        do {
+            if (nextHalfEdge == null) {
+                break;
+            }
+
+            result.add(nextHalfEdge.getEdge());
+
+            if (nextHalfEdge.getOpp() != null) {
+                nextHalfEdge = nextHalfEdge.getOpp().getNext();
+            }
+
+        } while (!firstHalfEdge.equals(nextHalfEdge));
 
         return result;
     }

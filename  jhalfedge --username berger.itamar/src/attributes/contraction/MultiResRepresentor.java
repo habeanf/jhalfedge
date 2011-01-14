@@ -16,6 +16,8 @@ public class MultiResRepresentor {
 
     private int originalNumberOfFaces;
 
+    private boolean enableRandom = false;
+
     private List<DecimationRecord> decimationRecords;
 
     public MultiResRepresentor() {
@@ -24,6 +26,7 @@ public class MultiResRepresentor {
     public void build(IMesh mesh) {
         // get a set of all edges
         final Set<Edge> edges = mesh.getAllEdges();
+        updateWeights(edges);
 
         // construct priority que from all edges (use their length for rank)
         PriorityQueue<Edge> queue = new PriorityQueue<Edge>(edges);
@@ -34,7 +37,7 @@ public class MultiResRepresentor {
         originalNumberOfFaces = mesh.getAllFaces().size();
 
         // while the mesh is not coarse enough
-        while (!isMeshCoarse(mesh)) {
+        while (!isMeshCoarse(mesh) && queue.size() > 0) {
             final Edge edge = queue.poll();
 
             // if the contraction is not allowed continue to the next
@@ -48,21 +51,28 @@ public class MultiResRepresentor {
             // store the record in the decimation records list
             decimationRecords.add(record);
 
-            // get edges that are going to be updated after the contraction
-            final Set<Edge> staleEdges = mesh.geEdgesAdjacentToVertex(record.deletedVertex);
-
             // apply the edge contraction on the mesh
             contract(mesh, record);
 
             // update the information of edges in the queue
             final Set<Edge> modifiedEdges = mesh.geEdgesAdjacentToVertex(record.otherVertex);
-            updateQueue(queue, staleEdges, modifiedEdges);
+            updateQueue(queue,  modifiedEdges);
+
+            System.out.println("created " + decimationRecords.size() + " records ,queue size: " + queue.size());
+        }
+
+
+    }
+
+    private void updateWeights(Set<Edge> edges) {
+        for (Edge edge : edges) {
+            edge.updateWeight();
         }
     }
 
-    private void updateQueue(PriorityQueue<Edge> queue, Set<Edge> stailEdges, Set<Edge> modifiedEdges) {
+    private void updateQueue(PriorityQueue<Edge> queue, Set<Edge> modifiedEdges) {
         // remove all the edges of the deleted vertex
-        for (Edge edge : stailEdges) {
+        for (Edge edge : modifiedEdges) {
             queue.remove(edge);
         }
 
@@ -96,7 +106,7 @@ public class MultiResRepresentor {
         DecimationRecord record = new DecimationRecord();
 
         // choosing one of the vertices randomly
-        if (Math.random() > 0.5) {
+        if (enableRandom && Math.random() > 0.5) {
             record.deletedVertex = edge.getFrom();
             record.otherVertex = edge.getTo();
         } else {
