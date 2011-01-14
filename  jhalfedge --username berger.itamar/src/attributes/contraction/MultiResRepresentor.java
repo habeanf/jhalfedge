@@ -2,6 +2,7 @@ package attributes.contraction;
 
 import attributes.graph.Edge;
 import model.Face;
+import model.HalfEdgeDataStructure;
 import model.IMesh;
 
 import java.util.*;
@@ -14,18 +15,14 @@ import java.util.*;
 public class MultiResRepresentor {
     private static final float DECIMATION_RATIO = 0.1f;
 
-    private IMesh mesh;
-
     private int originalNumberOfFaces;
 
-    private List<DecimationRecord> decimationRecordList;
+    private List<DecimationRecord> decimationRecords;
 
-    public MultiResRepresentor(IMesh mesh) {
-        this.mesh = mesh;
-        originalNumberOfFaces = mesh.getFaces().size();
+    public MultiResRepresentor() {
     }
 
-    public void execute() {
+    public void build(IMesh mesh) {
         // get a set of all edges
         final Set<Edge> edges = mesh.getEdges();
 
@@ -33,10 +30,12 @@ public class MultiResRepresentor {
         PriorityQueue<Edge> queue = new PriorityQueue<Edge>(edges);
 
         // initialize a list of decimation records
-        decimationRecordList = new ArrayList<DecimationRecord>();
+        decimationRecords = new ArrayList<DecimationRecord>();
+
+        originalNumberOfFaces = mesh.getFaces().size();
 
         // while the mesh is not coarse enough
-        while (!isMeshCoarse()) {
+        while (!isMeshCoarse(mesh)) {
             final Edge edge = queue.poll();
 
             // if the contraction is not allowed continue to the next
@@ -45,16 +44,16 @@ public class MultiResRepresentor {
             }
 
             // build a decimation record according to edge's contraction
-            DecimationRecord record = createEdgeContractionRecord(edge);
+            DecimationRecord record = createEdgeContractionRecord(mesh, edge);
 
             // store the record in the decimation records list
-            decimationRecordList.add(record);
+            decimationRecords.add(record);
 
             // get edges that are going to be updated after the contraction
             final Set<Edge> staleEdges = mesh.geEdgesAdjacentToVertex(record.deletedVertex);
-            
+
             // apply the edge contraction on the mesh
-            applyContractionToMesh(record);
+            contract(mesh, record);
 
             // update the information of edges in the queue
             final Set<Edge> modifiedEdges = mesh.geEdgesAdjacentToVertex(record.otherVertex);
@@ -64,7 +63,7 @@ public class MultiResRepresentor {
 
     private void updateQueue(PriorityQueue<Edge> queue, Set<Edge> stailEdges, Set<Edge> modifiedEdges) {
         // remove all the edges of the deleted vertex
-        for (Edge edge: stailEdges) {
+        for (Edge edge : stailEdges) {
             queue.remove(edge);
         }
 
@@ -72,7 +71,7 @@ public class MultiResRepresentor {
         queue.addAll(modifiedEdges);
     }
 
-    private void applyContractionToMesh(DecimationRecord record) {
+    private void contract(IMesh mesh, DecimationRecord record) {
         // move triangles vertices that are attached to deleted vertex
         final Set<Face> adjacentFaces = mesh.getFacesAdjacentToVertex(record.deletedVertex);
 
@@ -90,7 +89,11 @@ public class MultiResRepresentor {
         mesh.removeVertex(record.deletedVertex);
     }
 
-    private DecimationRecord createEdgeContractionRecord(Edge edge) {
+    private void split(IMesh mesh, DecimationRecord record) {
+        // TODO
+    }
+
+    private DecimationRecord createEdgeContractionRecord(IMesh mesh, Edge edge) {
         DecimationRecord record = new DecimationRecord();
 
         // choosing one of the vertices randomly
@@ -128,16 +131,33 @@ public class MultiResRepresentor {
         return record;
     }
 
-    private boolean isMeshCoarse() {
+    private boolean isMeshCoarse(IMesh mesh) {
         return (mesh.getFaces().size() / (float) originalNumberOfFaces > DECIMATION_RATIO);
     }
 
     public boolean isContractionAllowed() {
-        return true;
-        // TODO
+        return true;  // TODO
     }
 
-    public List<DecimationRecord> getDecimationRecordList() {
-        return decimationRecordList;
+    int p = 0;
+
+    public void decreaseResolution(IMesh mesh) {
+
+        if (p == decimationRecords.size())
+            return;
+
+        final DecimationRecord decimationRecord = decimationRecords.get(p++);
+
+        contract(mesh, decimationRecord);
     }
+
+    public void increaseResolution(IMesh mesh) {
+        if (p == 0)
+            return;
+
+        final DecimationRecord decimationRecord = decimationRecords.get(--p);
+
+        split(mesh, decimationRecord);
+    }
+
 }

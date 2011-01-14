@@ -1,6 +1,7 @@
 package contoller;
 
 import attributes.*;
+import attributes.contraction.MultiResRepresentor;
 import colormaps.ColorMapFactory;
 import model.HalfEdgeDataStructure;
 import parser.HalfEdgeNormalCreator;
@@ -92,9 +93,9 @@ public class Controller implements GLEventListener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
         gl.glTranslatef(0f, 0.0f, this.z);
-        gl.glScalef(3.0f,3.0f,3.0f);
-        gl.glRotatef((45.0f + xrot)%360, 1.0f, 0.0f, 0.0f);
-        gl.glRotatef((45.0f + yrot)%360, 0.0f, 1.0f, 0.0f);
+        gl.glScalef(3.0f, 3.0f, 3.0f);
+        gl.glRotatef((45.0f + xrot) % 360, 1.0f, 0.0f, 0.0f);
+        gl.glRotatef((45.0f + yrot) % 360, 0.0f, 1.0f, 0.0f);
 
         if (isSmooth)
             gl.glShadeModel(GL.GL_SMOOTH);
@@ -267,7 +268,7 @@ public class Controller implements GLEventListener {
 
     public void setCentricityAttribute() {
         if (!state.isCalculatedCentricity()) {
-            Centricity.calculate(halfEdgeDataStructure,infoLogger, state);
+            Centricity.calculate(halfEdgeDataStructure, infoLogger, state);
         } else {
             MeshAttribute attribute = new Centricity();
             state.setMeshAttribute(attribute);
@@ -381,5 +382,27 @@ public class Controller implements GLEventListener {
         state.setMeshAttribute(attribute);
         state.transperacy(false);
         infoLogger.setAttribute(attribute.getName());
+    }
+
+    MultiResRepresentor multiResRepresentor;
+
+    public void moveDownResolution() {
+        // calculate the decimation records
+        if (multiResRepresentor == null) {
+            multiResRepresentor = new MultiResRepresentor();
+            multiResRepresentor.build(halfEdgeDataStructure);
+        }
+
+        multiResRepresentor.decreaseResolution(halfEdgeDataStructure);
+    }
+
+    public void moveUpResolution() {
+        // calculate the decimation records
+        if (multiResRepresentor == null) {
+            multiResRepresentor = new MultiResRepresentor();
+            multiResRepresentor.build(halfEdgeDataStructure);
+        }
+
+        multiResRepresentor.increaseResolution(halfEdgeDataStructure);
     }
 }

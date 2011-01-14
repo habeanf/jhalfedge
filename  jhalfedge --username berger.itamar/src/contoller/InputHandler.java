@@ -44,13 +44,16 @@ public class InputHandler extends KeyAdapter {
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_0, 0), "Debug - Show Normals");
 
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_5, 0), "Create Segmentation");
+
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_J, 0), "Move resolution up");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_K, 0), "Move resolution down");
     }
 
     public void keyPressed(KeyEvent e) {
         if (keyboardLock) {
             return;
         }
-        
+
         processKeyEvent(e, true);
     }
 
@@ -113,6 +116,12 @@ public class InputHandler extends KeyAdapter {
                 break;
             case KeyEvent.VK_5:
                 controller.setSegmentationAttribute();
+                break;
+            case KeyEvent.VK_J:
+                controller.moveUpResolution();
+                break;
+            case KeyEvent.VK_K:
+                controller.moveDownResolution();
                 break;
             default:
                 processKeyEvent(e, false);

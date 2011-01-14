@@ -1,5 +1,7 @@
 package model;
 
+import attributes.graph.Edge;
+
 import java.util.*;
 
 /**
@@ -7,7 +9,7 @@ import java.util.*;
  * Date: Nov 27, 2010
  * Time: 11:30:33 PM
  */
-public class HalfEdgeDataStructure {
+public class HalfEdgeDataStructure implements IMesh {
 
     private final Collection<HalfEdge> halfEdges;
     private final List<Face> faces;
@@ -107,4 +109,39 @@ public class HalfEdgeDataStructure {
     }
 
 
+    public Set<Edge> getEdges() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Set<Face> getFaces() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Face[] getFacesAdjacentToEdge(Edge edge) {
+        return new Face[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public int[] getFaceAdjacentIds(Face triangle) {
+        return new int[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Set<Face> getFacesAdjacentToVertex(int vertex) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void removeFace(int firstRemovedTriangleIndex) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void removeVertex(int deletedVertex) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void updateFacesVertices(Face face, int deletedVertex, int otherVertex) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Set<Edge> geEdgesAdjacentToVertex(int deletedVertex) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }
