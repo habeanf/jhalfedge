@@ -1,6 +1,6 @@
 package attributes;
 
-import model.HalfEdgeDataStructure;
+import model.IVertex;
 import model.Vertex;
 
 /**
@@ -11,12 +11,9 @@ import model.Vertex;
 public interface MeshAttribute {
     String getName();
 
-    float getValue(Vertex vertex, HalfEdgeDataStructure halfEdgeDataStructure);
+    float getValue(IVertex vertex);
 
     boolean doFaceRendering();
 
     int getClustersAmount();
-
-
-    void calculate(HalfEdgeDataStructure halfEdgeDataStructure);
 }

@@ -1,34 +1,34 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * User: itamar
  * Date: Nov 27, 2010
  * Time: 7:22:11 PM
  */
-public class Vertex {
+public class Vertex implements IVertex{
     int id;
     float[] xyz;
-    HalfEdge halfEdge;
+    boolean isActive = true;
 
-    private float centricity;
-    private float distance;
-    private float gaussianCurvature;
-    private float segmentation;
+    Set<IFace> faces;
+
 
     public Vertex(int id,float x, float y, float z) {
         this.xyz = new float[]{x, y, z};
         this.id = id;
-        this.halfEdge = null;
     }
 
     public Vertex(int id) {
         this.id = id;
-        this.halfEdge = null;
     }
 
     @Override
     public String toString() {
-        return "x: " + xyz[0] + " y: " + xyz[1] + " z: " + xyz[2];
+        return "id:" + id + " x: " + xyz[0] + " y: " + xyz[1] + " z: " + xyz[2];
     }
 
     public float[] getXyz() {
@@ -39,13 +39,6 @@ public class Vertex {
         this.xyz = xyz;
     }
 
-    public HalfEdge getHalfEdge() {
-        return halfEdge;
-    }
-
-    public void setHalfEdge(HalfEdge halfEdge) {
-        this.halfEdge = halfEdge;
-    }
 
     public void normalize(float max) {
         if (max > 0.0) {
@@ -63,36 +56,32 @@ public class Vertex {
         return id;
     }
 
-    public float getCentricity() {
-        return centricity;
+    public Set<IFace> getFaces() {
+        if (faces == null){
+            return new HashSet<IFace>();
+        }
+
+        return faces;
     }
 
-    public void setCentricity(float centricity) {
-        this.centricity = centricity;
+    public void addFace(IFace face) {
+        if (faces == null){
+            faces = new HashSet<IFace>();
+        }
+
+        faces.add(face);
     }
 
-    public float getSegmentation() {
-        return segmentation;
+    public void removeFace(IFace face) {
+        faces.remove(face);
     }
 
-    public void setSegmentation(float segmentation) {
-        this.segmentation = segmentation;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public float getDistance() {
-        return distance;
-    }
-
-    public void setDistance(float distance) {
-        this.distance = distance;
-    }
-
-    public float getGaussianCurvature() {
-        return gaussianCurvature;
-    }
-
-    public void setGaussianCurvature(float gaussianCurvature) {
-        this.gaussianCurvature = gaussianCurvature;
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     public void offset(float meanx, float meany, float meanz) {
@@ -116,9 +105,5 @@ public class Vertex {
     @Override
     public int hashCode() {
         return id;
-    }
-
-    public boolean isIsolated() {
-        return halfEdge==null;
     }
 }

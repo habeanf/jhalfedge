@@ -45,7 +45,7 @@ public class InputHandler extends KeyAdapter {
 
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_5, 0), "Create Segmentation");
 
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_J, 0), "Move resolution up");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Calculate multiresolution");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_K, 0), "Move resolution down");
     }
             
@@ -81,15 +81,15 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_1:
                 controller.setNoAttribute();
                 break;
-            case KeyEvent.VK_2:
-                controller.setCentricityAttribute();
-                break;
-            case KeyEvent.VK_3:
-                controller.setDistanceToCentroidAttribute();
-                break;
-            case KeyEvent.VK_4:
-                controller.setGaussianCurvature();
-                break;
+//            case KeyEvent.VK_2:
+//                controller.setCentricityAttribute();
+//                break;
+//            case KeyEvent.VK_3:
+//                controller.setDistanceToCentroidAttribute();
+//                break;
+//            case KeyEvent.VK_4:
+//                controller.setGaussianCurvature();
+//                break;
             case KeyEvent.VK_Z:
                 controller.loadNewFile();
                 break;
@@ -105,9 +105,9 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_0:
                 controller.toggleShowCornerNormals();
                 break;
-            case KeyEvent.VK_7:
-                controller.toggleGeodesicTest();
-                break;
+//            case KeyEvent.VK_7:
+//                controller.toggleGeodesicTest();
+//                break;
             case KeyEvent.VK_8:
                 controller.toggleFaceNeighbourTest();
                 break;
@@ -117,11 +117,14 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_5:
                 controller.setSegmentationAttribute();
                 break;
+            case KeyEvent.VK_ENTER:
+                controller.calculateMultiresolution();
+                break;
             case KeyEvent.VK_J:
-                controller.moveUpResolution();
+                controller.moveUpResolution(1);
                 break;
             case KeyEvent.VK_K:
-                controller.moveDownResolution();
+                controller.moveDownResolution(1);
                 break;
             default:
                 processKeyEvent(e, false);
@@ -149,6 +152,10 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_W:
                 controller.zoomOut(pressed);
                 break;
+            case KeyEvent.VK_PAGE_UP:
+                controller.moveUpResolution(pressed);
+            case KeyEvent.VK_PAGE_DOWN:
+                controller.moveDownResolution(pressed);
         }
     }
 }

@@ -1,15 +1,12 @@
 package render;
 
 import attributes.MeshAttribute;
-import model.HalfEdgeDataStructure;
-import model.Vertex;
 import model.*;
 
 import javax.media.opengl.GL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * User: itamar
@@ -24,10 +21,10 @@ public class MeshRenderer {
     // hold the current renderer state
     RenderState prevState;
 
-    private final HalfEdgeDataStructure halfEdgeDataStructure;
+    private final IMesh mesh;
 
-    public MeshRenderer(HalfEdgeDataStructure halfEdgeDataStructure) {
-        this.halfEdgeDataStructure = halfEdgeDataStructure;
+    public MeshRenderer(IMesh mesh) {
+        this.mesh = mesh;
     }
 
     public void render(GL gl, RenderState state) {
@@ -44,46 +41,40 @@ public class MeshRenderer {
             if (state.isMesh()) {
                 // a method for displaying the neigbours of a face/vertex
                 if (state.isVertexNeihbourTest()) {
-                    renderVertexNeigbours(gl, halfEdgeDataStructure);
+                    renderVertexNeigbours(gl, mesh);
                 } else if (state.isFaceNeihbourTest()) {
-                    renderFaceNeigbours(gl, halfEdgeDataStructure);
+                    renderFaceNeigbours(gl, mesh);
                 } else {
-                    setMinMax(halfEdgeDataStructure);
+                    setMinMax(mesh);
 
                     if (state.getMeshAttribute() != null && state.getMeshAttribute().doFaceRendering()) {
-                        renderfaces(gl, state, halfEdgeDataStructure.getAllFaces());
+                        renderfaces(gl, state, mesh.getAllFaces());
                     } else {
                         if (state.getTransparent()) {
                             float alpha = 0.5f;
                             if (state.getMeshAttribute() == null) {
                                 gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
                                 gl.glColor4f(1f, 1f, 1f, alpha);
-                                renderTriangles(gl, alpha, state, halfEdgeDataStructure.getAllFaces(), true);
+                                renderTriangles(gl, alpha, state, mesh.getAllFaces(), true);
                             }
 
                             gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
                             gl.glColor4f(1f, 1, 1f, 0.5f);
-                            renderTriangles(gl, alpha, state, halfEdgeDataStructure.getAllFaces(), true);
+                            renderTriangles(gl, alpha, state, mesh.getAllFaces(), true);
 
                         } else {
                             float alpha = 1f;
                             gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
                             gl.glColor4f(1f, 1, 1f, alpha);
-                            renderTriangles(gl, alpha, state, halfEdgeDataStructure.getAllFaces(), true);
+                            renderTriangles(gl, alpha, state, mesh.getAllFaces(), true);
                         }
                     }
                 }
             } else {
                 // draw cloud points
                 gl.glColor4f(1f, 1f, 1f, 0.8f);
-                renderVertices(gl, halfEdgeDataStructure.getVertexes());
+                renderVertices(gl, mesh.getAllVertices());
             }
-
-            if (state.isShowCornerNormals()) {
-                gl.glColor4f(1f, 0, 0f, 0.2f);
-                renderNormals(gl, halfEdgeDataStructure.getAllFaces());
-            }
-
 
             gl.glEndList();
             prevState = state;
@@ -92,10 +83,10 @@ public class MeshRenderer {
         gl.glCallList(displayList);
     }
 
-    private void renderfaces(GL gl, RenderState state, List<Face> faces) {
+    private void renderfaces(GL gl, RenderState state, Collection<IFace> faces) {
         float amount = state.getMeshAttribute().getClustersAmount();
 
-        for (Face candidate : faces) {
+        for (IFace candidate : faces) {
             if (candidate != null) {
                 final int segment = candidate.getSegment();
                 final float[] color = state.getColorMap().getColor(segment/amount);
@@ -105,62 +96,56 @@ public class MeshRenderer {
         }
     }
 
-    private void renderVertexNeigbours(GL gl, HalfEdgeDataStructure halfEdgeDataStructure) {
-        for (int i = 1; i < 100; i++) {
-            Vertex candidate = halfEdgeDataStructure.getVertex((int) (1 + Math.random() * halfEdgeDataStructure.getVertexes().size()));
-
-            if (candidate != null) {
-                final Set<Vertex> neighbours = halfEdgeDataStructure.getNeighbours(candidate);
-                float[] values = {(float) Math.random(), (float) Math.random(), (float) Math.random()};
-                gl.glColor4f(values[0], values[1], values[2], 1f);
-                renderVertices(gl, neighbours);
-
-                gl.glColor4f(1f, 1f, 1f, 1f);
-                renderVertices(gl, Arrays.asList(candidate));
-            }
-        }
+    private void renderVertexNeigbours(GL gl, IMesh mesh) {
+//        for (int i = 1; i < 100; i++) {
+//            IVertex candidate = mesh.getVertex((int) (1 + Math.random() * mesh.getAllVertices().size()));
+//
+//            if (candidate != null) {
+//                final Set<IVertex> neighbours = mesh.getNeighbours(candidate);
+//                float[] values = {(float) Math.random(), (float) Math.random(), (float) Math.random()};
+//                gl.glColor4f(values[0], values[1], values[2], 1f);
+//                renderVertices(gl, neighbours);
+//
+//                gl.glColor4f(1f, 1f, 1f, 1f);
+//                renderVertices(gl, Arrays.asList(candidate));
+//            }
+//        }
     }
 
-    private void renderFaceNeigbours(GL gl, HalfEdgeDataStructure halfEdgeDataStructure) {
-        for (int i = 1; i < 100; i++) {
-            Face candidate = halfEdgeDataStructure.getAllFaces().get((int) (Math.random() * halfEdgeDataStructure.getAllFaces().size()));
-
-            if (candidate != null) {
-                final Set<Face> neighbours = halfEdgeDataStructure.getNeighbours(candidate);
-                float[] values = {(float) Math.random(), (float) Math.random(), (float) Math.random()};
-                gl.glColor4f(values[0], values[1], values[2], 1f);
-                renderTriangles(gl, 0.5f, prevState, neighbours, true);
-
-                gl.glColor4f(1f, 1f, 1f, 1f);
-                renderTriangles(gl, 0.5f, prevState, Arrays.asList(candidate), true);
-            }
-        }
+    private void renderFaceNeigbours(GL gl, IMesh mesh) {
+//        for (int i = 1; i < 100; i++) {
+//            Face candidate = mesh.getAllFaces().get((int) (Math.random() * mesh.getAllFaces().size()));
+//
+//            if (candidate != null) {
+//                final Set<Face> neighbours = mesh.getNeighbours(candidate);
+//                float[] values = {(float) Math.random(), (float) Math.random(), (float) Math.random()};
+//                gl.glColor4f(values[0], values[1], values[2], 1f);
+//                renderTriangles(gl, 0.5f, prevState, neighbours, true);
+//
+//                gl.glColor4f(1f, 1f, 1f, 1f);
+//                renderTriangles(gl, 0.5f, prevState, Arrays.asList(candidate), true);
+//            }
+//        }
     }
 
-    private void renderVertices(GL gl, Collection<Vertex> vertices) {
+    private void renderVertices(GL gl, Collection<IVertex> vertices) {
         gl.glBegin(GL.GL_POINTS);
-        for (Vertex vertex : vertices) {
+        for (IVertex vertex : vertices) {
             gl.glVertex3fv(vertex.getXyz(), 0);
         }
         gl.glEnd();
     }
 
-    private void renderTriangles(GL gl, float alpha, RenderState state, Collection<Face> faces, boolean overrideColor) {
-        for (Face face : faces) {
+    private void renderTriangles(GL gl, float alpha, RenderState state, Collection<IFace> faces, boolean overrideColor) {
+        for (IFace face : faces) {
             gl.glBegin(GL.GL_TRIANGLES);
-            HalfEdge firstHalfEdge = face.getHalfEdge();
-            HalfEdge nextHalfEdge = firstHalfEdge;
-            int counter = 0;
 
-            do {
-                gl.glNormal3fv(nextHalfEdge.getCornerNormal(), 0);
-
-                Vertex vertex = nextHalfEdge.getVertex();
+            for (IVertex vertex : face.getVertices()) {
                 MeshAttribute attribute = state.getMeshAttribute();
 
                 if (overrideColor) {
                     if (attribute != null) {
-                        float value = attribute.getValue(vertex, halfEdgeDataStructure);
+                        float value = attribute.getValue(vertex);
                         value = (value / (Math.abs(max - min)));
                         final float[] color = state.getColorMap().getColor(value);
                         gl.glColor4f(color[0], color[1], color[2], alpha);
@@ -168,68 +153,26 @@ public class MeshRenderer {
                 }
 
                 gl.glVertex3fv(vertex.getXyz(), 0);
-                nextHalfEdge = nextHalfEdge.getNext();
-                counter++;
 
-                // for ignoring inifinte loop in case of corruption
-                if (counter > 4) {
-                    break;
-                }
-            } while (nextHalfEdge != firstHalfEdge);
+            }
 
             gl.glEnd();
         }
     }
 
 
-    private void renderNormals(GL gl, Collection<Face> faces) {
-        for (Face face : faces) {
-            gl.glBegin(GL.GL_TRIANGLES);
-            HalfEdge firstHalfEdge = face.getHalfEdge();
-            HalfEdge nextHalfEdge = firstHalfEdge;
-            int counter = 0;
-
-            do {
-                final float[] cornerNormal = nextHalfEdge.getCornerNormal();
-                Vertex vertex = nextHalfEdge.getVertex();
-                renderNormal(gl, vertex.getXyz(), cornerNormal);
-                gl.glVertex3fv(vertex.getXyz(), 0);
-                nextHalfEdge = nextHalfEdge.getNext();
-                counter++;
-
-                // for ignoring inifinte loop in case of corruption
-                if (counter > 4) {
-                    break;
-                }
-            } while (nextHalfEdge != firstHalfEdge);
-
-
-            gl.glEnd();
-        }
-    }
-
-    private void renderNormal(GL gl, float[] xyz, float[] cornerNormal) {
-        gl.glBegin(GL.GL_LINES);
-
-        float[] to = {(xyz[0] - cornerNormal[0] / 20), (xyz[1] - cornerNormal[1] / 20), (xyz[2] - cornerNormal[2] / 20)};
-
-        gl.glVertex3fv(to, 0);
-        gl.glVertex3fv(xyz, 0);
-
-        gl.glEnd();
-    }
 
     private float min;
     private float max;
 
-    public void setMinMax(HalfEdgeDataStructure halfEdgeDataStructure) {
+    public void setMinMax(IMesh mesh) {
         float minx = Integer.MAX_VALUE;
         float maxx = Integer.MIN_VALUE;
         float miny = Integer.MAX_VALUE;
         float maxy = Integer.MIN_VALUE;
         float minz = Integer.MAX_VALUE;
         float maxz = Integer.MIN_VALUE;
-        for (Vertex v : halfEdgeDataStructure.getVertexes()) {
+        for (IVertex v : mesh.getAllVertices()) {
             final float[] xyz = v.getXyz();
             minx = Math.min(minx, xyz[0]);
             maxx = Math.max(maxx, xyz[0]);

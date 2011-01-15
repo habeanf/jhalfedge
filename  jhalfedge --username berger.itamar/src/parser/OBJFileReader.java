@@ -7,7 +7,7 @@ import model.Vertex;
  * Date: Nov 27, 2010
  * Time: 4:33:41 PM
  */
-public class OBJReader implements MeshReader{
+public class OBJFileReader implements IMeshFileReader {
         int counter = 1;
 
     public boolean isVertex(String[] fields) {

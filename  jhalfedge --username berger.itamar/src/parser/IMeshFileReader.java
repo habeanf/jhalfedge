@@ -7,7 +7,7 @@ import model.Vertex;
  * Date: Nov 27, 2010
  * Time: 7:09:32 PM
  */
-public interface MeshReader {
+public interface IMeshFileReader {
     boolean isVertex(String[] fields);
     Vertex getVertex(String[] fields);
     boolean isFace(String[] fields);

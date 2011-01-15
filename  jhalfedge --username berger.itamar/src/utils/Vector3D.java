@@ -1,4 +1,7 @@
-package model;
+package utils;
+
+import model.IVertex;
+import model.Vertex;
 
 /**
  * User: itamar
@@ -38,7 +41,7 @@ public class Vector3D {
         this.z = xyz[2];
     }
 
-    public Vector3D(Vertex v)              // Constructor that initializes this Vector3D to the intended values of the Vertex v
+    public Vector3D(IVertex v)              // Constructor that initializes this Vector3D to the intended values of the Vertex v
     {
         this(v.getXyz());
     }

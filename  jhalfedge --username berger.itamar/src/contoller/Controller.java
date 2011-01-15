@@ -3,9 +3,8 @@ package contoller;
 import attributes.*;
 import attributes.contraction.MultiResRepresentor;
 import colormaps.ColorMapFactory;
-import model.HalfEdgeDataStructure;
-import parser.HalfEdgeNormalCreator;
-import parser.HalfEdgeReader;
+import model.IMesh;
+import model.MeshPersistenceService;
 import render.*;
 import segmentation.PartSegmentation;
 import utils.InfoLogger;
@@ -69,14 +68,20 @@ public class Controller implements GLEventListener {
     // current render state
     private RenderState state;
 
-    // current mesh inside halfEdgeDS
-    private HalfEdgeDataStructure halfEdgeDataStructure = null;
+    // current mesh
+    private IMesh mesh = null;
+
+    private MeshPersistenceService meshPersistenceService;
+
 
     public Controller() {
+        meshPersistenceService = new MeshPersistenceService();
+
         gridRenderer = new GridRenderer(freq);
         paths = new ArrayList<File>();
 
-        File modelDirectory = new File("./Models/BEAR_KLA.off");
+//        File modelDirectory = new File("./Models/test.obj");
+        File modelDirectory = new File("./Models");
         if (modelDirectory.isDirectory()) {
 
             Collections.addAll(paths, modelDirectory.listFiles());
@@ -188,6 +193,10 @@ public class Controller implements GLEventListener {
             z += 0.1f;
         if (zoomOut)
             z -= 0.1f;
+        if(moveDownRes)
+            moveDownResolution(0.2);
+        if(moveUpRes)
+            moveUpResolution(0.5);
     }
 
     public void increaseXrot(boolean increase) {
@@ -268,42 +277,6 @@ public class Controller implements GLEventListener {
         infoLogger.setAttribute("None");
     }
 
-    public void setCentricityAttribute() {
-        if (!state.isCalculatedCentricity()) {
-            Centricity.calculate(halfEdgeDataStructure, infoLogger, state);
-        } else {
-            MeshAttribute attribute = new Centricity();
-            state.setMeshAttribute(attribute);
-            state.transperacy(false);
-            infoLogger.setAttribute(attribute.getName());
-            infoLogger.setDebugRow("");
-            InputHandler.keyboardLock = false;
-        }
-    }
-
-    public void setDistanceToCentroidAttribute() {
-        MeshAttribute attribute = new DistanceToCentroid();
-        if (!state.isCalculatedDistanceToCentroid()) {
-            attribute.calculate(halfEdgeDataStructure);
-            state.setCalculatedDistance(true);
-        }
-
-        state.setMeshAttribute(attribute);
-        state.transperacy(false);
-        infoLogger.setAttribute(attribute.getName());
-    }
-
-    public void setGaussianCurvature() {
-        MeshAttribute attribute = new GaussianCurvature();
-        if (!state.isCalculatedGaussian()) {
-            attribute.calculate(halfEdgeDataStructure);
-            state.setCalculatedGaussian(true);
-        }
-
-        state.setMeshAttribute(attribute);
-        state.transperacy(false);
-        infoLogger.setAttribute(attribute.getName());
-    }
 
     private List<File> paths;
     int meshIterator = 0;
@@ -325,13 +298,13 @@ public class Controller implements GLEventListener {
 
     public void selectFile(File file) {
         state = new RenderState();
-        HalfEdgeReader reader = new HalfEdgeReader(true, true);
-        halfEdgeDataStructure = reader.get(file.getPath(), true);
 
-        HalfEdgeNormalCreator halfEdgeNormalCreator = new HalfEdgeNormalCreator(halfEdgeDataStructure);
-        halfEdgeNormalCreator.calcNormals();
+
+        mesh = meshPersistenceService.loadMeshFromFile(file.getPath());
+
         z = -10.0f;
-        meshRenderer = new MeshRenderer(halfEdgeDataStructure);
+        meshRenderer = new MeshRenderer(mesh);
+        multiResRepresentor = null;
         infoLogger.setModelPath("Model path:" + file.getPath());
     }
 
@@ -366,45 +339,55 @@ public class Controller implements GLEventListener {
         state.toggleShowCornerNormals();
     }
 
-    public void toggleGeodesicTest() {
-        Centricity.calculateOnePointOnly(halfEdgeDataStructure);
-        MeshAttribute attribute = new Centricity();
-        state.setMeshAttribute(attribute);
-        state.transperacy(false);
-        infoLogger.setAttribute(attribute.getName() + "Debug Mode - ony point only");
-    }
-
     public void setSegmentationAttribute() {
-        MeshAttribute attribute = new PartSegmentation();
-        if (!state.isCalculateSegmentation()) {
-            attribute.calculate(halfEdgeDataStructure);
-            state.setCalculatedSegmentation(true);
-        }
-
-        state.setMeshAttribute(attribute);
-        state.transperacy(false);
-        infoLogger.setAttribute(attribute.getName());
+//        MeshAttribute attribute = new PartSegmentation();
+//        if (!state.isCalculateSegmentation()) {
+//            attribute.calculate(mesh);
+//            state.setCalculatedSegmentation(true);
+//        }
+//
+//        state.setMeshAttribute(attribute);
+//        state.transperacy(false);
+//        infoLogger.setAttribute(attribute.getName());
     }
 
     MultiResRepresentor multiResRepresentor;
 
-    public void moveDownResolution() {
-        // calculate the decimation records
-        if (multiResRepresentor == null) {
-            multiResRepresentor = new MultiResRepresentor();
-            multiResRepresentor.build(halfEdgeDataStructure);
-        }
+    boolean moveDownRes = false;
+    boolean moveUpRes = false;
 
-        multiResRepresentor.decreaseResolution(halfEdgeDataStructure);
+    public void moveDownResolution(double speed) {
+        if (multiResRepresentor == null) {
+            calculateMultiresolution();
+        } else {
+            multiResRepresentor.decreaseResolution(mesh,speed);
+            state.shouldUpdate = true;
+        }
     }
 
-    public void moveUpResolution() {
+
+    public void moveDownResolution(boolean pressed) {
+            this.moveDownRes = pressed;
+    }
+
+    public void moveUpResolution(boolean pressed) {
+            this.moveUpRes = pressed;
+    }
+
+    public void moveUpResolution(double speed) {
+        if (multiResRepresentor == null) {
+            calculateMultiresolution();
+        } else {
+            multiResRepresentor.increaseResolution(mesh,speed);
+            state.shouldUpdate = true;
+        }
+    }
+
+    public void calculateMultiresolution() {
         // calculate the decimation records
         if (multiResRepresentor == null) {
             multiResRepresentor = new MultiResRepresentor();
-            multiResRepresentor.build(halfEdgeDataStructure);
+            multiResRepresentor.build(mesh);
         }
-
-        multiResRepresentor.increaseResolution(halfEdgeDataStructure);
     }
 }

@@ -1,6 +1,7 @@
 package model;
 
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -11,23 +12,31 @@ import java.util.Set;
  */
 public interface IMesh {
 
-    Set<Edge> getAllEdges();
+    Collection<IEdge> getAllUndirectedEdges();
 
-    List<Face> getAllFaces();
+    Collection<IFace> getAllFaces();
 
-    List<Face> getFacesAdjacentToEdge(Edge edge);
+    Collection<IVertex> getAllVertices();
+    
+    List<IFace> getFacesAdjacentToEdge(IEdge edge);
 
-    List<Integer> getFaceAdjacentVerticesIds(Face triangle);
+    List<IVertex> getVerticesAdjacentToFace(int faceId);
 
-    Set<Face> getFacesAdjacentToVertex(Vertex vertex);
+    Set<IFace> getFacesAdjacentToVertex(int vertexId);
 
-    void removeFace(Face face);
+    Set<IEdge> getEdgesAdjacentToVertex(int vertexId);
 
-    void removeVertex(Vertex deletedVertex);
+    boolean isEdgeValid(IEdge edge);
 
-    void contractVertices(Vertex deletedVertex, Vertex otherVertex) throws Exception;
+    void removeFace(int faceId);
 
-    Set<Edge> getEdgesAdjacentToVertex(Vertex vertex);
+    void removeVertex(int vertexId);
 
-    boolean isEdgeValid(Edge edge);
+    boolean changeFaceVertices(int faceId, int from, int to);
+
+    void addFace(int faceId, int[] verticesIds);
+
+    void addVertex(int vertexId);
+
+    boolean isValidReplacment(Integer faceId, int from, int to);
 }
