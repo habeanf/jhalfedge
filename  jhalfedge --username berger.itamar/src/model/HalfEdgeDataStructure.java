@@ -19,7 +19,16 @@ public class HalfEdgeDataStructure implements IMesh {
         this.halfEdges = halfEdges;
         this.faces = faces;
         this.vertexes = vertexes;
-        this.edgeToHalfEdgeMap = edgeToHalfEdgeMap;
+
+        this.edgeToHalfEdgeMap = new HashMap<Edge, HalfEdge>();
+
+        for (Map.Entry<Edge, HalfEdge> edgeHalfEdgeEntry : edgeToHalfEdgeMap.entrySet()) {
+            final Edge key = edgeHalfEdgeEntry.getKey();
+            final HalfEdge value = edgeHalfEdgeEntry.getValue();
+            if (key.from.getId() > key.to.getId()){
+                this.edgeToHalfEdgeMap.put(key,value);
+            }
+        }
     }
 
     public Collection<HalfEdge> getAllHalfEdges() {
