@@ -19,11 +19,11 @@ public class DecimationRecord {
 
     // the first deleted triangle
     public Face firstRemovedTriangle;
-    public int[] firstTriangleVertices;
+    public List<Integer> firstTriangleVertices;
 
     // the second deleted triangle (optional)    
     public Face secondRemovedTriangle;
-    public int[] secondTriangleVertices;
+    public List<Integer> secondTriangleVertices;
 
     // the list of triangles that change one of their vertices from v2 to v1;
     public List<Face> changedTriangles;

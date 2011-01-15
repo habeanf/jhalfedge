@@ -135,8 +135,14 @@ public class HalfEdgeDataStructure implements IMesh {
         return result;
     }
 
-    public int[] getFaceAdjacentVerticesIds(Face triangle) {
-        return new int[0];  //To change body of implemented methods use File | Settings | File Templates.
+    public List<Integer> getFaceAdjacentVerticesIds(Face triangle) {
+        List<Integer> idListInteger = new ArrayList<Integer>();
+
+        for(HalfEdge halfEdge = triangle.getHalfEdge();!halfEdge.equals(triangle.getHalfEdge()); halfEdge = halfEdge.getNext()) {
+            idListInteger.add(halfEdge.getVertex().getId());
+        }
+
+        return idListInteger;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public Set<Face> getFacesAdjacentToVertex(Vertex vertex) {
@@ -199,7 +205,10 @@ public class HalfEdgeDataStructure implements IMesh {
 
         halfEdges.remove(toFromEdge);
         halfEdges.remove(fromToEdge);
+
+        // remove both directions of edge from map
         edgeToHalfEdgeMap.remove(edge);
+        edgeToHalfEdgeMap.remove(edge.getOpp());
     }
 
     public void removeVertex(Vertex vertex) {
@@ -222,8 +231,86 @@ public class HalfEdgeDataStructure implements IMesh {
         vertexes.remove(vertex.getId());
     }
 
-    public void updateFacesVertices(Face face, Vertex deletedVertex, Vertex otherVertex) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public HalfEdge getHalfEdge(Vertex v_from, Vertex v_to) throws Exception {
+        Edge edgeToFind = new Edge(v_from,v_to);
+        if (!edgeToHalfEdgeMap.containsKey(edgeToFind))
+            throw new Exception("Edge from " + v_from + " to " + v_to + " does not exist");
+        else
+            return edgeToHalfEdgeMap.get(edgeToFind);
+    }
+
+    /***
+     * Gets all outgoing half edges of a vertex
+     * @param v
+     * @return
+     */
+    public List<HalfEdge> getVertexHalfEdges(Vertex v) {
+        List<HalfEdge> result  = new ArrayList<HalfEdge>();
+
+        HalfEdge beginEdge = v.getHalfEdge();
+        HalfEdge curEdge = v.getHalfEdge();
+        do {
+            result.add(curEdge);
+            curEdge = curEdge.getOpp().getNext(); // curEdge.rotateNext();
+        } while (!curEdge.equals(beginEdge));
+        return result;
+    }
+
+    public void removeHalfEdge(HalfEdge halfEdge) {
+        // de register from edgetohalfedgemap if present
+        Edge edge = new Edge(halfEdge.getVertex(),halfEdge.getNext().getVertex());
+        if (edgeToHalfEdgeMap.containsKey(edge))
+            edgeToHalfEdgeMap.remove(edge);
+
+        // remove from halfedges collections
+        halfEdges.remove(halfEdge);
+    }
+
+    // takes a halfedge and replaces it with another halfedge
+    public void replaceHalfEdge(HalfEdge replacer, HalfEdge replacee) {
+        // update halfedges opposites
+        replacee.getOpp().setOpp(replacer);
+        replacer.setOpp(replacee.getOpp());
+
+        // update replacee's vertex if it is the vertexes half edge
+        if (replacee.getVertex().getHalfEdge().equals(replacee))
+            replacee.getVertex().setHalfEdge(replacer);
+
+        // update edge to halfedge map
+        edgeToHalfEdgeMap.put(new Edge(replacee.getVertex(),replacee.getNext().getVertex()),replacer);
+
+        removeHalfEdge(replacer.getOpp());
+        removeHalfEdge(replacee);
+    }
+
+    public void contractVertices(Vertex deletedVertex, Vertex otherVertex) throws Exception {
+        // get edge to be removed
+        Edge edgeToRemove = new Edge(otherVertex,deletedVertex);
+
+        // remember halfedges to be replaced
+        HalfEdge baseEdge = getHalfEdge(otherVertex,deletedVertex);
+        HalfEdge otherIn  = baseEdge.getPrev();
+        HalfEdge otherOut = baseEdge.getOpp().getPrev();
+        HalfEdge delIn    = baseEdge.getNext().getOpp();
+        HalfEdge delOut   = baseEdge.getOpp().getPrev().getOpp();
+
+        // remove edge (removes faces too)
+        removeEdge(edgeToRemove);
+
+        // change the vertex of all outgoing half edges of vertex to be deleted to new vertex
+        for(HalfEdge edge : getVertexHalfEdges(deletedVertex))
+            edge.setVertex(otherVertex);
+
+        // let the vertex know it is no longer used (isolated)
+        deletedVertex.setHalfEdge(null);
+
+        // replace old half edges with new half edges
+        // note.. order is important. ins must be deleted before outs or else an error will occur
+        replaceHalfEdge(otherIn,delIn);
+        replaceHalfEdge(otherOut,delOut);
+
+        // remove isolated vertex
+        removeVertex(deletedVertex);
     }
 
     public Set<Edge> getEdgesAdjacentToVertex(Vertex vertex) {

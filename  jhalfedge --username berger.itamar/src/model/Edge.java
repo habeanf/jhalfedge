@@ -16,6 +16,10 @@ public class Edge implements Comparable<Edge> {
         this.to = to;
     }
 
+    public Edge getOpp() {
+        return new Edge(to,from);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

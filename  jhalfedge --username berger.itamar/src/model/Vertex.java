@@ -21,6 +21,11 @@ public class Vertex {
         this.halfEdge = null;
     }
 
+    public Vertex(int id) {
+        this.id = id;
+        this.halfEdge = null;
+    }
+
     @Override
     public String toString() {
         return "x: " + xyz[0] + " y: " + xyz[1] + " z: " + xyz[2];

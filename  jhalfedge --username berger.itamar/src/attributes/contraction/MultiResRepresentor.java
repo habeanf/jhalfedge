@@ -39,28 +39,32 @@ public class MultiResRepresentor {
         System.out.println("Starting contraction, total faces :" + originalNumberOfFaces);
 
         // while the mesh is not coarse enough
-        while (!isMeshCoarse(mesh) && queue.size() > 0) {
-            final Edge edge = queue.poll();
+        try {
+            while (!isMeshCoarse(mesh) && queue.size() > 0) {
+                final Edge edge = queue.poll();
 
-            // if the contraction is not allowed continue to the next
-            if (!isContractionAllowed(mesh, edge)) {
-                continue;
+                // if the contraction is not allowed continue to the next
+                if (!isContractionAllowed()) {
+                    continue;
+                }
+
+                // build a decimation record according to edge's contraction
+                DecimationRecord record = createEdgeContractionRecord(mesh, edge);
+
+                // store the record in the decimation records list
+                decimationRecords.add(record);
+
+                // apply the edge contraction on the mesh
+                contract(mesh, record);
+
+                // update the information of edges in the queue
+                final Set<Edge> modifiedEdges = mesh.getEdgesAdjacentToVertex(record.otherVertex);
+                updateQueue(queue,  modifiedEdges);
+                System.out.println("created " + decimationRecords.size() + " records ,queue size: " + queue.size());
             }
-
-            // build a decimation record according to edge's contraction
-            DecimationRecord record = createEdgeContractionRecord(mesh, edge);
-
-            // store the record in the decimation records list
-            decimationRecords.add(record);
-
-            // apply the edge contraction on the mesh
-            contract(mesh, record);
-
-            // update the information of edges in the queue
-            final Set<Edge> modifiedEdges = mesh.getEdgesAdjacentToVertex(record.otherVertex);
-            updateQueue(queue,  modifiedEdges);
-
-            System.out.println("created " + decimationRecords.size() + " records ,queue size: " + queue.size());
+        } catch (Exception e) {
+            System.out.println("Failed to build mesh with exception:");
+            System.out.println(e);
         }
 
         System.out.println("done");
@@ -86,22 +90,22 @@ public class MultiResRepresentor {
         queue.addAll(modifiedEdges);
     }
 
-    private void contract(IMesh mesh, DecimationRecord record) {
+    private void contract(IMesh mesh, DecimationRecord record) throws Exception {
         // move triangles vertices that are attached to deleted vertex
         final Set<Face> adjacentFaces = mesh.getFacesAdjacentToVertex(record.deletedVertex);
 
-        for (Face face : adjacentFaces) {
-            mesh.updateFacesVertices(face, record.deletedVertex, record.otherVertex);
-        }
+//        for (Face face : adjacentFaces) {
+            mesh.contractVertices(record.deletedVertex, record.otherVertex);
+//        }
 
         // delete the attached triangles
-        mesh.removeFace(record.firstRemovedTriangle);
-
-        if (record.secondRemovedTriangle != null)
-            mesh.removeFace(record.secondRemovedTriangle);
-
-        // delete the vertex
-        mesh.removeVertex(record.deletedVertex);
+//        mesh.removeFace(record.firstRemovedTriangle);
+//
+//        if (record.secondRemovedTriangle != null)
+//            mesh.removeFace(record.secondRemovedTriangle);
+//
+//        // delete the vertex
+//        mesh.removeVertex(record.deletedVertex);
     }
 
     private void split(IMesh mesh, DecimationRecord record) {
@@ -150,10 +154,7 @@ public class MultiResRepresentor {
         return (mesh.getAllFaces().size() / (float) originalNumberOfFaces < DECIMATION_RATIO);
     }
 
-    public boolean isContractionAllowed(IMesh mesh, Edge edge) {
-        if (!mesh.isEdgeValid(edge))
-            return false;
-
+    public boolean isContractionAllowed() {
         return true;  // TODO
     }
 
@@ -164,8 +165,12 @@ public class MultiResRepresentor {
             return;
 
         final DecimationRecord decimationRecord = decimationRecords.get(p++);
-
-        contract(mesh, decimationRecord);
+//        try {
+//            contract(mesh, decimationRecord);
+//        } catch (Exception e) {
+//            System.out.println("Failed to contract with exception:");
+//            System.out.println(e);
+//        }
     }
 
     public void increaseResolution(IMesh mesh) {

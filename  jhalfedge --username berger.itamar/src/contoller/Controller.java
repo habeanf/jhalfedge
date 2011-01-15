@@ -76,12 +76,14 @@ public class Controller implements GLEventListener {
         gridRenderer = new GridRenderer(freq);
         paths = new ArrayList<File>();
 
-        File modelDirectory = new File("./Models");
+        File modelDirectory = new File("./Models/BEAR_KLA.off");
         if (modelDirectory.isDirectory()) {
 
             Collections.addAll(paths, modelDirectory.listFiles());
 
             selectFile(paths.get(meshIterator));
+        } else if (modelDirectory.isFile()) {
+            selectFile(modelDirectory);
         } else {
             loadNewFile();
         }

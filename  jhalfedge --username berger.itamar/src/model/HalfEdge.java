@@ -100,4 +100,8 @@ public class HalfEdge {
     public double getDihedralAngle() {
         return dihedralAngle;
     }
+
+    public void setVertex(Vertex vertex) {
+        this.vertex = vertex;
+    }
 }
