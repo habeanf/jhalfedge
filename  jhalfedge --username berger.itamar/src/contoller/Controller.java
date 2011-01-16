@@ -193,9 +193,9 @@ public class Controller implements GLEventListener {
             z += 0.1f;
         if (zoomOut)
             z -= 0.1f;
-        if(moveDownRes)
+        if (moveDownRes)
             moveDownResolution(0.2);
-        if(moveUpRes)
+        if (moveUpRes)
             moveUpResolution(0.5);
     }
 
@@ -306,6 +306,7 @@ public class Controller implements GLEventListener {
         meshRenderer = new MeshRenderer(mesh);
         multiResRepresentor = null;
         infoLogger.setModelPath("Model path:" + file.getPath());
+        infoLogger.setDebugRow("");
     }
 
     public void nextFile() {
@@ -360,25 +361,25 @@ public class Controller implements GLEventListener {
         if (multiResRepresentor == null) {
             calculateMultiresolution();
         } else {
-            multiResRepresentor.decreaseResolution(mesh,speed);
+            multiResRepresentor.decreaseResolution(mesh, speed);
             state.shouldUpdate = true;
         }
     }
 
 
     public void moveDownResolution(boolean pressed) {
-            this.moveDownRes = pressed;
+        this.moveDownRes = pressed;
     }
 
     public void moveUpResolution(boolean pressed) {
-            this.moveUpRes = pressed;
+        this.moveUpRes = pressed;
     }
 
     public void moveUpResolution(double speed) {
         if (multiResRepresentor == null) {
             calculateMultiresolution();
         } else {
-            multiResRepresentor.increaseResolution(mesh,speed);
+            multiResRepresentor.increaseResolution(mesh, speed);
             state.shouldUpdate = true;
         }
     }
@@ -387,8 +388,16 @@ public class Controller implements GLEventListener {
         // calculate the decimation records
         if (multiResRepresentor == null) {
             multiResRepresentor = new MultiResRepresentor();
-            multiResRepresentor.build(mesh);
+            Thread thread = new Thread(new Runnable() {
+                public void run() {
+                    multiResRepresentor.build(infoLogger, mesh);
+                    InputHandler.keyboardLock = false;
+                    state.shouldUpdate = true;
+                }
+            });
+
+            thread.start();
+            InputHandler.keyboardLock = true;
         }
-        state.shouldUpdate = true;
     }
 }

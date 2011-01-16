@@ -1,6 +1,7 @@
 package attributes.contraction;
 
 import model.*;
+import utils.InfoLogger;
 
 import javax.swing.text.NumberFormatter;
 import java.text.ParseException;
@@ -27,7 +28,9 @@ public class MultiResRepresentor {
     public MultiResRepresentor() {
     }
 
-    public void build(IMesh mesh) {
+    public void build(InfoLogger infoLogger, IMesh mesh) {
+
+
         // get a set of all edges and construct priority que from all edges (use their length for rank)
         PriorityQueue<IEdge> queue = new PriorityQueue<IEdge>(mesh.getAllUndirectedEdges());
 
@@ -68,7 +71,7 @@ public class MultiResRepresentor {
             updateQueue(queue, staleEdges, modifiedEdges);
 
             try {
-                System.out.println("created " + decimationRecords.size() + " records, queue size: " + queue.size() + " (" +
+                infoLogger.setDebugRow("Created " + decimationRecords.size() + " decimation records" + " (" +
                         numberFormatter.valueToString(Math.min(100, (originalNumberOfFaces - mesh.getAllFaces().size()) / ((1 - DECIMATION_RATIO) * originalNumberOfFaces) * 100)) + "%)");
             } catch (ParseException e) {
                 System.out.println("Failed to format percent");
@@ -76,7 +79,7 @@ public class MultiResRepresentor {
 
         }
 
-        System.out.println("Done!, total amount of face left: " + mesh.getAllFaces().size() + " (original " + originalNumberOfFaces + ")");
+        infoLogger.setDebugRow("Done!, total amount of faces left: " + mesh.getAllFaces().size() + " (original " + originalNumberOfFaces + ")");
 
         System.out.println("Starting splitting");
         Collections.reverse(decimationRecords);
