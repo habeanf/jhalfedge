@@ -246,7 +246,6 @@ public class MultiResRepresentor {
     }
 
     public void increaseResolution(InfoLogger infoLogger, IMesh mesh, double speed) {
-
         if (p == -1)
             return;
 

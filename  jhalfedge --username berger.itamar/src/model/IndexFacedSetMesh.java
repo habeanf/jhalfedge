@@ -123,6 +123,16 @@ public class IndexFacedSetMesh implements IMesh {
     }
 
     public boolean isEdgeValid(IEdge edge) {
+        final List<IFace> facesAdjacentToEdge = getFacesAdjacentToEdge(edge);
+
+        if (facesAdjacentToEdge.size() == 2){
+            final IFace Face1 = facesAdjacentToEdge.get(0);
+            final IFace Face2 = facesAdjacentToEdge.get(1);
+
+            return Face1.getSegment() == Face2.getSegment();
+        }
+
+
         return true;
     }
 
