@@ -361,7 +361,7 @@ public class Controller implements GLEventListener {
         if (multiResRepresentor == null) {
             calculateMultiresolution();
         } else {
-            multiResRepresentor.decreaseResolution(mesh, speed);
+            multiResRepresentor.decreaseResolution(infoLogger,mesh, speed);
             state.shouldUpdate = true;
         }
     }
@@ -379,7 +379,7 @@ public class Controller implements GLEventListener {
         if (multiResRepresentor == null) {
             calculateMultiresolution();
         } else {
-            multiResRepresentor.increaseResolution(mesh, speed);
+            multiResRepresentor.increaseResolution(infoLogger,mesh, speed);
             state.shouldUpdate = true;
         }
     }

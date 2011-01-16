@@ -91,7 +91,7 @@ public class MultiResRepresentor {
         }
 
         Collections.reverse(decimationRecords);
-        decreaseResolution(mesh,Integer.MAX_VALUE);
+        decreaseResolution(infoLogger, mesh,Integer.MAX_VALUE);
     }
 
     private void updateQueue(PriorityQueue<IEdge> queue, Collection<IEdge> staleEdges, Collection<IEdge> modifiedEdges) {
@@ -225,7 +225,7 @@ public class MultiResRepresentor {
 
     int p = 0;
     int stepSize = 300;
-    public void decreaseResolution(IMesh mesh, double speed) {
+    public void decreaseResolution(InfoLogger infoLogger, IMesh mesh, double speed) {
         if (p == decimationRecords.size())
             return;
 
@@ -235,9 +235,11 @@ public class MultiResRepresentor {
             contract(mesh, decimationRecord);
         }
 
+        infoLogger.setDebugRow("Faces amount: " + mesh.getAllFaces().size() + "/" + originalNumberOfFaces);
+
     }
 
-    public void increaseResolution(IMesh mesh, double speed) {
+    public void increaseResolution(InfoLogger infoLogger, IMesh mesh, double speed) {
 
         if (p == -1)
             return;
@@ -247,6 +249,8 @@ public class MultiResRepresentor {
             final DecimationRecord decimationRecord = decimationRecords.get(--p);
             split(mesh, decimationRecord);
         }
+
+        infoLogger.setDebugRow("Faces amount: " + mesh.getAllFaces().size() + "/" + originalNumberOfFaces);
     }
 
 }
