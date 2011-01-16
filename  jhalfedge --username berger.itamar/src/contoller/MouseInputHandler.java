@@ -25,6 +25,9 @@ public class MouseInputHandler extends MouseInputAdapter {
         if (SwingUtilities.isRightMouseButton(mouseEvent)) {
             Controller.loadNewFile();
         }
+        if (SwingUtilities.isMiddleMouseButton(mouseEvent)) {
+            Controller.toggleAttributes();
+        }
     }
 
     public void mouseDragged(MouseEvent mouseEvent) {

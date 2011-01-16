@@ -279,6 +279,7 @@ public class Controller implements GLEventListener {
 
     private List<File> paths;
     int meshIterator = 0;
+
     public void loadNewFile() {
         if (!InputHandler.keyboardLock) {
             Frame f = new Frame();
@@ -303,6 +304,7 @@ public class Controller implements GLEventListener {
         z = -10.0f;
         meshRenderer = new MeshRenderer(mesh);
         multiResRepresentor = null;
+        noAttribute = false;
         infoLogger.setModelPath("Model path:" + file.getPath());
         infoLogger.setAttribute("Current mesh attribute: None");
         infoLogger.setDebugRow("");
@@ -364,7 +366,7 @@ public class Controller implements GLEventListener {
         if (multiResRepresentor == null) {
             calculateMultiresolution();
         } else {
-            multiResRepresentor.decreaseResolution(infoLogger,mesh, speed);
+            multiResRepresentor.decreaseResolution(infoLogger, mesh, speed);
             state.shouldUpdate = true;
         }
     }
@@ -382,7 +384,7 @@ public class Controller implements GLEventListener {
         if (multiResRepresentor == null) {
             calculateMultiresolution();
         } else {
-            multiResRepresentor.increaseResolution(infoLogger,mesh, speed);
+            multiResRepresentor.increaseResolution(infoLogger, mesh, speed);
             state.shouldUpdate = true;
         }
     }
@@ -402,5 +404,19 @@ public class Controller implements GLEventListener {
             thread.start();
             InputHandler.keyboardLock = true;
         }
+    }
+
+    boolean noAttribute = false;
+
+    public void toggleAttributes() {
+        if (!InputHandler.keyboardLock) {
+            if (noAttribute)
+                setNoAttribute();
+            else
+                setDistanceToCentroidAttribute();
+
+            noAttribute = !noAttribute;
+        }
+
     }
 }
