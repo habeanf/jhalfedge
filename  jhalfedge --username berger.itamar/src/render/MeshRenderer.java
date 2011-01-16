@@ -14,7 +14,6 @@ import java.util.List;
  * Time: 5:30:42 PM
  */
 public class MeshRenderer {
-
     // hold a cache of openGL display lists
     private int displayList;
 
@@ -39,41 +38,39 @@ public class MeshRenderer {
             gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
 
             if (state.isMesh()) {
-                // a method for displaying the neigbours of a face/vertex
-                if (state.isVertexNeihbourTest()) {
-                    renderVertexNeigbours(gl, mesh);
-                } else if (state.isFaceNeihbourTest()) {
-                    renderFaceNeigbours(gl, mesh);
+                setMinMax(mesh);
+
+                if (state.getMeshAttribute() != null && state.getMeshAttribute().doFaceRendering()) {
+                    renderfaces(gl, state, mesh.getAllFaces());
                 } else {
-                    setMinMax(mesh);
-
-                    if (state.getMeshAttribute() != null && state.getMeshAttribute().doFaceRendering()) {
-                        renderfaces(gl, state, mesh.getAllFaces());
-                    } else {
-                        if (state.getTransparent()) {
-                            float alpha = 0.5f;
-                            if (state.getMeshAttribute() == null) {
-                                gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
-                                gl.glColor4f(1f, 1f, 1f, alpha);
-                                renderTriangles(gl, alpha, state, mesh.getAllFaces(), true);
-                            }
-
-                            gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
-                            gl.glColor4f(1f, 1, 1f, 0.5f);
-                            renderTriangles(gl, alpha, state, mesh.getAllFaces(), true);
-
-                        } else {
-                            float alpha = 1f;
-                            gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
-                            gl.glColor4f(1f, 1, 1f, alpha);
+                    if (state.getTransparent()) {
+                        float alpha = 0.5f;
+                        if (state.getMeshAttribute() == null) {
+                            gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
+                            gl.glColor4f(1f, 1f, 1f, alpha);
                             renderTriangles(gl, alpha, state, mesh.getAllFaces(), true);
                         }
+
+                        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+                        gl.glColor4f(1f, 1, 1f, 0.5f);
+                        renderTriangles(gl, alpha, state, mesh.getAllFaces(), true);
+
+                    } else {
+                        float alpha = 1f;
+                        gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
+                        gl.glColor4f(1f, 1, 1f, alpha);
+                        renderTriangles(gl, alpha, state, mesh.getAllFaces(), true);
                     }
                 }
+
             } else {
                 // draw cloud points
                 gl.glColor4f(1f, 1f, 1f, 0.8f);
                 renderVertices(gl, mesh.getAllVertices());
+            }
+
+            if (state.isShowCornerNormals()) {
+                renderNormals(gl, mesh.getAllFaces());
             }
 
             gl.glEndList();
@@ -96,36 +93,23 @@ public class MeshRenderer {
         }
     }
 
-    private void renderVertexNeigbours(GL gl, IMesh mesh) {
-//        for (int i = 1; i < 100; i++) {
-//            IVertex candidate = mesh.getVertex((int) (1 + Math.random() * mesh.getAllVertices().size()));
-//
-//            if (candidate != null) {
-//                final Set<IVertex> neighbours = mesh.getNeighbours(candidate);
-//                float[] values = {(float) Math.random(), (float) Math.random(), (float) Math.random()};
-//                gl.glColor4f(values[0], values[1], values[2], 1f);
-//                renderVertices(gl, neighbours);
-//
-//                gl.glColor4f(1f, 1f, 1f, 1f);
-//                renderVertices(gl, Arrays.asList(candidate));
-//            }
-//        }
-    }
+    private void renderNormals(GL gl, Collection<IFace> faces) {
+        for (IFace face : faces) {
+            final Vector3D normal = face.getNormal();
+            float cornerNormal[] = normal.getFloatArray();
+            IVertex vertex = face.getVertices().get(0);
+            float xyz[] = vertex.getXyz();
 
-    private void renderFaceNeigbours(GL gl, IMesh mesh) {
-//        for (int i = 1; i < 100; i++) {
-//            Face candidate = mesh.getAllFaces().get((int) (Math.random() * mesh.getAllFaces().size()));
-//
-//            if (candidate != null) {
-//                final Set<Face> neighbours = mesh.getNeighbours(candidate);
-//                float[] values = {(float) Math.random(), (float) Math.random(), (float) Math.random()};
-//                gl.glColor4f(values[0], values[1], values[2], 1f);
-//                renderTriangles(gl, 0.5f, prevState, neighbours, true);
-//
-//                gl.glColor4f(1f, 1f, 1f, 1f);
-//                renderTriangles(gl, 0.5f, prevState, Arrays.asList(candidate), true);
-//            }
-//        }
+            gl.glBegin(GL.GL_LINES);
+            float[] to = {(xyz[0] - cornerNormal[0] / 20), (xyz[1] - cornerNormal[1] / 20), (xyz[2] - cornerNormal[2] / 20)};
+            gl.glColor4f(1f, 0f, 0f, 0.3f);
+            gl.glVertex3fv(to, 0);
+            gl.glColor4f(0.8f, 0f, 0.2f, 0.2f);
+            gl.glVertex3fv(xyz, 0);
+
+            gl.glEnd();
+
+        }
     }
 
     private void renderVertices(GL gl, Collection<IVertex> vertices) {
@@ -153,9 +137,7 @@ public class MeshRenderer {
                         gl.glColor4f(color[0], color[1], color[2], alpha);
                     }
                 }
-
                 gl.glVertex3fv(vertex.getXyz(), 0);
-
             }
 
             gl.glEnd();

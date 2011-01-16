@@ -16,6 +16,8 @@ public class Vertex implements IVertex{
 
     Set<IFace> faces;
 
+    // attributes
+    private float distance;
 
     public Vertex(int id,float x, float y, float z) {
         this.xyz = new float[]{x, y, z};
@@ -82,6 +84,14 @@ public class Vertex implements IVertex{
 
     public void setActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public void setDistance(float value) {
+        this.distance = value;
+    }
+
+    public float getDistance() {
+        return distance;
     }
 
     public void offset(float meanx, float meany, float meanz) {

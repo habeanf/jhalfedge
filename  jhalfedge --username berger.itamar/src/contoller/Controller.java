@@ -80,8 +80,7 @@ public class Controller implements GLEventListener {
         gridRenderer = new GridRenderer(freq);
         paths = new ArrayList<File>();
 
-        File modelDirectory = new File("./Models/BEAR_KLA.off");
-//        File modelDirectory = new File("./Models");
+        File modelDirectory = new File("./Models");
         if (modelDirectory.isDirectory()) {
 
             Collections.addAll(paths, modelDirectory.listFiles());
@@ -274,13 +273,12 @@ public class Controller implements GLEventListener {
     public void setNoAttribute() {
         MeshAttribute attribute = null;
         state.setMeshAttribute(attribute);
+        state.transperacy(true);
         infoLogger.setAttribute("None");
     }
 
-
     private List<File> paths;
     int meshIterator = 0;
-
     public void loadNewFile() {
         if (!InputHandler.keyboardLock) {
             Frame f = new Frame();
@@ -329,16 +327,20 @@ public class Controller implements GLEventListener {
         state.setAttributeColorMap(ColorMapFactory.getNextColorMap());
     }
 
-    public void toggleVertexNeighbourTest() {
-        state.toggleVertexNeighbourTest();
-    }
-
-    public void toggleFaceNeighbourTest() {
-        state.toggleFaceNeighbourTest();
-    }
-
     public void toggleShowCornerNormals() {
         state.toggleShowCornerNormals();
+    }
+
+    public void setDistanceToCentroidAttribute() {
+        MeshAttribute attribute = new DistanceToCentroid();
+        if (!state.isCalculatedDistanceToCentroid()) {
+            attribute.calculate(mesh);
+            state.setCalculatedDistance(true);
+        }
+
+        state.setMeshAttribute(attribute);
+        state.transperacy(false);
+        infoLogger.setAttribute(attribute.getName());
     }
 
     public void setSegmentationAttribute() {

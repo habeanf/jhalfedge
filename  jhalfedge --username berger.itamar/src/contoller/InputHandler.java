@@ -31,16 +31,11 @@ public class InputHandler extends KeyAdapter {
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_T, 0), "Toggle transparent");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0), "Show point cloud");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_1, 0), "No Attributes");
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_2, 0), "Attribute: Centricity");
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_3, 0), "Attribute: Distance to centroid");
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_4, 0), "Attribute: Gaussian Curvature");
+        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_2, 0), "Attribute: Distance to centroid");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_Z, 0), "Load file");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), "Next mesh");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_N, 0), "Prev mesh");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0), "Switch colormap");
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_7, 0), "Debug - Show one point geodesic");
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_8, 0), "Debug - Show Faces Neighbour test");
-        glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_9, 0), "Debug - Show Vertex Neighbout test");
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_0, 0), "Debug - Show Normals");
 
         glDisplay.registerKeyStrokeForHelp(KeyStroke.getKeyStroke(KeyEvent.VK_5, 0), "Create Segmentation");
@@ -81,15 +76,9 @@ public class InputHandler extends KeyAdapter {
             case KeyEvent.VK_1:
                 controller.setNoAttribute();
                 break;
-//            case KeyEvent.VK_2:
-//                controller.setCentricityAttribute();
-//                break;
-//            case KeyEvent.VK_3:
-//                controller.setDistanceToCentroidAttribute();
-//                break;
-//            case KeyEvent.VK_4:
-//                controller.setGaussianCurvature();
-//                break;
+            case KeyEvent.VK_2:
+                controller.setDistanceToCentroidAttribute();
+                break;
             case KeyEvent.VK_Z:
                 controller.loadNewFile();
                 break;
@@ -104,15 +93,6 @@ public class InputHandler extends KeyAdapter {
                 break;
             case KeyEvent.VK_0:
                 controller.toggleShowCornerNormals();
-                break;
-//            case KeyEvent.VK_7:
-//                controller.toggleGeodesicTest();
-//                break;
-            case KeyEvent.VK_8:
-                controller.toggleFaceNeighbourTest();
-                break;
-            case KeyEvent.VK_9:
-                controller.toggleVertexNeighbourTest();
                 break;
             case KeyEvent.VK_5:
                 controller.setSegmentationAttribute();

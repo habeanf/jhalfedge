@@ -25,4 +25,9 @@ public interface IVertex {
     boolean isActive();
 
     void setActive(boolean isActive);
+
+    void setDistance(float value);
+
+    float getDistance();
+
 }
