@@ -133,6 +133,9 @@ public class DihedralCluster extends Cluster {
         neighbors.addAll(dihedralPropertyCluster.getClusterNeighbors());
         neighbors.remove(this);
         neighbors.remove(dihedralPropertyCluster);
+        for(IFace face : clusterElements) {
+            neighbors.remove(face.getCluster());
+        }
 
         Hierarchy newhier = new Hierarchy(getHierarchy(),
                                           dihedralPropertyCluster.getHierarchy(),
@@ -157,4 +160,9 @@ public class DihedralCluster extends Cluster {
         return elementIds;
     }
 
+
+    public boolean equals (DihedralCluster cluster2) {
+        if (getId() == cluster2.getId()) return true;
+        else return false;
+    }
 }

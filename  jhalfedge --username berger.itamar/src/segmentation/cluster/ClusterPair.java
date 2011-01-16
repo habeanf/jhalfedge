@@ -15,9 +15,15 @@ public class ClusterPair implements Comparable<ClusterPair> {
     public Cluster clusterA,clusterB;
 
     public ClusterPair(Cluster clusterA, Cluster clusterB) {
-        this.clusterA = clusterA;
-        this.clusterB = clusterB;
-    }
+       if (clusterA.getId() > clusterB.getId()){
+           this.clusterA = clusterA;
+           this.clusterB = clusterB;
+       }
+       else{
+           this.clusterA = clusterB;
+           this.clusterB = clusterA;
+       }
+   }
 
     public ClusterProperty getIntersectionProperty() {
         Cluster primaryCluster,secondaryCluster;

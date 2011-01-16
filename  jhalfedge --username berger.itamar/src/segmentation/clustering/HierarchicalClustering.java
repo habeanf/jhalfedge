@@ -25,6 +25,8 @@ public class HierarchicalClustering {
     IMesh mesh;
 
     public void getHierarchicalClustering(IMesh mesh) {
+        Set<NumberPair> numpairs = new HashSet<NumberPair>();
+
         this.mesh = mesh;
         // Create a cluster for each face
         for(IFace face : mesh.getAllFaces()) {
@@ -51,6 +53,7 @@ public class HierarchicalClustering {
                 if (face.compareTo(faceNeighbor)>0) {
                     ClusterPair pair = new ClusterPair(face.getCluster(),faceNeighbor.getCluster());
                     Q.add(pair);
+                    numpairs.add(new NumberPair(pair.clusterA.getId(),pair.clusterB.getId()));
                 }
             }
         }
@@ -69,8 +72,13 @@ public class HierarchicalClustering {
                 Cluster w = nextPair.merge();
                 top = w.getHierarchy();
                 // Insert all valid pairs of w to Q
-                for (Cluster clusterNeighbor : w.getClusterNeighbors())
-                    Q.add(new ClusterPair(w,clusterNeighbor));
+                for (Cluster clusterNeighbor : w.getClusterNeighbors()) {
+                    NumberPair numberpair = new NumberPair(w.getId(),clusterNeighbor.getId());
+                    if (!numpairs.contains(numberpair)) {
+                        Q.add(new ClusterPair(w,clusterNeighbor));
+                        numpairs.add(numberpair);
+                    }
+                }
             }
         }
 
