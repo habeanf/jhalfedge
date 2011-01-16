@@ -89,7 +89,7 @@ public class MeshRenderer {
         for (IFace candidate : faces) {
             if (candidate != null) {
                 final int segment = candidate.getSegment();
-                final float[] color = state.getColorMap().getColor(segment/amount);
+                final float[] color = state.getColorMap().getColor(segment / amount);
                 gl.glColor4f(color[0], color[1], color[2], 1);
                 renderTriangles(gl, 1, state, Arrays.asList(candidate), false);
             }
@@ -139,8 +139,9 @@ public class MeshRenderer {
     private void renderTriangles(GL gl, float alpha, RenderState state, Collection<IFace> faces, boolean overrideColor) {
         for (IFace face : faces) {
             gl.glBegin(GL.GL_TRIANGLES);
-
-            gl.glNormal3fv(face.getNormal().getFloatArray(),0);
+            if (face.getNormal() != null) {
+                gl.glNormal3fv(face.getNormal().getFloatArray(), 0);
+            }
             for (IVertex vertex : face.getVertices()) {
                 MeshAttribute attribute = state.getMeshAttribute();
 
@@ -160,7 +161,6 @@ public class MeshRenderer {
             gl.glEnd();
         }
     }
-
 
 
     private float min;

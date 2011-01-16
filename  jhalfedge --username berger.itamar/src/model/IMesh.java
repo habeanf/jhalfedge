@@ -34,7 +34,7 @@ public interface IMesh {
 
     boolean changeFaceVertices(int faceId, int from, int to);
 
-    void addFace(int faceId, int[] verticesIds);
+    void addFace(int faceId, int[] verticesIds,boolean calcNormals);
 
     void addVertex(int vertexId);
 

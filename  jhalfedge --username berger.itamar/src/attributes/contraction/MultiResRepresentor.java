@@ -42,6 +42,7 @@ public class MultiResRepresentor {
         stepSize = (int) (originalNumberOfFaces * DECIMATION_RATIO / 3);
 
         System.out.println("Starting contraction, total faces :" + originalNumberOfFaces);
+        long l1 = System.currentTimeMillis();
 
         // while the mesh is not coarse enough
         while (!isMeshCoarse(mesh) && queue.size() > 0) {
@@ -79,7 +80,12 @@ public class MultiResRepresentor {
 
         }
 
-        infoLogger.setDebugRow("Done!, total amount of faces left: " + mesh.getAllFaces().size() + " (original " + originalNumberOfFaces + ")");
+        long l2 = System.currentTimeMillis();
+        try {
+            infoLogger.setDebugRow("Done creating decimation records!, took " + numberFormatter.valueToString(((l2-l1)/1000.0)) +"s");
+        } catch (ParseException e) {
+            System.out.println("Failed to format percent");
+        }
 
         System.out.println("Starting splitting");
         Collections.reverse(decimationRecords);
@@ -123,7 +129,7 @@ public class MultiResRepresentor {
             if (meshPersistenceService.isValidReplacment(mesh, faceId, record.deletedVertexId, record.otherVertexId)) {
                 final boolean success = meshPersistenceService.changeFaceVertices(mesh, faceId, record.deletedVertexId, record.otherVertexId);
 
-                // should we support faces that turns to edges? TODO
+                // should we support faces that turns to edges
                 if (!success) {
                     meshPersistenceService.removeFace(mesh, faceId);
                     problematicFaces.add(faceId);
@@ -149,11 +155,11 @@ public class MultiResRepresentor {
 
         // recreate first face
         if (record.firstRemovedTriangleId > 0)
-            meshPersistenceService.addFace(mesh, record.firstRemovedTriangleId, record.firstTriangleVerticesIds);
+            meshPersistenceService.addFace(mesh, record.firstRemovedTriangleId, record.firstTriangleVerticesIds, false);
 
         // recreate second face
         if (record.secondRemovedTriangleId > 0)
-            meshPersistenceService.addFace(mesh, record.secondRemovedTriangleId, record.secondTriangleVerticesIds);
+            meshPersistenceService.addFace(mesh, record.secondRemovedTriangleId, record.secondTriangleVerticesIds, false);
         if (record.changedTrianglesIds != null) {
             for (Integer faceId : record.changedTrianglesIds) {
                 meshPersistenceService.changeFaceVertices(mesh, faceId, record.otherVertexId, record.deletedVertexId);
@@ -235,7 +241,7 @@ public class MultiResRepresentor {
             contract(mesh, decimationRecord);
         }
 
-        infoLogger.setDebugRow("Faces amount: " + mesh.getAllFaces().size() + "/" + originalNumberOfFaces);
+        infoLogger.setAttribute("Faces amount: " + mesh.getAllFaces().size() + "/" + originalNumberOfFaces);
 
     }
 
@@ -250,7 +256,7 @@ public class MultiResRepresentor {
             split(mesh, decimationRecord);
         }
 
-        infoLogger.setDebugRow("Faces amount: " + mesh.getAllFaces().size() + "/" + originalNumberOfFaces);
+        infoLogger.setAttribute("Faces amount: " + mesh.getAllFaces().size() + "/" + originalNumberOfFaces);
     }
 
 }

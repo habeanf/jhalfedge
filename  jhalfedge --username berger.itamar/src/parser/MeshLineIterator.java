@@ -10,8 +10,8 @@ import java.io.Reader;
  * Date: Nov 27, 2010
  * Time: 4:56:02 PM
  */
-public class OBJLineIterator extends LineIterator{
-    public OBJLineIterator(Reader reader) throws IllegalArgumentException {
+public class MeshLineIterator extends LineIterator{
+    public MeshLineIterator(Reader reader) throws IllegalArgumentException {
         super(reader);
     }
 

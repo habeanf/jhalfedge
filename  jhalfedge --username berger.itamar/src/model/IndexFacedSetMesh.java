@@ -11,9 +11,14 @@ public class IndexFacedSetMesh implements IMesh {
     private final Map<Integer, IVertex> vertexIdMap;
     private final Map<Integer, IFace> faceMap;
 
+    // hold the original faces
+    private final Map<Integer, Vector3D> faceNormalMap;
+
     public IndexFacedSetMesh(Map<Integer, IVertex> vertexMap, Map<Integer, IFace> faceMap) {
         this.vertexIdMap = vertexMap;
         this.faceMap = faceMap;
+
+        faceNormalMap = new HashMap<Integer, Vector3D>(faceMap.size());
     }
 
     public List<IEdge> getAllUndirectedEdges() {
@@ -171,7 +176,7 @@ public class IndexFacedSetMesh implements IMesh {
 
     }
 
-    public void addFace(int faceId, int[] verticesIds) {
+    public void addFace(int faceId, int[] verticesIds, boolean doCalcNormals) {
         Face face = new Face(faceId);
         faceMap.put(faceId, face);
 
@@ -180,10 +185,16 @@ public class IndexFacedSetMesh implements IMesh {
             final IVertex vertex = getVertex(vertexId);
             vertices.add(vertex);
             addFaceToVertex(vertex, face);
-
         }
 
         addVerticesToFace(face, vertices);
+        
+        if (doCalcNormals) {
+            face.calcNormal();
+            faceNormalMap.put(face.getId(),face.getNormal());
+        }else{
+            face.setNormal(faceNormalMap.get(faceId));
+        }
     }
 
     public void addVertex(int vertexId) {

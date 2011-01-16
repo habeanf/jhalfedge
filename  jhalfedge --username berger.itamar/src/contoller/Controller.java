@@ -306,6 +306,7 @@ public class Controller implements GLEventListener {
         meshRenderer = new MeshRenderer(mesh);
         multiResRepresentor = null;
         infoLogger.setModelPath("Model path:" + file.getPath());
+        infoLogger.setAttribute("Current mesh attribute: None");
         infoLogger.setDebugRow("");
     }
 

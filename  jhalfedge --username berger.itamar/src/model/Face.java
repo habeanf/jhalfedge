@@ -33,10 +33,10 @@ public class Face implements IFace, Clusterable {
     public void removeVertex(IVertex vertex) {
         final Iterator<IVertex> iterator = vertices.iterator();
 
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             final IVertex next = iterator.next();
 
-            if (next == vertex){
+            if (next == vertex) {
                 iterator.remove();
             }
         }
@@ -50,14 +50,14 @@ public class Face implements IFace, Clusterable {
         List<IVertex> newVertices = new ArrayList<IVertex>();
 
         // in case the vertex already exists, no replacement should be done, this a valid state
-        if (vertices.contains(toVertex)){
+        if (vertices.contains(toVertex)) {
             return false;
         }
 
         for (IVertex vertex : vertices) {
-            if (vertex == fromVertex){
+            if (vertex == fromVertex) {
                 newVertices.add(toVertex);
-            }else{
+            } else {
                 newVertices.add(vertex);
             }
         }
@@ -89,7 +89,6 @@ public class Face implements IFace, Clusterable {
         }
 
         this.vertices.addAll(vertices);
-        calcNormal();
     }
 
     public void setVertices(List<IVertex> vertices) {
@@ -123,16 +122,17 @@ public class Face implements IFace, Clusterable {
     }
 
     public void calcNormal() {
-        assert(vertices.size()==3);
-        Vector3D vp         = new Vector3D(vertices.get(0).getXyz());
-        Vector3D v          = new Vector3D(vertices.get(1).getXyz());
-        Vector3D vn         = new Vector3D(vertices.get(2).getXyz());
+        if (vertices.size() == 3) {
+            Vector3D vp = new Vector3D(vertices.get(0).getXyz());
+            Vector3D v = new Vector3D(vertices.get(1).getXyz());
+            Vector3D vn = new Vector3D(vertices.get(2).getXyz());
 
-        Vector3D vector1    = v.sub(vp);
-        Vector3D vector2    = v.sub(vn);
+            Vector3D vector1 = v.sub(vp);
+            Vector3D vector2 = v.sub(vn);
 
-        // normal is calculated as the cross product of the incoming and outgoing half edges on a vertex
-        normal              = vector1.calculateCrossProductWith(vector2).normalize();
+            // normal is calculated as the cross product of the incoming and outgoing half edges on a vertex
+            normal = vector1.calculateCrossProductWith(vector2).normalize();
+        }
     }
 
     public Vector3D getNormal() {
@@ -141,7 +141,7 @@ public class Face implements IFace, Clusterable {
 
     /* Clusterable methods */
     public int compareTo(IFace otherFace) {
-        if (this.getSegment()>otherFace.getSegment())
+        if (this.getSegment() > otherFace.getSegment())
             return 1;
         else
             return -1;
@@ -149,11 +149,11 @@ public class Face implements IFace, Clusterable {
 
 
     public int compareTo(Clusterable otherClusterable) {
-        return compareTo((IFace)otherClusterable);
+        return compareTo((IFace) otherClusterable);
     }
 
     public DihedralProperty compareProperty(IFace otherFace) {
-        return new DihedralProperty(normal.calculateAngleTo(((Face)otherFace).getNormal()));
+        return new DihedralProperty(normal.calculateAngleTo(((Face) otherFace).getNormal()));
     }
 
     public void setCluster(Cluster cluster) {
@@ -168,7 +168,7 @@ public class Face implements IFace, Clusterable {
         Set<IFace> returnSet = new HashSet<IFace>();
 
         // return all faces of the this face's vertices
-        for(IVertex vertex : vertices) {
+        for (IVertex vertex : vertices) {
             returnSet.addAll(vertex.getFaces());
         }
 
@@ -176,5 +176,9 @@ public class Face implements IFace, Clusterable {
         returnSet.remove(this);
 
         return returnSet;
+    }
+
+    public void setNormal(Vector3D normal) {
+        this.normal = normal;
     }
 }

@@ -1,9 +1,6 @@
 package model;
 
-import parser.IMeshFileReader;
-import parser.OBJFileReader;
-import parser.OFFFileReader;
-import parser.OBJLineIterator;
+import parser.*;
 
 import java.io.FileReader;
 import java.util.HashMap;
@@ -34,7 +31,7 @@ public class MeshPersistenceService {
         IMeshFileReader meshFileReader = getReader(path);
         try {
             FileReader fileReader = new FileReader(path);
-            OBJLineIterator lineIterator = new OBJLineIterator(fileReader);
+            MeshLineIterator lineIterator = new MeshLineIterator(fileReader);
 
             meshFileReader.preProcess(lineIterator);
 
@@ -47,7 +44,7 @@ public class MeshPersistenceService {
                     max = findmax(max, vertex);
                     vertexMap.put(vertex.getId(), vertex);
                 } else if (meshFileReader.isFace(fields)) {
-                    addFace(mesh, faceCounter, meshFileReader.getFaceIds(fields));
+                    addFace(mesh, faceCounter, meshFileReader.getFaceIds(fields), true);
 
                     faceCounter++;
                 }
@@ -58,7 +55,7 @@ public class MeshPersistenceService {
             // normalization and other preprocessing
             postProcessVertices(vertexMap, normalizeVertices, max);
 
-            return new IndexFacedSetMesh(vertexMap, faceMap);
+            return mesh;
 
         } catch (Exception e) {
             System.out.println("Failed to load file from path: " + path);
@@ -69,10 +66,12 @@ public class MeshPersistenceService {
     }
 
     private IMeshFileReader getReader(String path) {
-        if (path.endsWith("obj")) {
+        if (path.toLowerCase().endsWith("obj")) {
             return new OBJFileReader();
-        }
-        return new OFFFileReader();
+        } else if (path.toLowerCase().endsWith("obj")) {
+            return new OFFFileReader();
+        } else
+            return new PLYFileReader();
     }
 
     private float findmax(float max, Vertex vertex) {
@@ -131,8 +130,8 @@ public class MeshPersistenceService {
         mesh.addVertex(vertexId);
     }
 
-    public void addFace(IMesh mesh, int faceId, int[] verticesIds) {
-        mesh.addFace(faceId, verticesIds);
+    public void addFace(IMesh mesh, int faceId, int[] verticesIds, boolean calcNormals) {
+        mesh.addFace(faceId, verticesIds, calcNormals);
     }
 
 

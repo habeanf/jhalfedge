@@ -13,5 +13,5 @@ public interface IMeshFileReader {
     boolean isFace(String[] fields);
     int[] getFaceIds(String[] fields);
 
-    void preProcess(OBJLineIterator lineIterator);
+    void preProcess(MeshLineIterator lineIterator);
 }

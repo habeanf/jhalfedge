@@ -26,6 +26,6 @@ public class OBJFileReader implements IMeshFileReader {
         return new int[]{Integer.parseInt(fields[1]),Integer.parseInt(fields[2]),Integer.parseInt(fields[3])};
     }
 
-    public void preProcess(OBJLineIterator lineIterator) {
+    public void preProcess(MeshLineIterator lineIterator) {
     }
 }
