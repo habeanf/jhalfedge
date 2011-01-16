@@ -2,6 +2,7 @@ package segmentation;
 
 import attributes.MeshAttribute;
 import model.*;
+import segmentation.clustering.HierarchicalClustering;
 import utils.Vector3D;
 
 import java.util.Collection;
@@ -12,7 +13,8 @@ import java.util.Collection;
  * Time: 5:37 PM
  */
 public class PartSegmentation implements MeshAttribute {
-    private int clusterAmount = 5;
+    HierarchicalClustering hcluster;
+    int clusterAmount = 5;
 
     public String getName() {
         return "Part Based Segmentation";
@@ -27,15 +29,23 @@ public class PartSegmentation implements MeshAttribute {
     }
 
     public int getClustersAmount() {
-        return clusterAmount;
+        return hcluster.getNumOfSegments();
     }
 
     public void calculate(IMesh mesh) {
-        final Collection<IFace> allFaces = mesh.getAllFaces();
-
-        for (IFace face : allFaces) {
-            face.setSegment((int) (Math.random()*clusterAmount));
+        hcluster = new HierarchicalClustering();
+        hcluster.getHierarchicalClustering(mesh);
+        while(getClustersAmount()<clusterAmount) {
+            goDown();
         }
+    }
+
+    public void goUp() {
+        hcluster.goUp();
+    }
+
+    public void goDown() {
+        hcluster.goDown();
     }
 
 }

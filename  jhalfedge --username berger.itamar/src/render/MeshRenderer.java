@@ -140,6 +140,7 @@ public class MeshRenderer {
         for (IFace face : faces) {
             gl.glBegin(GL.GL_TRIANGLES);
 
+            gl.glNormal3fv(face.getNormal().getFloatArray(),0);
             for (IVertex vertex : face.getVertices()) {
                 MeshAttribute attribute = state.getMeshAttribute();
 

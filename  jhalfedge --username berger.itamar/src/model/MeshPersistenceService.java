@@ -1,15 +1,12 @@
 package model;
 
-import attributes.MeshAttribute;
 import parser.IMeshFileReader;
 import parser.OBJFileReader;
-import parser.OBJLineIterator;
 import parser.OFFFileReader;
+import parser.OBJLineIterator;
 
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

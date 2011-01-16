@@ -1,6 +1,10 @@
 package model;
 
+import segmentation.cluster.Cluster;
+import segmentation.cluster.DihedralProperty;
+
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: itamar
@@ -8,6 +12,16 @@ import java.util.List;
  * Time: 3:43 PM
  */
 public interface IFace {
+    void setCluster(Cluster cluster);
+
+    Cluster getCluster();
+
+    Set<IFace> getNeighbors();
+
+    public int compareTo(IFace otherFace);
+
+    public DihedralProperty compareProperty(IFace otherFace);
+
     int getSegment();
 
     void setSegment(int cluster);
@@ -21,6 +35,8 @@ public interface IFace {
     void removeVertex(IVertex vertex);
 
     boolean replaceVertex(IVertex vertex, IVertex toVertex);
+
+    public Vector3D getNormal();
 
     boolean isValidReplacement(IVertex fromVertex, IVertex toVertex);
 
