@@ -1,5 +1,6 @@
 package attributes;
 
+import model.IMesh;
 import model.IVertex;
 import model.Vertex;
 
@@ -16,4 +17,6 @@ public interface MeshAttribute {
     boolean doFaceRendering();
 
     int getClustersAmount();
+
+    void calculate(IMesh mesh);
 }

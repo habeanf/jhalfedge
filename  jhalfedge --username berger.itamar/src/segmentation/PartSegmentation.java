@@ -1,11 +1,10 @@
 package segmentation;
 
 import attributes.MeshAttribute;
-import model.Face;
-import model.IMesh;
-import model.IVertex;
-import model.Vertex;
+import model.*;
 import utils.Vector3D;
+
+import java.util.Collection;
 
 /**
  * User: itamar
@@ -13,14 +12,14 @@ import utils.Vector3D;
  * Time: 5:37 PM
  */
 public class PartSegmentation implements MeshAttribute {
-    private int clusterAmount = 0;
+    private int clusterAmount = 5;
 
     public String getName() {
         return "Part Based Segmentation";
     }
 
     public float getValue(IVertex vertex) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     public boolean doFaceRendering() {
@@ -32,6 +31,11 @@ public class PartSegmentation implements MeshAttribute {
     }
 
     public void calculate(IMesh mesh) {
+        final Collection<IFace> allFaces = mesh.getAllFaces();
+
+        for (IFace face : allFaces) {
+            face.setSegment((int) (Math.random()*clusterAmount));
+        }
     }
 
 }

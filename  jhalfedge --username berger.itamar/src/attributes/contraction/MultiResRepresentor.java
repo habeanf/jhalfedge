@@ -24,7 +24,6 @@ public class MultiResRepresentor {
 
     NumberFormatter numberFormatter = new NumberFormatter();
 
-
     public MultiResRepresentor() {
     }
 
@@ -89,6 +88,7 @@ public class MultiResRepresentor {
         }
 
         Collections.reverse(decimationRecords);
+        decreaseResolution(mesh,Integer.MAX_VALUE);
     }
 
     private void updateQueue(PriorityQueue<IEdge> queue, Collection<IEdge> staleEdges, Collection<IEdge> modifiedEdges) {

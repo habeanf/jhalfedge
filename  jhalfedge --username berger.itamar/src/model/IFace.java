@@ -10,6 +10,8 @@ import java.util.List;
 public interface IFace {
     int getSegment();
 
+    void setSegment(int cluster);
+
     List<IVertex> getVertices();
 
     void addVertices(List<IVertex> vertices);
@@ -21,4 +23,5 @@ public interface IFace {
     boolean replaceVertex(IVertex vertex, IVertex toVertex);
 
     boolean isValidReplacement(IVertex fromVertex, IVertex toVertex);
+
 }

@@ -340,15 +340,15 @@ public class Controller implements GLEventListener {
     }
 
     public void setSegmentationAttribute() {
-//        MeshAttribute attribute = new PartSegmentation();
-//        if (!state.isCalculateSegmentation()) {
-//            attribute.calculate(mesh);
-//            state.setCalculatedSegmentation(true);
-//        }
-//
-//        state.setMeshAttribute(attribute);
-//        state.transperacy(false);
-//        infoLogger.setAttribute(attribute.getName());
+        MeshAttribute attribute = new PartSegmentation();
+        if (!state.isCalculateSegmentation()) {
+            attribute.calculate(mesh);
+            state.setCalculatedSegmentation(true);
+        }
+
+        state.setMeshAttribute(attribute);
+        state.transperacy(false);
+        infoLogger.setAttribute(attribute.getName());
     }
 
     MultiResRepresentor multiResRepresentor;
@@ -389,5 +389,6 @@ public class Controller implements GLEventListener {
             multiResRepresentor = new MultiResRepresentor();
             multiResRepresentor.build(mesh);
         }
+        state.shouldUpdate = true;
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Face implements IFace {
     private int id;
-    private int segment;
+    private int segment = 4;
 
     private List<IVertex> vertices;
 
