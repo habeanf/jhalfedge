@@ -68,7 +68,7 @@ public class MeshPersistenceService {
     private IMeshFileReader getReader(String path) {
         if (path.toLowerCase().endsWith("obj")) {
             return new OBJFileReader();
-        } else if (path.toLowerCase().endsWith("obj")) {
+        } else if (path.toLowerCase().endsWith("off")) {
             return new OFFFileReader();
         } else
             return new PLYFileReader();
