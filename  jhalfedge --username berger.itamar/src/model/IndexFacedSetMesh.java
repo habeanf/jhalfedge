@@ -124,7 +124,6 @@ public class IndexFacedSetMesh implements IMesh {
 
     public boolean isEdgeValid(IEdge edge) {
         final List<IFace> facesAdjacentToEdge = getFacesAdjacentToEdge(edge);
-
         if (facesAdjacentToEdge.size() == 2){
             final IFace Face1 = facesAdjacentToEdge.get(0);
             final IFace Face2 = facesAdjacentToEdge.get(1);
@@ -133,7 +132,7 @@ public class IndexFacedSetMesh implements IMesh {
         }
 
 
-        return true;
+        return false;
     }
 
     public void removeFace(int faceId) {
@@ -167,6 +166,10 @@ public class IndexFacedSetMesh implements IMesh {
         final IFace face = faceMap.get(faceId);
 
         return face.isValidReplacement(fromVertex, toVertex);
+    }
+
+    public IFace getFace(int faceId) {
+        return faceMap.get(faceId);
     }
 
     public boolean changeFaceVertices(int faceId, int from, int to) {

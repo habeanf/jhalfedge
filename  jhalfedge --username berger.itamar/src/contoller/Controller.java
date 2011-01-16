@@ -346,7 +346,7 @@ public class Controller implements GLEventListener {
     }
 
     public void setSegmentationAttribute() {
-        MeshAttribute attribute = new PartSegmentation();
+        MeshAttribute attribute = new PartSegmentation(infoLogger, 0.2);
         if (!state.isCalculateSegmentation()) {
             attribute.calculate(mesh);
             state.setCalculatedSegmentation(true);
@@ -364,7 +364,7 @@ public class Controller implements GLEventListener {
 
     public void moveDownResolution(double speed) {
         if (multiResRepresentor == null) {
-            calculateMultiresolution();
+            calculateMultiresolution(true);
         } else {
             multiResRepresentor.decreaseResolution(infoLogger, mesh, speed);
             state.shouldUpdate = true;
@@ -382,20 +382,29 @@ public class Controller implements GLEventListener {
 
     public void moveUpResolution(double speed) {
         if (multiResRepresentor == null) {
-            calculateMultiresolution();
+            calculateMultiresolution(true);
         } else {
             multiResRepresentor.increaseResolution(infoLogger, mesh, speed);
             state.shouldUpdate = true;
         }
     }
 
-    public void calculateMultiresolution() {
+    public void calculateMultiresolution(final boolean segment) {
         // calculate the decimation records
         if (multiResRepresentor == null) {
             multiResRepresentor = new MultiResRepresentor();
-            Thread thread = new Thread(new Runnable() {
+            final Thread thread = new Thread(new Runnable() {
                 public void run() {
-                    multiResRepresentor.build(infoLogger, mesh);
+
+                    if (segment){
+                        if (!state.isCalculateSegmentation()) {
+                            MeshAttribute attribute = new PartSegmentation(infoLogger,segmentationThreshold);
+                            attribute.calculate(mesh);
+                            state.setCalculatedSegmentation(true);
+                        }
+                    }
+
+                    multiResRepresentor.build(infoLogger, mesh,segment);
                     InputHandler.keyboardLock = false;
                     state.shouldUpdate = true;
                 }
@@ -418,5 +427,29 @@ public class Controller implements GLEventListener {
             noAttribute = !noAttribute;
         }
 
+    }
+
+    double segmentationThreshold = 0.2;
+    public void increaseSegThreshold() {
+        segmentationThreshold = segmentationThreshold + 0.05;
+        MeshAttribute attribute = new PartSegmentation(infoLogger, Math.min(1, segmentationThreshold));
+
+        attribute.calculate(mesh);
+        state.setCalculatedSegmentation(true);
+
+        state.setMeshAttribute(attribute);
+        state.transperacy(false);
+        infoLogger.setAttribute(attribute.getName());
+    }
+
+    public void decreaseSegThreshold() {
+        segmentationThreshold = segmentationThreshold - 0.05;
+        MeshAttribute attribute = new PartSegmentation(infoLogger, Math.max(0, segmentationThreshold));
+        attribute.calculate(mesh);
+        state.setCalculatedSegmentation(true);
+
+        state.setMeshAttribute(attribute);
+        state.transperacy(false);
+        infoLogger.setAttribute(attribute.getName());
     }
 }

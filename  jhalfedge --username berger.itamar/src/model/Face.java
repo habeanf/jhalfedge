@@ -1,9 +1,4 @@
 package model;
-
-import segmentation.cluster.Cluster;
-import segmentation.cluster.Clusterable;
-import segmentation.cluster.DihedralProperty;
-
 import java.util.*;
 
 /**
@@ -11,15 +6,15 @@ import java.util.*;
  * Date: Nov 27, 2010
  * Time: 8:48:45 PM
  */
-public class Face implements IFace, Clusterable {
+public class Face implements IFace {
     private int id;
-    private int segment = 4;
 
     private List<IVertex> vertices;
 
-    private Cluster cluster;
-
     private Vector3D normal;
+
+    private int relatedFaceId = -1;
+    private int segment = -1;
 
     public Face(int id) {
         this.id = id;
@@ -28,6 +23,10 @@ public class Face implements IFace, Clusterable {
 
     public int getId() {
         return id;
+    }
+
+    public double calcDihedralAngle(IFace face1, IFace face2) {
+        return face1.getNormal().calculateAngleTo(face2.getNormal());
     }
 
     public void removeVertex(IVertex vertex) {
@@ -44,6 +43,14 @@ public class Face implements IFace, Clusterable {
 
     public boolean isValidReplacement(IVertex fromVertex, IVertex toVertex) {
         return !vertices.contains(toVertex);
+    }
+
+    public void setRelatedFaceId(int relatedFaceId) {
+        this.relatedFaceId = relatedFaceId;
+    }
+
+    public int getRelatedFaceId() {
+        return relatedFaceId;
     }
 
     public boolean replaceVertex(IVertex fromVertex, IVertex toVertex) {
@@ -100,27 +107,6 @@ public class Face implements IFace, Clusterable {
         this.segment = segment;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Face face = (Face) o;
-
-        if (id != face.id) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id;
-    }
-
-    public void applyClustering() {
-        segment = cluster.getId();
-    }
-
     public void calcNormal() {
         if (vertices.size() == 3) {
             Vector3D vp = new Vector3D(vertices.get(0).getXyz());
@@ -137,31 +123,6 @@ public class Face implements IFace, Clusterable {
 
     public Vector3D getNormal() {
         return normal;
-    }
-
-    /* Clusterable methods */
-    public int compareTo(IFace otherFace) {
-        if (this.getId()>otherFace.getId())
-            return 1;
-        else
-            return -1;
-    }
-
-
-    public int compareTo(Clusterable otherClusterable) {
-        return compareTo((IFace) otherClusterable);
-    }
-
-    public DihedralProperty compareProperty(IFace otherFace) {
-        return new DihedralProperty(normal.calculateAngleTo(((Face) otherFace).getNormal()));
-    }
-
-    public void setCluster(Cluster cluster) {
-        this.cluster = cluster;
-    }
-
-    public Cluster getCluster() {
-        return cluster;
     }
 
     public Set<IFace> getNeighbors() {

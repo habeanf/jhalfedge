@@ -28,9 +28,7 @@ public class MultiResRepresentor {
     public MultiResRepresentor() {
     }
 
-    public void build(InfoLogger infoLogger, IMesh mesh) {
-
-
+    public void build(InfoLogger infoLogger, IMesh mesh, boolean useSegment) {
         // get a set of all edges and construct priority que from all edges (use their length for rank)
         PriorityQueue<IEdge> queue = new PriorityQueue<IEdge>(mesh.getAllUndirectedEdges());
 
@@ -49,7 +47,7 @@ public class MultiResRepresentor {
             final IEdge edge = queue.poll();
 
             // if the contraction is not allowed continue to the next
-            if (!isContractionAllowed(mesh, edge)) {
+            if (!isContractionAllowed(mesh, edge,useSegment)) {
                 continue;
             }
 
@@ -222,8 +220,8 @@ public class MultiResRepresentor {
         return (mesh.getAllFaces().size() / (float) originalNumberOfFaces < DECIMATION_RATIO);
     }
 
-    public boolean isContractionAllowed(IMesh mesh, IEdge edge) {
-        if (!mesh.isEdgeValid(edge))
+    public boolean isContractionAllowed(IMesh mesh, IEdge edge, boolean useSegment) {
+        if (useSegment && !mesh.isEdgeValid(edge))
             return false;
 
         return true;

@@ -39,4 +39,6 @@ public interface IMesh {
     void addVertex(int vertexId);
 
     boolean isValidReplacment(Integer faceId, int from, int to);
+
+    IFace getFace(int faceId);
 }

@@ -1,27 +1,14 @@
 package model;
 
-import segmentation.cluster.Cluster;
-import segmentation.cluster.DihedralProperty;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * User: itamar
  * Date: 1/15/11
  * Time: 3:43 PM
  */
-public interface IFace {
-    void setCluster(Cluster cluster);
-
-    Cluster getCluster();
-
-    Set<IFace> getNeighbors();
-
-    public int compareTo(IFace otherFace);
-
-    public DihedralProperty compareProperty(IFace otherFace);
-
+public interface IFace{
     int getSegment();
 
     void setSegment(int cluster);
@@ -40,4 +27,9 @@ public interface IFace {
 
     boolean isValidReplacement(IVertex fromVertex, IVertex toVertex);
 
+    void setRelatedFaceId(int faceId);
+
+    int getRelatedFaceId();
+
+    double calcDihedralAngle(IFace face1, IFace face2);
 }
