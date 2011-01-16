@@ -12,7 +12,7 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 public class ClusterPair implements Comparable<ClusterPair> {
-    Cluster clusterA,clusterB;
+    public Cluster clusterA,clusterB;
 
     public ClusterPair(Cluster clusterA, Cluster clusterB) {
         this.clusterA = clusterA;
@@ -49,13 +49,19 @@ public class ClusterPair implements Comparable<ClusterPair> {
             }
         }
 
-        return new DihedralProperty(totalDihedral/numOfDihedrals);
+        if(numOfDihedrals>0)
+            return new DihedralProperty(totalDihedral/numOfDihedrals);
+        else
+            return new DihedralProperty(0.0);
     }
 
     public ClusterProperty getUnionProperty() {
-        return new DihedralProperty(((DihedralProperty)clusterA.getClusterProperty()).getDihedral()+
+        int bothElements = clusterA.getClusterElements().size()+
+                           clusterB.getClusterElements().size();
+        return new DihedralProperty((
+                                    ((DihedralProperty)clusterA.getClusterProperty()).getDihedral()+
                                     ((DihedralProperty)clusterB.getClusterProperty()).getDihedral()+
-                                    ((DihedralProperty)getIntersectionProperty()).getDihedral());
+                                    ((DihedralProperty)getIntersectionProperty()).getDihedral())/bothElements);
     }
 
     public int compareTo(ClusterPair clusterPair) {

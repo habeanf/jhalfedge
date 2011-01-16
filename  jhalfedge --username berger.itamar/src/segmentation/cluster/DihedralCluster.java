@@ -22,6 +22,7 @@ public class DihedralCluster extends Cluster {
 
     public DihedralCluster(int id, IFace face) {
         this.id = id;
+        face.setCluster(this);
         this.clusterElements = new HashSet<IFace>();
         this.clusterElements.add(face);
         this.totalDihedral = new DihedralProperty(0.0);
@@ -101,7 +102,7 @@ public class DihedralCluster extends Cluster {
     }
 
     public boolean canMerge(Cluster dihedralPropertyCluster) {
-        return !neighbors.contains(dihedralPropertyCluster);
+        return neighbors.contains(dihedralPropertyCluster);
     }
 
     @Override

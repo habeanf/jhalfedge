@@ -141,7 +141,7 @@ public class Face implements IFace, Clusterable {
 
     /* Clusterable methods */
     public int compareTo(IFace otherFace) {
-        if (this.getSegment() > otherFace.getSegment())
+        if (this.getId()>otherFace.getId())
             return 1;
         else
             return -1;

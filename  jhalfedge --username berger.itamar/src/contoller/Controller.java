@@ -80,8 +80,8 @@ public class Controller implements GLEventListener {
         gridRenderer = new GridRenderer(freq);
         paths = new ArrayList<File>();
 
-//        File modelDirectory = new File("./Models/test.obj");
-        File modelDirectory = new File("./Models");
+        File modelDirectory = new File("./Models/BEAR_KLA.off");
+//        File modelDirectory = new File("./Models");
         if (modelDirectory.isDirectory()) {
 
             Collections.addAll(paths, modelDirectory.listFiles());

@@ -5,8 +5,11 @@ import model.IMesh;
 import segmentation.cluster.Cluster;
 import segmentation.cluster.ClusterPair;
 import segmentation.cluster.DihedralCluster;
+import segmentation.cluster.DihedralProperty;
 
+import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,20 +26,35 @@ public class HierarchicalClustering {
 
     public void getHierarchicalClustering(IMesh mesh) {
         this.mesh = mesh;
+        // Create a cluster for each face
+        for(IFace face : mesh.getAllFaces()) {
+            face.setCluster(new DihedralCluster(face.getId(),face));
+        }
+
+        // Initialize cluster neighbors of each cluster
+        for(IFace face : mesh.getAllFaces()) {
+            DihedralCluster cluster = (DihedralCluster)face.getCluster();
+            Set<Cluster> clusterNeighbors = new HashSet<Cluster>();
+            for (IFace neighbor : face.getNeighbors()) {
+                clusterNeighbors.add(neighbor.getCluster());
+            }
+
+            cluster.setClusterNeighbors(clusterNeighbors);
+        }
 
         // Initialize a priority queue Q of pairs
         PriorityQueue<ClusterPair> Q = new PriorityQueue<ClusterPair>();
 
         // Insert all valid element pairs to Q
-        for(IFace face : mesh.getAllFaces())
+        for(IFace face : mesh.getAllFaces()) {
             for(IFace faceNeighbor : face.getNeighbors()) {
                 if (face.compareTo(faceNeighbor)>0) {
-                    DihedralCluster clusterA = new DihedralCluster(face.getId(),face);
-                    DihedralCluster clusterB = new DihedralCluster(faceNeighbor.getId(),faceNeighbor);
-                    ClusterPair pair = new ClusterPair(clusterA,clusterB);
+                    ClusterPair pair = new ClusterPair(face.getCluster(),faceNeighbor.getCluster());
                     Q.add(pair);
                 }
             }
+        }
+
 
         // Loop until Q is empty
         while(!Q.isEmpty()) {
@@ -45,6 +63,8 @@ public class HierarchicalClustering {
 
             // If (u,v) can be merged
             if (nextPair.canMerge()) {
+                System.out.println("Merging pair (" + nextPair.clusterA.getId() + "," + nextPair.clusterB.getId() + ")" +
+                " with combined dihedral: " + ((DihedralProperty)nextPair.getUnionProperty()).getDihedral());
                 // Merge (u,v) into w
                 Cluster w = nextPair.merge();
                 top = w.getHierarchy();
@@ -53,6 +73,7 @@ public class HierarchicalClustering {
                     Q.add(new ClusterPair(w,clusterNeighbor));
             }
         }
+
         up = new PriorityQueue<Hierarchy>();
         down = new PriorityQueue<Hierarchy>();
         down.add(top);
